@@ -15,10 +15,10 @@ namespace IMEVENT.Data
         {
         }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<Zone> Zones { get; set; }
-        public DbSet<Responsable> Responsables { get; set; }
-        public DbSet<SousZone> SousZones { get; set; }
-        public DbSet<UsersZone> usersZone { get; set; }
+        public DbSet<Zone> Zones { get; set;}
+        public DbSet<Responsable> Responsables{get;set;}
+        public DbSet<SousZone> SousZones  { get; set;}
+        public DbSet<UsersZone> usersZone { get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
