@@ -7,8 +7,9 @@ namespace IMEVENT.Data
 {
     public class UsersZone
     {
+        public int Id { get; set; }
         public Guid UserId { get; set; }
         public int ZoneId { get; set; }
-        public int Id { get; set; }
+       
     }
 }
