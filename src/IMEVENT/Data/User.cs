@@ -8,7 +8,7 @@ namespace IMEVENT.Data
 {
     public class User:IdentityUser
     {
-       public DateTime DateofBirth { get; set; }
+        public DateTime DateofBirth { get; set; }
         public Guid TownId { get; set; }
         public String Sex { get; set; }
         public int Level { get; set; }
@@ -18,6 +18,7 @@ namespace IMEVENT.Data
         public String Language { get; set; }
         public String InvitedBy { get; set; }
         public int IdGroup { get; set; }
+        
 
     }
 }

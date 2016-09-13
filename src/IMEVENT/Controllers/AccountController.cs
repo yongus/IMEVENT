@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using IMEVENT.Models;
+using IMEVENT.Data;
 using IMEVENT.Models.AccountViewModels;
 using IMEVENT.Services;
 
@@ -17,15 +17,15 @@ namespace IMEVENT.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
@@ -114,7 +114,7 @@ namespace IMEVENT.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -217,7 +217,7 @@ namespace IMEVENT.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -446,6 +446,16 @@ namespace IMEVENT.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateUserViewModel updateViewModel)
+        {
+            //update the user information.
+           
+            User user = await _userManager.GetUserAsync(HttpContext.User);
+           
+            return View();
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)
@@ -456,7 +466,7 @@ namespace IMEVENT.Controllers
             }
         }
 
-        private Task<ApplicationUser> GetCurrentUserAsync()
+        private Task<User> GetCurrentUserAsync()
         {
             return _userManager.GetUserAsync(HttpContext.User);
         }

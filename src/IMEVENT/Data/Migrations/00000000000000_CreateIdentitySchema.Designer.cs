@@ -126,7 +126,7 @@ namespace IMEVENT.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("IMEVENT.Models.ApplicationUser", b =>
+            modelBuilder.Entity("IMEVENT.Data.User", b =>
                 {
                     b.Property<string>("Id");
 
@@ -184,7 +184,7 @@ namespace IMEVENT.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("IMEVENT.Models.ApplicationUser")
+                    b.HasOne("IMEVENT.Data.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -192,7 +192,7 @@ namespace IMEVENT.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("IMEVENT.Models.ApplicationUser")
+                    b.HasOne("IMEVENT.Data.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -205,7 +205,7 @@ namespace IMEVENT.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("IMEVENT.Models.ApplicationUser")
+                    b.HasOne("IMEVENT.Data.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
