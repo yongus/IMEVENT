@@ -1,0 +1,356 @@
+
+
+body{
+
+	background:url(../images/bg-body-brown.gif);
+
+}
+
+
+.searh-holder{
+
+	border-radius:5px;
+
+	background:#6d2402;
+
+	display:inline-block;
+
+	width:40px;
+
+	height:30px;
+
+}
+
+.header-wrapper.subnav-fixed{
+
+	border-bottom:2px solid #6d2402;
+
+}
+
+.buy-now {
+
+    background: url(../images/buy-now-brown.png) no-repeat ;
+
+}
+
+.calender-box, .news-holder .left, .skCopyright, .skMiddleBlock{
+
+	background:#5b2703;
+
+}
+
+.skArtistlist li{
+
+	color:#fff;
+
+}
+
+.dark.projekktor .skControls{
+
+	background:#793c12;
+
+}
+
+.nav ul li:hover, .nav ul li.active{
+
+	border-bottom:1px solid #5b2703;
+
+}
+
+.chzn-results{
+
+	background:#5b2703;
+
+}
+
+ul.pagination li a{
+
+	background:#5b2703;
+
+	border:3px solid #793c12;
+
+}
+
+ul.pagination li a:hover{
+
+	background:#793c12;
+
+	border:3px solid #5b2703;
+
+}
+
+.s-link {
+
+	background:#5b2703;
+
+	color:#fff;
+
+}
+
+.news-holder .left span{
+
+    text-shadow: 0 3px 1px #5b2703;
+
+}
+
+
+
+.gallery-holder .pagination .active a, .gallery-holder .pagination a:hover{
+
+	border:4px solid #5b2703;
+
+}
+
+.detail em, 
+
+.post-heading em, 
+
+.add-comment a,
+
+ul.news-nav li span em,
+
+.name,
+
+.tags a:hover span, 
+
+.tags a.active span,
+
+.let-talk a,
+
+.view-all,
+
+.footer-tweet a, 
+
+.blog-comments a,
+
+.prayer-request label,
+
+.contact-flied .row input,
+
+.church-theme em,
+
+.contact-us ul.event-list li span, 
+
+.contact-us ul.event-list li a,
+
+.contact-flied textarea,
+
+.map-add p span,
+
+.news-holder .right p a,
+
+.g-heading,
+
+.gallery-titel a,
+
+#dates a,
+
+.tech-text em{
+
+	color:#5b2703;
+
+}
+
+.readmorebtn:hover,
+
+.pagination-list li a.prev:hover, 
+
+.pagination-list li a.next:hover{
+
+	background:#5b2703 !important;
+
+}
+
+.gallery-titel a:hover{
+
+	color:#5b2703;
+
+}
+
+.add-comment a,
+
+.prayer-heading span{
+
+	color:#5b2703 !important;
+
+}
+
+.ch-item,
+
+.prayer-heading span em,
+
+.readmorebtn.large.gray, 
+
+.readmorebtn.medium.gray, 
+
+.readmorebtn.small.gray, 
+
+#toggle-view li h3.gray,
+
+.readmorebtn,
+
+.meter,
+
+.pagination-list li a.prev, 
+
+.pagination-list li a.next,
+
+#toggle-view li h3,
+
+.dropcap.color,
+
+.blog-date{
+
+	background-color:#784e30;
+
+}
+.row-form input,
+.row-form textarea,
+.contact-flied .row input,
+.contact-flied textarea{
+	background-color:#784e30;
+	color:#fff;
+}
+.ch-item:hover {
+
+	box-shadow: 
+
+		inset 0 0 0 110px rgba(86,49,23, 0.6),
+
+		inset 0 0 0 16px rgba(86,49,23, 0.6),
+
+		0 1px 2px rgba(0,0,0,0.1);
+
+}
+
+.name span{
+
+	color:#5b2703;
+
+}
+
+.meter > span{
+
+	background-color:#5b2703;
+
+}
+
+
+
+.ui-datepicker-other-month .ui-state-default { color: #a1836f; }
+
+
+
+#horizontal-tabs ul.tabs li, 
+
+#horizontal-tabs .tabscontent, 
+
+#vertical-tabs ul.tabs li, 
+
+#vertical-tabs .tabscontent, 
+
+.pagination li a, 
+
+.breadcrumbs.gray, 
+
+.tables-column .list li.even, 
+
+#toggle-view li h3.normal{background-color:#a87c5b;}
+
+.share-request a:after {
+
+    border-color: transparent transparent transparent #5b2703;
+
+    border-style: solid;
+
+    border-width: 14px 0 14px 12px;
+
+    content: "";
+
+    height: 0;
+
+    position: absolute;
+
+    right: -12px;
+
+    top: 0;
+
+    width: 0;
+
+}
+
+.share-request a {
+
+    background: none repeat scroll 0 0 #5b2703;
+
+    color: #EEEEEE;
+
+    float: right;
+
+    font-size: 14px;
+
+    height: 29px;
+
+    line-height: 29px;
+
+    margin: 0;
+
+    padding: 0 20px 0 15px;
+
+    position: relative;
+
+    text-decoration: none;
+
+}
+
+.inner-heading{
+
+	color:#fff;
+
+	background:url(../images/bg-main-heading-brown.png) repeat-x left bottom;
+
+}
+
+.h-left{
+
+	background:url(../images/bg-main-heading-brown.png) repeat-x left top;
+
+}
+
+.h-right{
+
+	background:url(../images/bg-main-heading-brown.png) repeat-x left -51px;
+
+}
+
+.ch-img-1 {
+
+	background-image:url(../images/pray-brown.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-2 { 
+
+	background-image:url(../images/faith-brown.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-3 { 
+
+	background-image:url(../images/trust-brown.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-4 { 
+
+	background-image:url(../images/rules-brown.png) ;
+
+	background-repeat:no-repeat;
+
+}
