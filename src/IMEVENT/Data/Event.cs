@@ -13,6 +13,7 @@ namespace IMEVENT.Data
         public DateTime EndDate { get; set; }
         public string Place { get; set; }
         public EventType type { get; set; }
+        public int Fee { get; set; }
 
         public void persist(ApplicationDbContext context)
         {
