@@ -18,8 +18,11 @@ namespace IMEVENT.Data
         public DbSet<Zone> Zones { get; set;}
         public DbSet<Responsable> Responsables{get;set;}
         public DbSet<SousZone> SousZones  { get; set;}
-        public DbSet<UsersZone> usersZone { get; set;}
-
+        public DbSet<UsersZone> UsersZones { get; set;}
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Dormitory> Dorms { get; set; }
+        public DbSet<Hall> Halls { get; set; }
+        public DbSet<Refectory> Refectories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

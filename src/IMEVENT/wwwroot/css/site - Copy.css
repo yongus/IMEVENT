@@ -1,0 +1,83 @@
+﻿/* buttons and links extension to use brackets: [ click me ] */
+.btn-bracketed::before {
+    display:inline-block;
+    content: "[";
+    padding-right: 0.5em;
+}
+
+.btn-bracketed::after {
+    display:inline-block;
+    content: "]";
+    padding-left: 0.5em;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+  /* Hide captions */
+  .carousel-caption {
+    display: none
+  }
+}
+
+* {
+    margin: 0;
+}
+
+html, body {
+height: 100%;
+}
+
+.main-wrapper {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 0 5px 0 auto -4em;
+}
+
+.container.body-content{
+    margin-top: 32px;
+}
+
+footer, .push {
+height: 4em;
+}
+
+.footer, footer{
+    background-color:black;
+}
+
+/*center the menu inside the black bar*/
+.home-menu li.top-menu{
+    padding-top:10px;
+}
+
+/*set color of active menu item*/
+.home-menu li.active a{
+	color:#0f8de0 !important;
+    background:none !important;
+}
+
+.home-menu li a {
+	color: #FFFFFF;
+    display: block;
+    line-height: 42px;
+    padding: 0 15px;
+    position: relative;
+    text-decoration: none;
+}
+
+.home-menu li.top-menu:hover{
+    border:0 !important;
+	background-color: black
+}
+
+/*Make dropdown visibe when hovering over item*/
+.dropdown-menu li:hover {
+    visibility: visible;
+}
+
+/*set color of dropdown when hovering over*/
+.dropdown:hover .dropdown-menu {
+    display: block;
+    background-color: #3d3c3c;
+}

@@ -1,0 +1,98 @@
+
+
+body{
+
+	background:url(../images/bg-body.gif);
+
+}
+
+.buy-now {
+
+    background: url(../images/buy-now-bg.png) no-repeat ;
+
+}
+
+.calender-box, .news-holder .left{
+
+	background:#ffa054;
+
+}
+
+.nav ul li:hover, .nav ul li.active{
+
+	border-bottom:1px solid #ffa054;
+
+}
+
+.calender-box{
+
+	background:#ffa054;
+
+}
+
+.news-holder .left span{
+
+    text-shadow: 0 3px 1px #ffa054;
+
+}
+
+.gallery-titel a:hover{
+
+	color:#ffa054;
+
+}
+
+.add-comment a,
+
+.prayer-heading span{
+
+	color:#ffa054 !important;
+
+}
+
+.name span{
+
+	color:#ffa054;
+
+}
+
+
+
+.ch-item{
+
+	background:#ffae6c;
+
+}
+
+.ch-img-1 {
+
+	background-image:url(../images/pray.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-2 { 
+
+	background-image:url(../images/faith.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-3 { 
+
+	background-image:url(../images/trust.png);
+
+	background-repeat:no-repeat;
+
+}
+
+.ch-img-4 { 
+
+	background-image:url(../images/rules.png) ;
+
+	background-repeat:no-repeat;
+
+}
+

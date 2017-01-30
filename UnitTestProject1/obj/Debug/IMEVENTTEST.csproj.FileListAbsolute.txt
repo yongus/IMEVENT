@@ -13,3 +13,11 @@ C:\Users\fyonga\Source\Repos\IMEVENT\UnitTestProject1\bin\Debug\Microsoft.Visual
 C:\Users\fyonga\Source\Repos\IMEVENT\UnitTestProject1\bin\Debug\IMEVENT.pdb
 C:\Users\fyonga\Source\Repos\IMEVENT\UnitTestProject1\obj\Debug\UnitTestProject1.dll
 C:\Users\fyonga\Source\Repos\IMEVENT\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
+G:\IMVENT\IMEVENT\UnitTestProject1\bin\Debug\UnitTestProject1.dll
+G:\IMVENT\IMEVENT\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
+G:\IMVENT\IMEVENT\UnitTestProject1\bin\Debug\IMEVENT.dll
+G:\IMVENT\IMEVENT\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+G:\IMVENT\IMEVENT\UnitTestProject1\bin\Debug\IMEVENT.pdb
+G:\IMVENT\IMEVENT\UnitTestProject1\obj\Debug\IMEVENTTEST.csprojResolveAssemblyReference.cache
+G:\IMVENT\IMEVENT\UnitTestProject1\obj\Debug\UnitTestProject1.dll
+G:\IMVENT\IMEVENT\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
