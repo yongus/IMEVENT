@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-WebApplication2-664abd68-e9df-4569-b205-c8406ba6bae3",
 
   "dependencies": {
@@ -43,7 +43,8 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "Shaman.EPPlus": "1.0.1.1"
   },
 
   "tools": {

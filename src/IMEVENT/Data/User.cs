@@ -18,7 +18,11 @@ namespace IMEVENT.Data
         public String Language { get; set; }
         public String InvitedBy { get; set; }
         public int IdGroup { get; set; }
-        
+        public string Town { get; set; }
+        public bool IsGroupResponsible { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
 
     }
 }

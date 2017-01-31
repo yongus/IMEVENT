@@ -2420,6 +2420,65 @@
           }
         }
       },
+      "Shaman.EPPlus/1.0.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Shaman.System.Drawing": "1.0.1.1",
+          "System.Collections": "4.0.11",
+          "System.Collections.NonGeneric": "4.0.1",
+          "System.ComponentModel": "4.0.1",
+          "System.Data.Common": "4.1.0",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Globalization": "4.0.11",
+          "System.Globalization.Calendars": "4.0.1",
+          "System.IO": "4.1.0",
+          "System.IO.FileSystem": "4.0.1",
+          "System.Linq": "4.1.0",
+          "System.Reflection": "4.1.0",
+          "System.Reflection.Extensions": "4.0.1",
+          "System.Reflection.Primitives": "4.0.1",
+          "System.Reflection.TypeExtensions": "4.1.0",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.InteropServices": "4.1.0",
+          "System.Security.Cryptography.Algorithms": "4.2.0",
+          "System.Security.Cryptography.Primitives": "4.0.0",
+          "System.Security.Cryptography.X509Certificates": "4.1.0",
+          "System.Text.Encoding": "4.0.11",
+          "System.Text.Encoding.Extensions": "4.0.11",
+          "System.Text.RegularExpressions": "4.1.0",
+          "System.Threading": "4.0.11",
+          "System.Threading.ThreadPool": "4.0.10",
+          "System.Xml.ReaderWriter": "4.0.11",
+          "System.Xml.XPath": "4.0.1",
+          "System.Xml.XPath.XmlDocument": "4.0.1",
+          "System.Xml.XmlDocument": "4.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/Shaman.EPPlus.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/Shaman.EPPlus.dll": {}
+        }
+      },
+      "Shaman.System.Drawing/1.0.1.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.11",
+          "System.Globalization": "4.0.11",
+          "System.IO": "4.1.0",
+          "System.Linq": "4.1.0",
+          "System.Reflection": "4.1.0",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.Extensions": "4.1.0",
+          "System.Threading": "4.0.11"
+        },
+        "compile": {
+          "lib/netstandard1.0/Shaman.System.Drawing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/Shaman.System.Drawing.dll": {}
+        }
+      },
       "System.AppContext/4.1.0": {
         "type": "package",
         "dependencies": {
@@ -4381,7 +4440,7 @@
           "System.Xml.ReaderWriter": "4.0.11"
         },
         "compile": {
-          "ref/netstandard1.3/_._": {}
+          "ref/netstandard1.3/System.Xml.XmlDocument.dll": {}
         },
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
@@ -4401,7 +4460,7 @@
           "System.Xml.ReaderWriter": "4.0.11"
         },
         "compile": {
-          "ref/netstandard1.3/_._": {}
+          "ref/netstandard1.3/System.Xml.XPath.dll": {}
         },
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.dll": {}
@@ -4425,6 +4484,27 @@
         },
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
+        }
+      },
+      "System.Xml.XPath.XmlDocument/4.0.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.11",
+          "System.Globalization": "4.0.11",
+          "System.IO": "4.1.0",
+          "System.Resources.ResourceManager": "4.0.1",
+          "System.Runtime": "4.1.0",
+          "System.Runtime.Extensions": "4.1.0",
+          "System.Threading": "4.0.11",
+          "System.Xml.ReaderWriter": "4.0.11",
+          "System.Xml.XPath": "4.0.1",
+          "System.Xml.XmlDocument": "4.0.1"
+        },
+        "compile": {
+          "ref/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
       }
     }
@@ -6477,6 +6557,29 @@
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.4.0.1.nupkg.sha512",
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.nuspec",
         "runtimes/win7-x86/native/sni.dll"
+      ]
+    },
+    "Shaman.EPPlus/1.0.1.1": {
+      "sha512": "TpH46Oe8pOIb2cBtXAIVGnxXoIrYKyVjWAJU/yDXcjJUU+vVuzshAMm/mwoegj4zay72OB9T3nLnSvlAjsHLKA==",
+      "type": "package",
+      "path": "Shaman.EPPlus/1.0.1.1",
+      "files": [
+        "HgRepositorySummary.txt",
+        "Shaman.EPPlus.1.0.1.1.nupkg.sha512",
+        "Shaman.EPPlus.nuspec",
+        "lib/net45/Shaman.EPPlus.dll",
+        "lib/netstandard1.3/Shaman.EPPlus.dll"
+      ]
+    },
+    "Shaman.System.Drawing/1.0.1.1": {
+      "sha512": "eJFuzPFFF55SFaB6a4+u4QtuGBAeeKnqAWhZ96Yt4LrCXLQW6CaO/pO9Opa6SGYXtlX8tF/n/TrtIQQigtk6dg==",
+      "type": "package",
+      "path": "Shaman.System.Drawing/1.0.1.1",
+      "files": [
+        "HgRepositorySummary.txt",
+        "Shaman.System.Drawing.1.0.1.1.nupkg.sha512",
+        "Shaman.System.Drawing.nuspec",
+        "lib/netstandard1.0/Shaman.System.Drawing.dll"
       ]
     },
     "System.AppContext/4.1.0": {
@@ -11126,6 +11229,41 @@
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
       ]
+    },
+    "System.Xml.XPath.XmlDocument/4.0.1": {
+      "sha512": "Zm2BdeanuncYs3NhCj4c9e1x3EXFzFBVv2wPEc/Dj4ZbI9R8ecLSR5frAsx4zJCPBtKQreQ7Q/KxJEohJZbfzA==",
+      "type": "package",
+      "path": "System.Xml.XPath.XmlDocument/4.0.1",
+      "files": [
+        "System.Xml.XPath.XmlDocument.4.0.1.nupkg.sha512",
+        "System.Xml.XPath.XmlDocument.nuspec",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/netstandard1.3/System.Xml.XPath.XmlDocument.dll",
+        "ref/netstandard1.3/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/de/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/es/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/fr/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/it/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/ja/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/ko/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/ru/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/zh-hans/System.Xml.XPath.XmlDocument.xml",
+        "ref/netstandard1.3/zh-hant/System.Xml.XPath.XmlDocument.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -11153,7 +11291,8 @@
       "Microsoft.NETCore.App >= 1.0.0",
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Tools >= 1.0.0-preview2-final",
-      "Microsoft.VisualStudio.Web.CodeGenerators.Mvc >= 1.0.0-preview2-final"
+      "Microsoft.VisualStudio.Web.CodeGenerators.Mvc >= 1.0.0-preview2-final",
+      "Shaman.EPPlus >= 1.0.1.1"
     ],
     ".NETCoreApp,Version=v1.0": []
   },
