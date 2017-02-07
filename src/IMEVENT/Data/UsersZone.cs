@@ -10,10 +10,11 @@ namespace IMEVENT.Data
         public int Id { get; set; }
         public Guid UserId { get; set; }
         public int ZoneId { get; set; }
-        public void persist(ApplicationDbContext context)
+        public int persist(ApplicationDbContext context)
         {
             context.UsersZones.Add(this);
             context.SaveChanges();
+            return this.Id;
         }
 
     }

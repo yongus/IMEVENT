@@ -1,12 +1,13 @@
-﻿using System;
+﻿using IMEVENT.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace IMEVENT.Services
 {
-    interface IDataExtractor
+    public interface IDataExtractor
     {
-        void ExtractDataFromSource();
+        void ExtractDataFromSource(string source , int idEvent);
     }
 }

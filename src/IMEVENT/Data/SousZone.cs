@@ -10,13 +10,23 @@ namespace IMEVENT.Data
     {
         public int IdZone { get; set; }
         [Key]
-        public int IdSousZone { get; set; }
+        public int Id { get; set; }
         public int IdParent { get; set; }
         public String Label { get; set; }
-        public void persist(ApplicationDbContext context)
+        public int persist(ApplicationDbContext context)
         {
             context.SousZones.Add(this);
             context.SaveChanges();
+            return this.Id;
+        }
+        public static int GetIdRefectoryIdByLabel(ApplicationDbContext context, string label)
+        {
+            var zone = context.SousZones.FirstOrDefault(d => d.Label.Equals(label));
+            if (zone != null)
+            {
+                return zone.Id;
+            }
+            else return 0;
         }
     }
 }

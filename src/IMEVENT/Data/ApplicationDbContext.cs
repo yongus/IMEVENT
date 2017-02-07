@@ -23,6 +23,7 @@ namespace IMEVENT.Data
         public DbSet<Dormitory> Dorms { get; set; }
         public DbSet<Hall> Halls { get; set; }
         public DbSet<Refectory> Refectories { get; set; }
+        public DbSet<EventAttendee> EventAttendees { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

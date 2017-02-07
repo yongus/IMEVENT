@@ -11,10 +11,20 @@ namespace IMEVENT.Data
         [Key]
         public int IdHall { get; set; }
 
-        public void persist(ApplicationDbContext context)
+        public int persist(ApplicationDbContext context)
         {
             context.Halls.Add(this);
             context.SaveChanges();
+            return this.IdHall;
+        }
+        public int GetIdDormIdByName(ApplicationDbContext context, string name)
+        {
+            var hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));
+            if (hall != null)
+            {
+                return hall.IdHall;
+            }
+            else return 0;
         }
 
     }
