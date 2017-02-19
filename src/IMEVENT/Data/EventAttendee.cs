@@ -16,10 +16,18 @@ namespace IMEVENT.Data
         public int AmountPaid { get; set; }
         public string Remarks { get; set; }
 
-        public int persist(ApplicationDbContext context)
+        public int persist()
         {
-      
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             context.EventAttendees.Add(this);
+            if (IdEventAttendee != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.EventAttendees.Add(this);
+            }
             context.SaveChanges();
 
             return this.IdEventAttendee;

@@ -42,9 +42,18 @@ namespace IMEVENT.Data
             else return String.Empty;
         }
 
-        public string persist(ApplicationDbContext context)
+        public string persist()
         {
-            context.Users.Add(this);
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            if (String.IsNullOrEmpty(Id))
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.Users.Add(this);
+            }
+           
             context.SaveChanges();
             return this.Id;
         }

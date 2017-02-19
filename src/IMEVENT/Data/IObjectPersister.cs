@@ -7,7 +7,7 @@ namespace IMEVENT.Data
 {
     interface IObjectPersister
     {
-         int persist(ApplicationDbContext context);
+         int persist();
        
     }
 }

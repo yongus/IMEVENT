@@ -10,6 +10,9 @@ namespace IMEVENT.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
+        
+
+       
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -31,5 +34,13 @@ namespace IMEVENT.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+      public static  ApplicationDbContext GetDbContext()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>();
+            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=aspnet-IMEVENT;Trusted_Connection=True;MultipleActiveResultSets=true");
+            return new ApplicationDbContext(options.Options);
+        }
+
+       
     }
 }

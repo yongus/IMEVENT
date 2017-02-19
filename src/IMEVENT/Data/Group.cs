@@ -14,9 +14,18 @@ namespace IMEVENT.Data
         public int IdSousZone { get; set; }
         public int IdZone { get; set; }
         public int IdResponsable { get; set; }
-        public int persist(ApplicationDbContext context)
+        public int persist()
         {
-            context.Groups.Add(this);
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            if (Id != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.Groups.Add(this);
+            }
+           
             context.SaveChanges();
             return this.Id;
         }
