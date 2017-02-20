@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using IMEVENT.Data;
 
-namespace IMEVENT.Data.Migrations
+namespace IMEVENT.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160910031937_IdentityClasses")]
-    partial class IdentityClasses
+    [Migration("20170217070420_newMigration")]
+    partial class newMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -17,20 +17,116 @@ namespace IMEVENT.Data.Migrations
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("IMEVENT.Data.Dormitory", b =>
+                {
+                    b.Property<int>("IdDormitory")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Capacity");
+
+                    b.Property<int>("DormType");
+
+                    b.Property<int>("IdEvent");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("IdDormitory");
+
+                    b.ToTable("Dorms");
+                });
+
+            modelBuilder.Entity("IMEVENT.Data.Event", b =>
+                {
+                    b.Property<int>("EventId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<int>("Fee");
+
+                    b.Property<string>("Place");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Theme");
+
+                    b.Property<int>("type");
+
+                    b.HasKey("EventId");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("IMEVENT.Data.EventAttendee", b =>
+                {
+                    b.Property<int>("IdEventAttendee")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AmountPaid");
+
+                    b.Property<int>("IdEvent");
+
+                    b.Property<string>("InvitedBy");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("IdEventAttendee");
+
+                    b.ToTable("EventAttendees");
+                });
+
             modelBuilder.Entity("IMEVENT.Data.Group", b =>
                 {
-                    b.Property<int>("IdGroup")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("IdResponsable");
 
                     b.Property<int>("IdSousZone");
 
+                    b.Property<int>("IdZone");
+
                     b.Property<string>("Label");
 
-                    b.HasKey("IdGroup");
+                    b.HasKey("Id");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("IMEVENT.Data.Hall", b =>
+                {
+                    b.Property<int>("IdHall")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Capacity");
+
+                    b.Property<int>("IdEvent");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("IdHall");
+
+                    b.ToTable("Halls");
+                });
+
+            modelBuilder.Entity("IMEVENT.Data.Refectory", b =>
+                {
+                    b.Property<int>("IdRefectory")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Capacity");
+
+                    b.Property<int>("IdEvent");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("NumberOfTable");
+
+                    b.HasKey("IdRefectory");
+
+                    b.ToTable("Refectories");
                 });
 
             modelBuilder.Entity("IMEVENT.Data.Responsable", b =>
@@ -81,13 +177,23 @@ namespace IMEVENT.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName");
+
                     b.Property<int>("IdGroup");
+
+                    b.Property<int>("IdSousZone");
+
+                    b.Property<int>("IdZone");
 
                     b.Property<string>("InvitedBy");
 
+                    b.Property<bool>("IsGroupResponsible");
+
                     b.Property<string>("Language");
 
-                    b.Property<int>("Level");
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("Level");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -98,6 +204,8 @@ namespace IMEVENT.Data.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasAnnotation("MaxLength", 256);
+
+                    b.Property<int>("OriginZone");
 
                     b.Property<string>("PasswordHash");
 
@@ -112,6 +220,8 @@ namespace IMEVENT.Data.Migrations
                     b.Property<int>("Status");
 
                     b.Property<string>("Telephone");
+
+                    b.Property<string>("Town");
 
                     b.Property<Guid>("TownId");
 
@@ -143,7 +253,7 @@ namespace IMEVENT.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("usersZone");
+                    b.ToTable("UsersZones");
                 });
 
             modelBuilder.Entity("IMEVENT.Data.Zone", b =>

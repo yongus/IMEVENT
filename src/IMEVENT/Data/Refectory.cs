@@ -10,10 +10,31 @@ namespace IMEVENT.Data
     {
         [Key]
         public int IdRefectory { get; set; }
-        public void persist(ApplicationDbContext context)
+        public int NumberOfTable { get; set; }
+        public int persist()
         {
-            context.Refectories.Add(this);
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            if (IdRefectory != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.Refectories.Add(this);
+            }
+           
             context.SaveChanges();
+            return this.IdRefectory;
+        }
+
+        public int GetIdRefectoryIdByName(ApplicationDbContext context, string name)
+        {
+            var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));
+            if (refectory != null)
+            {
+                return refectory.IdRefectory;
+            }
+            else return 0;
         }
     }
 }

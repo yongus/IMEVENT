@@ -1,0 +1,15 @@
+﻿@model EventCreateViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="content">
+    <form method="post" asp-action="Index" asp-controller="Event" enctype="multipart/form-data">
+        <label>enter the name of the event.</label>
+        <input type="text"  asp-for="EventName" name="eventName" />
+        <input type="file" name="files" multiple />
+        <input type="submit" value="Upload" />
+    </form>
+</div>
+
+
