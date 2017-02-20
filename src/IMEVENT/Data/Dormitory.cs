@@ -12,10 +12,33 @@ namespace IMEVENT.Data
         public int IdDormitory { get; set; }
         public DormitoryEnum DormType { get; set; }
 
-        public void persist(ApplicationDbContext context)
+        public int persist()
         {
-            context.Dorms.Add(this);
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            if (IdDormitory != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                  context.Dorms.Add(this);
+            }
+               
             context.SaveChanges();
+            var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(this.Name));
+            
+            return dorm.IdDormitory;
+          
+           
+        }
+        public Nullable<Int32> GetIdDormIdByName(ApplicationDbContext context,string name)
+        {
+            var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
+            if (dorm != null)
+            {
+                return dorm.IdDormitory;
+            }
+            else return null;
         }
     }
 }

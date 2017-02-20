@@ -44,7 +44,8 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "Shaman.EPPlus": "1.0.1.1"
+    "Shaman.EPPlus": "1.0.1.1",
+    "System.IO.FileSystem": "4.3.0"
   },
 
   "tools": {
