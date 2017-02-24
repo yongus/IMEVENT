@@ -1,0 +1,342 @@
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using IMEVENT.Data;
+
+namespace IMEVENT.Event
+{
+    public class BadgesGenerator
+    {        
+        //Is the data loaded from the DB
+        private bool isLoaded;         
+
+        //Constructor
+        public BadgesGenerator()
+        {
+            InvalidateAllData();
+        }
+
+        //Test Constructor
+        public BadgesGenerator(Dictionary<Guid, EventAttendee> participants, List<Hall> seatsInHall,
+            List<Dormitory> bedsInDorms, List<Refectory> tablesInRefs)
+        {
+            availableParticipants = participants;
+            availableSeatsInHall = seatsInHall;
+            availableBedsInDorms = bedsInDorms;
+            availableTablesInRefs = tablesInRefs;
+            isLoaded = true;
+        }
+
+        //Total number of attendees at an event
+        private int totalAttendees;
+        public int TotalAttendees
+        {
+            get
+            {
+                EnsureLoaded();
+                return totalAttendees;
+            }            
+        }        
+       
+        private Dictionary<Guid, EventAttendee> availableParticipants;
+        public Dictionary<Guid, EventAttendee> AvailableParticipants
+        {
+            get
+            {
+                EnsureLoaded();
+                return availableParticipants;
+            }
+        }
+
+        private List<Hall> availableSeatsInHall;
+        public List<Hall> AvailableSeatsInHall
+        {
+            get
+            {
+                EnsureLoaded();
+                return availableSeatsInHall;
+            }
+        }
+
+        private List<Dormitory> availableBedsInDorms;
+        public List<Dormitory> AvailableBedsInDorms
+        {
+            get
+            {
+                EnsureLoaded();
+                return availableBedsInDorms;
+            }
+        }
+
+        private List<Refectory> availableTablesInRefs;
+        public List<Refectory> AvailableTablesInRefs
+        {
+            get
+            {
+                EnsureLoaded();
+                return availableTablesInRefs;
+            }
+        }
+
+        protected Dictionary<Guid, AttendeeEntry> participantsMatching = null;
+
+        private void EnsureLoaded()
+        {
+            if (isLoaded)
+            {
+                totalAttendees = availableParticipants.Count;
+                return; //data already loaded
+            }
+
+            //Do this after working with Innocent
+
+            //set total attendees
+
+            isLoaded = true;
+        }
+
+        public void LoadDataFromDB()
+        {
+
+        }
+
+        private void InvalidateAllData()
+        {
+            isLoaded = false;
+        }
+
+        public void InvalidateAllButSeats()
+        {
+
+        }
+
+        #region Map Attendees to Seat in Halls        
+        
+        public bool MapAttendeeToSeat(out Dictionary<int, HallMappingEntry> AttendeeToSeats)
+        {            
+            Dictionary<int, Section> listofSeats = new Dictionary<int, Section>();
+            try
+            {
+                int index = 0;
+                foreach (Hall seat in AvailableSeatsInHall)
+                {
+                    for (int j = 1; j <= seat.Capacity; j++)
+                    {
+                        index++;
+                        listofSeats[index] = new Section
+                        {
+                            Id = seat.IdHall,
+                            PlaceNbr = j
+                        };
+                    }
+                }
+
+                //Shuffle Ids
+                List<int> seatsIds = new List<int>(listofSeats.Keys);
+                seatsIds.Shuffle();                
+
+                //do the assignement
+                AttendeeToSeats = new Dictionary<int, HallMappingEntry>();
+                for (int i = 1; i <= seatsIds.Count; i++)
+                {
+                    index = seatsIds[i-1];
+                    AttendeeToSeats[i] = new HallMappingEntry
+                    {
+                        AttendeeIndex = i,
+                        IdHall = listofSeats[index].Id,
+                        SeatNbr = listofSeats[index].PlaceNbr
+                    };
+                }
+
+                return true;
+            }
+            catch
+            {
+                AttendeeToSeats = null;
+                return false;
+            }           
+        }
+
+        #endregion
+
+        #region Map Attendees to Beds in Dorms        
+
+        public bool MapAttendeeToBeds(out Dictionary<int, DormMappingEntry> AttendeeToBeds)
+        {
+            Dictionary<int, Section> listofBeds = new Dictionary<int, Section>();
+            try
+            {
+                int index = 0;
+                foreach (Dormitory dorm in AvailableBedsInDorms)
+                {
+                    for (int j = 1; j <= dorm.Capacity; j++)
+                    {
+                        index++;
+                        listofBeds[index] = new Section
+                        {
+                            Id = dorm.IdDormitory,
+                            PlaceNbr = j
+                        };
+                    }
+                }
+
+                //Shuffle Ids
+                List<int> bedsIds = new List<int>(listofBeds.Keys);
+                bedsIds.Shuffle();
+
+                //do the assignement
+                AttendeeToBeds = new Dictionary<int, DormMappingEntry>();
+                for (int i = 1; i <= bedsIds.Count; i++)
+                {
+                    index = bedsIds[i-1];
+                    AttendeeToBeds[i] = new DormMappingEntry
+                    {
+                        AttendeeIndex = i,
+                        IdDormitory = listofBeds[index].Id,
+                        BedNbr = listofBeds[index].PlaceNbr
+                    };
+                }
+
+                return true;
+            }
+            catch
+            {
+                AttendeeToBeds = null;
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Map Attendees to Tables in Refectories        
+
+        public bool MapAttendeeToTables(out Dictionary<int, RefectoryMappingEntry> AttendeeToTables)
+        {
+            Dictionary<int, Section> listofTables = new Dictionary<int, Section>();
+            try
+            {
+                int index = 0;
+                foreach (Refectory refect in AvailableTablesInRefs)
+                {
+                    for (int j = 1; j <= refect.Capacity; j++)
+                    {
+                        index++;
+                        listofTables[index] = new Section
+                        {
+                            Id = refect.IdRefectory,
+                            PlaceNbr = j
+                        };
+                    }
+                }
+
+                //Shuffle Ids
+                List<int> tablesIds = new List<int>(listofTables.Keys);
+                tablesIds.Shuffle();
+
+                //do the assignement
+                AttendeeToTables = new Dictionary<int, RefectoryMappingEntry>();
+                for (int i = 1; i <= tablesIds.Count; i++)
+                {
+                    index = tablesIds[i-1];
+                    AttendeeToTables[i] = new RefectoryMappingEntry
+                    {
+                        AttendeeIndex = i,
+                        IdRefectory = listofTables[index].Id,
+                        TableNbr = listofTables[index].PlaceNbr
+                    };
+                }
+
+                return true;
+            }
+            catch
+            {
+                AttendeeToTables = null;
+                return false;
+            }
+        }
+
+        #endregion
+
+        public bool GenerateAll()
+        {
+            Dictionary<int, HallMappingEntry> AttendeeToSeats;
+            if (!this.MapAttendeeToSeat(out AttendeeToSeats))
+            {
+                return false;
+            }
+
+            Dictionary<int, DormMappingEntry> AttendeeToBeds;           
+            if (!this.MapAttendeeToBeds(out AttendeeToBeds))
+            {
+                return false;
+            }
+
+            Dictionary<int, RefectoryMappingEntry> AttendeeToTables;
+            if (!this.MapAttendeeToTables(out AttendeeToTables))
+            {
+                return false;
+            }
+
+            if (AttendeeToSeats.Count() != this.TotalAttendees 
+               || AttendeeToBeds.Count() != this.TotalAttendees
+               || AttendeeToTables.Count() != this.TotalAttendees)
+            {
+                return false;
+            }
+            
+            //List of participants to an event            
+            participantsMatching = new Dictionary<Guid, AttendeeEntry>();
+            List<Guid> participantsKeys = new List<Guid>(AvailableParticipants.Keys);
+
+            for (int i = 1; i <= this.TotalAttendees; i++)
+            {
+                Guid participantID = participantsKeys[i - 1];
+                var attendee = new AttendeeEntry
+                {
+                    IdUser = participantID,
+                    IdHall = AttendeeToSeats[i].IdHall,
+                    SeatNbr = AttendeeToSeats[i].SeatNbr,
+                    IdDormitory = AttendeeToBeds[i].IdDormitory,
+                    BedNbr = AttendeeToBeds[i].BedNbr,
+                    IdRefectory = AttendeeToTables[i].IdRefectory,
+                    TableNbr = AttendeeToTables[i].TableNbr
+                };
+
+                participantsMatching[participantID] = attendee;
+            }
+            
+            return true;
+        }
+
+        public void PrintAllToFile(string FilePath, bool forceRecompute)
+        {
+            //format output
+            List<string> temp = new List<string>();
+            if (forceRecompute || participantsMatching == null || !participantsMatching.Any())
+            {
+                if (!GenerateAll())
+                {
+                    return;
+                }
+            }
+
+            foreach(var entry in participantsMatching)
+            {
+                string aMatching = String.Format("{0},{1},{2},{3},{4},{5},{6}"
+                    , availableParticipants[entry.Key].FirstName
+                    , availableParticipants[entry.Key].LastName                                        
+                    , availableSeatsInHall[entry.Value.IdHall].Name
+                    , entry.Value.SeatNbr
+                    , availableBedsInDorms[entry.Value.IdDormitory].Name
+                    , entry.Value.BedNbr
+                    , availableTablesInRefs[entry.Value.IdRefectory].Name
+                    , entry.Value.TableNbr);
+                temp.Add(aMatching);
+            }
+
+            File.WriteAllLines(FilePath, temp.ToArray());
+        }
+    }
+}
