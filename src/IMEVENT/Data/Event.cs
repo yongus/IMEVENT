@@ -14,6 +14,7 @@ namespace IMEVENT.Data
         public string Place { get; set; }
         public EventType type { get; set; }
         public int Fee { get; set; }
+        public bool mingleAttendees { get; set; }
 
         public void persist(ApplicationDbContext context)
         {
@@ -21,5 +22,11 @@ namespace IMEVENT.Data
             context.SaveChanges();
         }
 
+        #region Methods
+        public Event()
+        {
+            IdEvent = 1;
+        }
+        #endregion
     }
 }
