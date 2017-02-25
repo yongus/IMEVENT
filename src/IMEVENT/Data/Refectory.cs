@@ -12,11 +12,34 @@ namespace IMEVENT.Data
         [Key]
         public int IdRefectory { get; set; }
         public int TableCapacity { get; set; }
-        public RegimeEnum RegimeType { get; set; }
-        public void persist(ApplicationDbContext context)
+        public RegimeEnum RegimeType { get; set; }        
+        public int NumberOfTable { get; set; }
+        public int persist()
         {
-            context.Refectories.Add(this);
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            if (IdRefectory != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.Refectories.Add(this);
+            }
+           
             context.SaveChanges();
+            return this.IdRefectory;
+        }
+
+        public int GetIdRefectoryIdByName(string name)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));
+            if (refectory != null)
+            {
+                return refectory.IdRefectory;
+            }
+
+            return 0;
         }
     }
 }

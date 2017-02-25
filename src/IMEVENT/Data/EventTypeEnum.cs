@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Data
 {
-    public enum EventType
+    public enum EventTypeEnum
     {
         GRANDE_RETRAITE = 0,
         RETRAITE_DE_COUPLE = 1,

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.SharedEnums;
-using System.ComponentModel.DataAnnotations;
 
 namespace IMEVENT.Data
 {
-    public class EventAttendee
+    public class EventAttendee:IObjectPersister
     {
         [Key]
-        public string AttendeeId { get; set; }
-        public int EventId { get; set; }
+        public int IdEventAttendee { get; set; }
+        public int IdEvent { get; set; }
         public string UserId { get; set; }
         public string InvitedBy { get; set; }        
         public int AmountPaid { get; set; }
@@ -67,6 +67,42 @@ namespace IMEVENT.Data
                 );
 
             return ret;
+        }
+        
+        public static Dictionary<string, EventAttendee> GetAllAttendee(int eventID)
+        {            
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.EventAttendees.Where(x => x.IdEvent == eventID).ToDictionary(x => x.UserId, x => x); 
+        }
+
+        public EventAttendee GetEventAttendeeById(int eventId, string userId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            EventAttendee attendee = context.EventAttendees.Where(x => x.IdEvent == eventId).FirstOrDefault(e => e.UserId == userId);
+            if (attendee != null)
+            {
+                return attendee;
+            }
+
+            return null;
+        }
+
+        public int persist()
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            context.EventAttendees.Add(this);
+            if (IdEventAttendee != 0)
+            {
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            }
+            else
+            {
+                context.EventAttendees.Add(this);
+            }
+
+            context.SaveChanges();
+
+            return this.IdEventAttendee;
         }
     }
 }

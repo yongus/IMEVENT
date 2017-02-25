@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using IMEVENT.Data;
 using IMEVENT.SharedEnums;
 
-namespace IMEVENT.Event
+namespace IMEVENT.Events
 {
     public class DataMatchingGenerator
     {
         #region private data
         //Is the data loaded from the DB
         private bool isLoaded;         
-
+        public int EventID { get; set; }
         //Constructor
-        public DataMatchingGenerator()
+        public DataMatchingGenerator(int eventID)
         {
+            this.EventID = eventID;
             InvalidateAllData();
         }
 
@@ -107,8 +108,12 @@ namespace IMEVENT.Event
                 return; //data already loaded
             }
 
-            //Do this after working with Innocent
+            //Get list of attendees
+            this.attendees = EventAttendee.GetAllAttendee(this.EventID);
 
+            this.seatsInHall = Hall.GetAllHalls(this.EventID);
+
+            this.bedsInDorms = Dormitory.GetAllDorms(this.EventID);
             //set total attendees
 
             isLoaded = true;

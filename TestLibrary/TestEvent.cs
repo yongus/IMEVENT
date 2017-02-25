@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT;
 using IMEVENT.Data;
-using IMEVENT.Event;
+using IMEVENT.Events;
 using IMEVENT.SharedEnums;
 
 namespace TestLibrary
@@ -172,7 +172,7 @@ namespace TestLibrary
                     string id = Guid.NewGuid().ToString();
                     attendee[id] = new EventAttendee
                     {
-                        EventId = EVENTID,
+                        IdEvent = EVENTID,
                         UserId = id,
                         InvitedBy = aPart[7],
                         AmountPaid = int.Parse(aPart[10]),
@@ -226,7 +226,7 @@ namespace TestLibrary
                 return;
             };
 
-            DataMatchingGenerator badge = new DataMatchingGenerator();
+            DataMatchingGenerator badge = new DataMatchingGenerator(EVENTID);
             badge.LoadDataInMatchingGenerator(attendees, attendeesInfo, halls, dorms, refs);
             if (!badge.GenerateAllBadges(false))
             {
@@ -234,6 +234,7 @@ namespace TestLibrary
             };
             badge.PrintAllBadgesToFile("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Results.csv", false);
             return;
+            //<ProjectGuid>2c4f4925-8651-4533-96ff-6d53dae66163</ProjectGuid>
         }
     }
 }

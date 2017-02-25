@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IMEVENT.Event
+namespace IMEVENT.Events
 {
-    public class RefectoryEntry
+    public class HallEntry
     {        
-        public int IdRefectory { get; set; }
-        public int TableNbr { get; set; }
+        public int IdHall { get; set; }
         public int SeatNbr { get; set; }
     }
 }
