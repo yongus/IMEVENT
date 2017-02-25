@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("TestLibrary")]
 [assembly: AssemblyTrademark("")]
 
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2c4f4925-8651-4533-96ff-6d53dae66163")]
+[assembly: Guid("d7e6a08c-0cf8-47d6-8801-3cfb7b69a9d9")]

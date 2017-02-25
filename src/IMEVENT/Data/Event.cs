@@ -17,12 +17,14 @@ namespace IMEVENT.Data
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Place { get; set; }
-        public EventType type { get; set; }
+        public EventTypeEnum type { get; set; }
         public int Fee { get; set; }
+        public bool mingleAttendees { get; set; }
         public Event(ApplicationDbContext context)
         {
             _context = context;
         }
+
         public int persist()
         {
             _context = ApplicationDbContext.GetDbContext();
@@ -38,16 +40,17 @@ namespace IMEVENT.Data
             _context.SaveChanges();
             return this.IdEvent;
         }
+
         public Event(string name, IDataExtractor extractor)
         {
-
             this.extractor = extractor;
             this.Theme = name;
+            this.IdEvent = 1;
         }
+
         public void  ExtractEventDetails(String source )
         {
             extractor.ExtractDataFromSource(source,IdEvent);
-        }
-
+        }        
     }
 }

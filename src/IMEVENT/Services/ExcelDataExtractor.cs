@@ -63,7 +63,6 @@ namespace IMEVENT.Services
                     if (!String.IsNullOrEmpty(name))
                     {
                         User u = getUserFromSpreadSheet(currentRow, worksheet);
-
                         maxEmpty = 0;
                     }
                     else
@@ -71,8 +70,7 @@ namespace IMEVENT.Services
                         maxEmpty++;
                     }
                     currentRow++;
-                }
-
+                }            
                
             }
         }

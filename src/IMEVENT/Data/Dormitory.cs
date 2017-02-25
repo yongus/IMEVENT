@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using IMEVENT.SharedEnums;
 
 namespace IMEVENT.Data
 {
@@ -10,7 +11,7 @@ namespace IMEVENT.Data
     {
         [Key]
         public int IdDormitory { get; set; }
-        public DormitoryEnum DormType { get; set; }
+        public DormitoryTypeEnum DormType { get; set; }
 
         public int persist()
         {
@@ -31,14 +32,21 @@ namespace IMEVENT.Data
           
            
         }
-        public Nullable<Int32> GetIdDormIdByName(ApplicationDbContext context,string name)
+        public Nullable<Int32> GetIdDormIdByName(string name)
         {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
             if (dorm != null)
             {
                 return dorm.IdDormitory;
             }
             else return null;
+        }
+
+        public static Dictionary<int, Dormitory> GetAllDorms(int eventID)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Dorms.Where(x => x.IdEvent == eventID).ToDictionary(x => x.IdDormitory, x => x);
         }
     }
 }
