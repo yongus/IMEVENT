@@ -47,6 +47,11 @@ namespace IMEVENT.Controllers
                         dataExtractor.DBcontext = ApplicationDbContext.GetDbContext(); 
                      
                         Event e = new Event(model.EventName, dataExtractor );
+                        e.EndDate = model.EndDate;
+                        e.StartDate = model.StartDate;
+                        e.Theme = model.Theme;
+                        e.Place = model.Venue;
+
                         e.persist();
                         Thread t = new Thread(()=>ProcessEvent(e, dataExtractor.Source));
                         t.Start();

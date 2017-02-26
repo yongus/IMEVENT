@@ -13,8 +13,9 @@ namespace IMEVENT.Data
         public string UserId { get; set; }
         public string InvitedBy { get; set; }
         public int IdEvent { get; set; }
-        public int AmountPaid { get; set; }
+        public Int32 AmountPaid { get; set; }
         public string Remarks { get; set; }
+        public bool OnDiet { get; set; }
 
         public int persist()
         {

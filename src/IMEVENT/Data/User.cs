@@ -32,8 +32,14 @@ namespace IMEVENT.Data
         /// <param name="context"></param>
         /// <param name="fullName">Fullname in format LASTNAME-FIRSTMANE of the user</param>
         /// <returns></returns>
-        public static String GetIdUserIdByName(ApplicationDbContext context, string fullName)
+        public static String GetIdUserIdByName( string fullName)
         {
+            if (String.IsNullOrEmpty(fullName))
+            {
+                return String.Empty;
+            }
+            fullName = fullName.Trim();
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));
             if (user != null)
             {

@@ -14,20 +14,24 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            IdHall = GetIdHallIdByName(Name); 
+               
             if (IdHall != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
             else
             {
+                
                 context.Halls.Add(this);
             }
             
             context.SaveChanges();
             return this.IdHall;
         }
-        public int GetIdDormIdByName(ApplicationDbContext context, string name)
+        public int GetIdHallIdByName( string name)
         {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));
             if (hall != null)
             {

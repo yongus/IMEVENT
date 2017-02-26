@@ -15,6 +15,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            IdDormitory = GetIdDormIdByName(Name);
             if (IdDormitory != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -31,14 +32,16 @@ namespace IMEVENT.Data
           
            
         }
-        public Nullable<Int32> GetIdDormIdByName(ApplicationDbContext context,string name)
+        public int GetIdDormIdByName(string name)
         {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
+
             if (dorm != null)
             {
                 return dorm.IdDormitory;
             }
-            else return null;
+            else return 0;
         }
     }
 }

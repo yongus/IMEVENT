@@ -17,6 +17,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            Id = GetIdGroupIdByLabel(Label);
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -35,8 +36,9 @@ namespace IMEVENT.Data
         /// <param name="context"></param>
         /// <param name="label"></param>
         /// <returns></returns>
-        public static int GetIdGroupIdByLabel(ApplicationDbContext context, string label)
+        public static int GetIdGroupIdByLabel( string label)
         {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var group = context.Groups.FirstOrDefault(d => d.Label.Equals(label));
             if (group != null)
             {
