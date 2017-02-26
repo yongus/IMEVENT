@@ -20,5 +20,7 @@ namespace IMEVENT.SharedEnums
         MP = 10,
         INCARNATEUR = 11,
         RG = 12
+        
     }    
+    
 }

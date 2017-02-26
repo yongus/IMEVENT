@@ -192,7 +192,7 @@ namespace TestLibrary
                         Sex = aPart[2],
                         Town = aPart[4],
                         //Group = aPart[5],
-                        MembershipLevel = level[aPart[6].ToLower()],
+                        Level = level[aPart[6].ToLower()],
                         Category = category[aPart[8].ToLower()],
                         Language = aPart[9],
                         Email = aPart[11],

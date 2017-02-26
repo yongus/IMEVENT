@@ -8,6 +8,7 @@
 /// <reference path="js/jqueryi-icon-menu.js" />
 /// <reference path="js/jquery-inner-slider.js" />
 /// <reference path="js/jquery-u.js" />
+/// <reference path="js/jquery-ui.min.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/sourtin-jquery.js" />
 /// <reference path="js/speakker-big-1.2.02r134.min.js" />
