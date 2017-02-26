@@ -5,11 +5,61 @@
 
 <div class="content">
     <form method="post" asp-action="Index" asp-controller="Event" enctype="multipart/form-data">
-        <label>enter the name of the event.</label>
-        <input type="text"  asp-for="EventName" name="eventName" />
-        <input type="file" name="files" multiple />
-        <input type="submit" value="Upload" />
-    </form>
-</div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" >event name.</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="EventName" name="eventName" />
+            </div>
+        </div>
 
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Event Fee</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="Fee" name="fee" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Start date</label>
+            <div class="col-sm-10">
+                <input type="date" id="startdate" asp-for="StartDate" name="startdate" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">End date</label>
+            <div class="col-sm-10">
+                <input type="date" id="enddate" asp-for="EndDate" name="enddate" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Theme</label>
+            <div class="col-sm-10">
+                <input type="text" id="enddate" asp-for="Theme" name="theme" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Venue</label>
+            <div class="col-sm-10">
+                <input type="text" id="venue" asp-for="Venue" name="venue" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" >Enter event details</label>
+            <div class="col-sm-10">
+                <input type="file" name="files" multiple />
+            </div>
+        </div>
+            <input type="submit" value="Upload" />
+</form>
+</div>
+<script>
+    $(function () {
+     
+      //$("#startdate").datepicker();
+      //$("#enddate").datepicker();
+  } );
+</script>
 

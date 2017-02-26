@@ -11,12 +11,15 @@ namespace IMEVENT.Data
     {
         [Key]
         public int IdRefectory { get; set; }
+
         public int TableCapacity { get; set; }
         public RegimeEnum RegimeType { get; set; }        
         public int NumberOfTable { get; set; }
+
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            IdRefectory = GetIdRefectoryByName(Name);
             if (IdRefectory != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -30,7 +33,8 @@ namespace IMEVENT.Data
             return this.IdRefectory;
         }
 
-        public int GetIdRefectoryIdByName(string name)
+
+        public int GetIdRefectoryByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));

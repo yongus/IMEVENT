@@ -16,6 +16,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            IdSousZone = GetIdSousZoneIdByLabel(Label);
             if (IdSousZone != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -28,8 +29,9 @@ namespace IMEVENT.Data
             context.SaveChanges();
             return this.IdSousZone;
         }
-        public static int GetIdRefectoryIdByLabel(ApplicationDbContext context, string label)
+        public  int GetIdSousZoneIdByLabel( string label)
         {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var zone = context.SousZones.FirstOrDefault(d => d.Label.Equals(label));
             if (zone != null)
             {

@@ -12,10 +12,12 @@ namespace IMEVENT.Data
         [Key]
         public int IdEventAttendee { get; set; }
         public int IdEvent { get; set; }
+        public Int32 AmountPaid { get; set; }
+        public string Remarks { get; set; }
+        public bool OnDiet { get; set; }
         public string UserId { get; set; }
         public string InvitedBy { get; set; }        
-        public int AmountPaid { get; set; }
-        public string Remarks { get; set; }
+       
         public string Regime { get; set; }
         public string Precision { get; set; }
         public HallSectionTypeEnum sectionType { get; set; }
@@ -87,10 +89,11 @@ namespace IMEVENT.Data
             return null;
         }
 
+
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            context.EventAttendees.Add(this);
+           
             if (IdEventAttendee != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
