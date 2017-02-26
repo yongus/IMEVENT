@@ -1,4 +1,5 @@
 ﻿using IMEVENT.Data;
+using IMEVENT.SharedEnums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -89,6 +90,7 @@ namespace IMEVENT.Services
                     attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
                     try
                     {
+
                         attendee.AmountPaid = (int)worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value;
                     }
                     catch(Exception)
@@ -100,11 +102,13 @@ namespace IMEVENT.Services
                     try
                     {
                         attendee.OnDiet = worksheet.Cells[COLUMN_REGIME + Convert.ToString(currentRow)].Value.Equals("OUI") ? true : false;
+
                     }
                     catch (Exception)
                     {
                         attendee.OnDiet = false;
                     }
+
                    
                     maxEmpty = 0;
                 }
@@ -122,6 +126,7 @@ namespace IMEVENT.Services
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
+
                
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
@@ -212,7 +217,7 @@ namespace IMEVENT.Services
             user.FirstName = (string)sheet.Cells[COLUMN_FIRSTNAME + Convert.ToString(row)].Value;
             user.LastName = (string)sheet.Cells[COLUMN_LASTNAME + Convert.ToString(row)].Value;
             user.Sex = (string)sheet.Cells[COLUMN_SEX + Convert.ToString(row)].Value;
-            user.Level = (string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value;
+            user.Level = Convertors.GetMembershipLevel( (string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value);
             if(sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value != null)
             {
                 string val;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using IMEVENT.SharedEnums;
 
 namespace IMEVENT.Data
 {
@@ -10,11 +11,12 @@ namespace IMEVENT.Data
     {
         [Key]
         public int IdHall { get; set; }
+        public HallSectionTypeEnum HallType { get; set; }
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdHall = GetIdHallIdByName(Name); 
+            IdHall = GetHallIdByName(Name); 
                
             if (IdHall != 0)
             {
@@ -29,7 +31,8 @@ namespace IMEVENT.Data
             context.SaveChanges();
             return this.IdHall;
         }
-        public int GetIdHallIdByName( string name)
+
+        public int GetHallIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));
@@ -38,6 +41,14 @@ namespace IMEVENT.Data
                 return hall.IdHall;
             }
             else return 0;
+        }
+
+
+        public static Dictionary<int, Hall> GetAllHalls(int eventID)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Halls.Where(x => x.IdEvent == eventID).ToDictionary(x => x.IdHall, x => x);            
+
         }
 
     }
