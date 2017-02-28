@@ -9,15 +9,12 @@ namespace IMEVENT.Data
 {
     public class User:IdentityUser
     {
-        public string UserId { get; set; }
         public DateTime DateofBirth { get; set; }
-        public string TownId { get; set; }
         public string Sex { get; set; }
         public int Status { get; set; }                
         public string Language { get; set; }
         public SharingGroupCategoryEnum Category { get; set; }
       
-        public String InvitedBy { get; set; }
         public int IdGroup { get; set; }
         public int IdZone { get; set; }
         public int IdSousZone { get; set; }

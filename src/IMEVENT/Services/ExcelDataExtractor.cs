@@ -48,7 +48,12 @@ namespace IMEVENT.Services
         private static readonly int DORMS_WORKSHEET_INDEX = 4;
 
         private static readonly string COLUMN_NAME = "A";
-        private static readonly string COLUMN_CAPACITE = "b";
+        private static readonly string COLUMN_CAPACITE = "B";
+
+        private static readonly string REFETORY_NAME = "A";
+        private static readonly string TABLE_NAME = "B";
+        private static readonly string CAPACITY_TABLE = "C";
+        private static readonly string FOR_SPECIAL_USE = "D";
 
 
 
@@ -109,7 +114,7 @@ namespace IMEVENT.Services
                         attendee.OnDiet = false;
                     }
 
-                   
+                    attendee.persist();
                     maxEmpty = 0;
                 }
                 else
@@ -176,10 +181,34 @@ namespace IMEVENT.Services
         private void getRefertoryFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
         {
             Refectory h = new Refectory();
-            h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
-            h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
+           
+            h.Name = (string)sheet.Cells[REFETORY_NAME + Convert.ToString(row)].Value;
             h.IdEvent = IdEvent;
             h.persist();
+            Table t = new Table();
+            t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
+            t.IdRefertoire = h.IdRefectory;
+            try
+            {
+                t.Capacite = (int)sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value;
+            }
+            catch (Exception)
+            {
+                t.Capacite = 0;
+            }
+            try
+            {
+                string strValue = sheet.Cells[FOR_SPECIAL_USE + Convert.ToString(row)].Value.ToString().ToLowerInvariant();
+                t.ForSpecialRegime  = strValue.Equals("oui") ? true : false;
+                
+            }
+            catch (Exception)
+            {
+                t.ForSpecialRegime = false;
+            }
+            t.persist();
+
+
         }
 
         public void loadDorms(ExcelWorksheet worksheet, int IdEvent)
@@ -218,7 +247,7 @@ namespace IMEVENT.Services
             user.LastName = (string)sheet.Cells[COLUMN_LASTNAME + Convert.ToString(row)].Value;
             user.Sex = (string)sheet.Cells[COLUMN_SEX + Convert.ToString(row)].Value;
             user.Level = Convertors.GetMembershipLevel( (string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value);
-            if(sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value != null)
+            if (sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value != null)
             {
                 string val;
                 try
