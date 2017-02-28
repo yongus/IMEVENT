@@ -12,12 +12,12 @@ namespace IMEVENT.Events
     {
         #region private data
         //Is the data loaded from the DB
-        private bool isLoaded;         
-        public int EventID { get; set; }
+        private bool isAllDataLoaded;         
+        public Event CurrentEvent { get; set; }
         //Constructor
-        public DataMatchingGenerator(int eventID)
+        public DataMatchingGenerator(Event ev)
         {
-            this.EventID = eventID;
+            this.CurrentEvent = ev;
             InvalidateAllData();
         }
 
@@ -30,7 +30,7 @@ namespace IMEVENT.Events
             seatsInHall = seats;
             bedsInDorms = beds;
             tablesInRefs = tables;
-            isLoaded = true;
+            isAllDataLoaded = true;
         }
 
         //Total number of attendees at an event
@@ -55,7 +55,7 @@ namespace IMEVENT.Events
             }
         }
 
-        //attendees Info
+        //Attendees Info
         private Dictionary<string, User> attendeesInfo;
         public Dictionary<string, User> AttendeesInfo
         {
@@ -102,39 +102,125 @@ namespace IMEVENT.Events
 
         private void EnsureLoaded()
         {
-            if (isLoaded)
-            {
-                totalAttendees = attendees.Count;
+            if (isAllDataLoaded)
+            {                
                 return; //data already loaded
             }
 
             //Get list of attendees
-            this.attendees = EventAttendee.GetAllAttendee(this.EventID);
+            this.attendees = EventAttendee.GetAllAttendee(this.CurrentEvent.IdEvent);
+            if (this.attendees == null)
+            {
+                throw new System.NullReferenceException(string.Format("No Attendee registered yet for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
 
-            this.seatsInHall = Hall.GetAllHalls(this.EventID);
+            //get attendees information
 
-            this.bedsInDorms = Dormitory.GetAllDorms(this.EventID);
-            //set total attendees
+            this.attendeesInfo = User.GetRegisteredUsers(this.attendees.Keys.ToList());
+            if (this.attendees == null)
+            {
+                throw new System.NullReferenceException(string.Format("Infos not available for registered users for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
 
-            isLoaded = true;
+            //Get list of seats
+            this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.IdEvent);
+            if (this.attendees == null)
+            {
+                throw new System.NullReferenceException(string.Format("Seats not availaible for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
+
+            //Get list of beds
+            this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.IdEvent);
+            if (this.attendees == null)
+            {
+                throw new System.NullReferenceException(string.Format("Beds not availaible for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
+
+            //Get list of tables
+            this.tablesInRefs = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
+            if (this.attendees == null)
+            {
+                throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
+
+            isAllDataLoaded = true;
         }
 
-        public void LoadDataFromDB()
+        private bool isSeatsDataLoaded;
+        public bool IsSeatsDataLoaded
         {
+            get
+            {
+                return isAllDataLoaded && isSeatsDataLoaded;
+            }
 
+            set
+            {
+                isSeatsDataLoaded = value;
+            }
         }
 
+        private bool isBedsDataLoaded;
+        public bool IsBedsDataLoaded
+        {
+            get
+            {
+                return isAllDataLoaded && isBedsDataLoaded;
+            }
+
+            set
+            {
+                isBedsDataLoaded = value;
+            }
+        }
+
+        private bool isTablesDataLoaded;
+        public bool IsTablesDataLoaded
+        {
+            get
+            {
+                return isAllDataLoaded && isTablesDataLoaded;
+            }
+
+            set
+            {
+                isTablesDataLoaded = value;
+            }
+        }
+        #endregion
+
+        #region Invalidate data
         private void InvalidateAllData()
         {
-            isLoaded = false;
+            this.isAllDataLoaded = this.IsSeatsDataLoaded
+                = this.IsBedsDataLoaded = this.IsTablesDataLoaded = false;
         }
 
-        public void InvalidateAllButSeats()
+        public void InvalidateAllButHalls()
         {
-
+            this.IsBedsDataLoaded = this.IsTablesDataLoaded = false;
         }
 
-        #endregion
+        public void InvalidateAllButDorms()
+        {
+            this.IsSeatsDataLoaded = this.IsTablesDataLoaded = false;
+        }
+
+        public void InvalidateAllButRefectories()
+        {
+            this.IsSeatsDataLoaded = this.IsTablesDataLoaded = false;
+        }
+        #endregion        
 
         #region Map Attendees to Seat in Halls        
 
@@ -196,6 +282,11 @@ namespace IMEVENT.Events
 
         public bool MatchAttendeesToSeats(bool mingle = false)
         {
+            if (this.IsSeatsDataLoaded)
+            {
+                return true;
+            }
+            
             //if mingle true, no need to break per categorie
             this.ListAvailableSections = new Dictionary<HallSectionTypeEnum, Stack<HallEntry>>();
             if (mingle)
@@ -238,6 +329,7 @@ namespace IMEVENT.Events
                 this.ListAvailableSections[cat.Key] = tempStack;
             }
 
+            this.IsSeatsDataLoaded = true;
             return true;
         }
         #endregion
@@ -478,7 +570,7 @@ namespace IMEVENT.Events
                 return false;
             }
 
-            /* Check that we have enough available places (Seats, beds, tables) for the matching
+            /* Check that we have enough places (Seats, beds, tables) available for the matching
             if (ListAvailableSections.Count() < this.TotalAttendees 
                || AttendeeToBeds.Count() < this.TotalAttendees
                || AttendeeToTables.Count() < this.TotalAttendees)
@@ -512,13 +604,13 @@ namespace IMEVENT.Events
                 {
                     return false;
                 }
-                this.Attendees[attendee.Key].IdHall = aSeat.IdHall;
-                this.Attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
-                this.Attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
-                this.Attendees[attendee.Key].BedNbr = aBed.BedNbr;
-                this.Attendees[attendee.Key].IdRefectory = aTable.IdRefectory;
-                this.Attendees[attendee.Key].TableNbr = aTable.TableNbr;
-                this.Attendees[attendee.Key].TableSeatNbr = aTable.SeatNbr;
+                this.attendees[attendee.Key].IdHall = aSeat.IdHall;
+                this.attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
+                this.attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
+                this.attendees[attendee.Key].BedNbr = aBed.BedNbr;
+                this.attendees[attendee.Key].IdRefectory = aTable.IdRefectory;
+                this.attendees[attendee.Key].TableNbr = aTable.TableNbr;
+                this.attendees[attendee.Key].TableSeatNbr = aTable.SeatNbr;
             }
             
             return true;

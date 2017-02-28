@@ -55,15 +55,22 @@ namespace IMEVENT.Data
         /// <param name="context"></param>
         /// <param name="fullName">Fullname in format LASTNAME-FIRSTMANE of the user</param>
         /// <returns></returns>
-        public static String GetUserIdByName(ApplicationDbContext context, string fullName)
+        public static String GetUserIdByName(string fullName)
         {
-            var user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            User user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));
             if (user == null)
             {
                 return String.Empty; 
             }
 
             return user.Id;
+        }
+
+        public static Dictionary<string, User> GetRegisteredUsers(List<string> keys)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Users.Where(x => keys.Contains(x.Id)).ToDictionary(x => x.Id, x => x);
         }
 
         public string persist()

@@ -32,7 +32,7 @@ namespace IMEVENT.Data
           
            
         }
-        public Nullable<Int32> GetIdDormIdByName(string name)
+        public int? GetDormIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
@@ -40,7 +40,8 @@ namespace IMEVENT.Data
             {
                 return dorm.IdDormitory;
             }
-            else return null;
+
+            return null;
         }
 
         public static Dictionary<int, Dormitory> GetAllDorms(int eventID)
