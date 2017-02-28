@@ -13,11 +13,10 @@ namespace IMEVENT.Data
         public DateTime DateofBirth { get; set; }
         public string TownId { get; set; }
         public string Sex { get; set; }
-        public string Level { get; set; }
         public int Status { get; set; }                
         public string Language { get; set; }
         public SharingGroupCategoryEnum Category { get; set; }
-        public String Telephone { get; set; }        
+      
         public String InvitedBy { get; set; }
         public int IdGroup { get; set; }
         public int IdZone { get; set; }
@@ -26,7 +25,7 @@ namespace IMEVENT.Data
         public bool IsGroupResponsible { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public MembershipLevelEnum MembershipLevel { get; set; }
+        public MembershipLevelEnum Level { get; set; }
 
         public override string ToString()
         {
@@ -37,7 +36,7 @@ namespace IMEVENT.Data
                  , Town
                  , ""//TODO - read group
                  , IsGroupResponsible ? "Oui" : "Non"
-                 , MembershipLevel.MemberShipLevelToString()
+                 , Level.MemberShipLevelToString()
                  , Category.SharingGroupCategoryToString()
                  , Language
                  , Email
@@ -57,8 +56,13 @@ namespace IMEVENT.Data
         /// <returns></returns>
         public static String GetUserIdByName(string fullName)
         {
+            if (String.IsNullOrEmpty(fullName))
+            {
+                return String.Empty;
+            }
+            fullName = fullName.Trim();
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            User user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));
+            User user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));        
             if (user == null)
             {
                 return String.Empty; 

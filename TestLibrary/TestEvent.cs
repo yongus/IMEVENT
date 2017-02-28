@@ -192,7 +192,7 @@ namespace TestLibrary
                         Sex = aPart[2],
                         Town = aPart[4],
                         //Group = aPart[5],
-                        Level = level[aPart[6].ToLower()].ToString(),
+                        Level = level[aPart[6].ToLower()],
                         Category = category[aPart[8].ToLower()],
                         Language = aPart[9],
                         Email = aPart[11],
@@ -211,10 +211,10 @@ namespace TestLibrary
         [TestMethod]
         public void TestMethod1()
         {
-            string[] hallsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Halls.txt");
-            string[] dormsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Dormitories.txt");
-            string[] refsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Refectories.txt");
-            string[] attendeeList = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Participants.txt");
+            string[] hallsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Halls.txt");
+            string[] dormsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Dormitories.txt");
+            string[] refsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Refectories.txt");
+            string[] attendeeList = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Participants.txt");
 
             Dictionary<int, Hall> halls = GetHalls(hallsLines);
             Dictionary<int, Dormitory> dorms = GetDorms(dormsLines);

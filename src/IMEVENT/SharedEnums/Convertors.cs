@@ -41,7 +41,42 @@ namespace IMEVENT.SharedEnums
                     return "Inconnu";
             }
         }
-        
+
+        public static MembershipLevelEnum GetMembershipLevel( string text)
+        {
+            text = text.ToLower().Trim();
+            switch (text)
+            {
+                case "simple":
+                    return MembershipLevelEnum.SIMPLE;
+                case "regulier":
+                    return MembershipLevelEnum.REGULIER;
+                case "actifI":
+                    return MembershipLevelEnum.ACTIF_1;
+                case "actifII":
+                    return MembershipLevelEnum.ACTIF_2;
+                case "actifIII":
+                    return MembershipLevelEnum.ACTIF_3;
+                case "jeunephare":
+                    return MembershipLevelEnum.JEUNE_PHARE;
+                case "accompagnateur":
+                    return MembershipLevelEnum.ACCOMPAGNATEUR;
+                case "aef":
+                    return MembershipLevelEnum.AEF;
+                case "candidatmembreplein":
+                    return MembershipLevelEnum.CMP;
+                case "membreplein":
+                    return MembershipLevelEnum.MP;
+                case "incarnateur":
+                    return MembershipLevelEnum.INCARNATEUR;
+                case "responsablegeneral":
+                    return MembershipLevelEnum.RG;
+               
+                default:
+                    return MembershipLevelEnum.INVITE;
+            }
+        }
+
         public static string DormitoryTypeToString(this DormitoryTypeEnum type)
         {
             switch (type)

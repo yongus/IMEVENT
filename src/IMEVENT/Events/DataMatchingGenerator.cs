@@ -31,18 +31,7 @@ namespace IMEVENT.Events
             bedsInDorms = beds;
             tablesInRefs = tables;
             isAllDataLoaded = true;
-        }
-
-        //Total number of attendees at an event
-        private int totalAttendees;
-        public int TotalAttendees
-        {
-            get
-            {
-                EnsureLoaded();
-                return totalAttendees;
-            }            
-        }                      
+        }                              
 
         //Input attendees
         private Dictionary<string, EventAttendee> attendees;
