@@ -23,28 +23,24 @@ namespace IMEVENT.Data
             }
             else
             {
-                  context.Dorms.Add(this);
+                context.Dorms.Add(this);
             }
                
             context.SaveChanges();
-            var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(this.Name));
+            Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(this.Name));
             
-            return dorm.IdDormitory;
-          
-           
+            return dorm.IdDormitory;                     
         }
 
         public int GetDormIdByName(string name)
-
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
-
+            Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
             if (dorm != null)
             {
                 return dorm.IdDormitory;
             }
-            else return 0;
+            return 0;
         }
 
         public static Dictionary<int, Dormitory> GetAllDorms(int eventID)

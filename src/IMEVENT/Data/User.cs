@@ -9,12 +9,15 @@ namespace IMEVENT.Data
 {
     public class User:IdentityUser
     {
+        public string UserId { get; set; }
         public DateTime DateofBirth { get; set; }
+        public string TownId { get; set; }
         public string Sex { get; set; }
         public int Status { get; set; }                
         public string Language { get; set; }
         public SharingGroupCategoryEnum Category { get; set; }
       
+        public String InvitedBy { get; set; }
         public int IdGroup { get; set; }
         public int IdZone { get; set; }
         public int IdSousZone { get; set; }
@@ -51,9 +54,7 @@ namespace IMEVENT.Data
         /// <param name="context"></param>
         /// <param name="fullName">Fullname in format LASTNAME-FIRSTMANE of the user</param>
         /// <returns></returns>
-
-        public static  String GetIdUserIdByName( string fullName)
-
+        public static String GetUserIdByName(string fullName)
         {
             if (String.IsNullOrEmpty(fullName))
             {
@@ -61,13 +62,19 @@ namespace IMEVENT.Data
             }
             fullName = fullName.Trim();
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));
+            User user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));        
             if (user == null)
             {
                 return String.Empty; 
             }
 
             return user.Id;
+        }
+
+        public static Dictionary<string, User> GetRegisteredUsers(List<string> keys)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Users.Where(x => keys.Contains(x.Id)).ToDictionary(x => x.Id, x => x);
         }
 
         public string persist()

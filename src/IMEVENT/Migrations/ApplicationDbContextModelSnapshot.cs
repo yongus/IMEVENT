@@ -83,11 +83,13 @@ namespace IMEVENT.Migrations
 
                     b.Property<string>("Precision");
 
+
                     b.Property<string>("Regime");
 
                     b.Property<string>("Remarks");
 
                     b.Property<int>("SeatNbr");
+
 
                     b.Property<int>("SectionType");
 
@@ -95,9 +97,10 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("TableSeatNbr");
 
-                    b.Property<int>("TableType");
 
                     b.Property<string>("UserId");
+
+                    b.Property<int>("sectionType");
 
                     b.HasKey("IdEventAttendee");
 
@@ -153,6 +156,7 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("NumberOfTable");
 
+
                     b.Property<int>("TableCapacity");
 
                     b.HasKey("IdRefectory");
@@ -203,7 +207,9 @@ namespace IMEVENT.Migrations
 
                     b.Property<string>("Name");
 
+
                     b.Property<int>("RegimeType");
+
 
                     b.HasKey("IdTable");
 
@@ -271,6 +277,8 @@ namespace IMEVENT.Migrations
                     b.Property<string>("Town");
 
                     b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserId");
 
                     b.Property<string>("UserName")
                         .HasAnnotation("MaxLength", 256);
