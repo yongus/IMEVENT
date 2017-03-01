@@ -36,12 +36,14 @@ namespace IMEVENT.Migrations
 
             modelBuilder.Entity("IMEVENT.Data.Event", b =>
                 {
-                    b.Property<int>("EventId")
+                    b.Property<int>("IdEvent")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("EndDate");
 
                     b.Property<int>("Fee");
+
+                    b.Property<bool>("MingleAttendees");
 
                     b.Property<string>("Place");
 
@@ -49,9 +51,9 @@ namespace IMEVENT.Migrations
 
                     b.Property<string>("Theme");
 
-                    b.Property<int>("type");
+                    b.Property<int>("Type");
 
-                    b.HasKey("EventId");
+                    b.HasKey("IdEvent");
 
                     b.ToTable("Events");
                 });
@@ -63,11 +65,37 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("AmountPaid");
 
+                    b.Property<int>("BedNbr");
+
+                    b.Property<int>("DormType");
+
+                    b.Property<int>("IdDormitory");
+
                     b.Property<int>("IdEvent");
+
+                    b.Property<int>("IdHall");
+
+                    b.Property<int>("IdRefectory");
 
                     b.Property<string>("InvitedBy");
 
+                    b.Property<bool>("OnDiet");
+
+                    b.Property<string>("Precision");
+
+                    b.Property<string>("Regime");
+
                     b.Property<string>("Remarks");
+
+                    b.Property<int>("SeatNbr");
+
+                    b.Property<int>("SectionType");
+
+                    b.Property<int>("TableNbr");
+
+                    b.Property<int>("TableSeatNbr");
+
+                    b.Property<int>("TableType");
 
                     b.Property<string>("UserId");
 
@@ -101,6 +129,8 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("Capacity");
 
+                    b.Property<int>("HallType");
+
                     b.Property<int>("IdEvent");
 
                     b.Property<string>("Name");
@@ -122,6 +152,8 @@ namespace IMEVENT.Migrations
                     b.Property<string>("Name");
 
                     b.Property<int>("NumberOfTable");
+
+                    b.Property<int>("TableCapacity");
 
                     b.HasKey("IdRefectory");
 
@@ -158,6 +190,26 @@ namespace IMEVENT.Migrations
                     b.ToTable("SousZones");
                 });
 
+            modelBuilder.Entity("IMEVENT.Data.Table", b =>
+                {
+                    b.Property<int>("IdTable")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Capacite");
+
+                    b.Property<bool>("ForSpecialRegime");
+
+                    b.Property<int>("IdRefertoire");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("RegimeType");
+
+                    b.HasKey("IdTable");
+
+                    b.ToTable("Tables");
+                });
+
             modelBuilder.Entity("IMEVENT.Data.User", b =>
                 {
                     b.Property<string>("Id");
@@ -184,15 +236,13 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("IdZone");
 
-                    b.Property<string>("InvitedBy");
-
                     b.Property<bool>("IsGroupResponsible");
 
                     b.Property<string>("Language");
 
                     b.Property<string>("LastName");
 
-                    b.Property<string>("Level");
+                    b.Property<int>("Level");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -218,11 +268,7 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("Telephone");
-
                     b.Property<string>("Town");
-
-                    b.Property<Guid>("TownId");
 
                     b.Property<bool>("TwoFactorEnabled");
 
