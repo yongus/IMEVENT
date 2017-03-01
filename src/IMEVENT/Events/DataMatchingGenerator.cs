@@ -432,7 +432,7 @@ namespace IMEVENT.Events
             Dictionary<RegimeEnum, Dictionary<int, Refectory>> tempDict = new Dictionary<RegimeEnum, Dictionary<int, Refectory>>();
             foreach (KeyValuePair<int, Refectory> table in this.TablesInRefs)
             {
-                if (!tempDict.ContainsKey(table.Value.RegimeType))
+                /*if (!tempDict.ContainsKey(table.Value.RegimeType))
                 {
                     tempDict[table.Value.RegimeType] = new Dictionary<int, Refectory>
                     {
@@ -442,7 +442,7 @@ namespace IMEVENT.Events
                 else
                 {
                     tempDict[table.Value.RegimeType][table.Value.IdRefectory] = table.Value;
-                }
+                }*/
             }
 
             // Match per category
@@ -461,6 +461,7 @@ namespace IMEVENT.Events
 
         #endregion
 
+       
         public bool GenerateAllBadges(bool mingleAttendees = false)
         {
             if (!this.MatchAttendeesToSeats(mingleAttendees))
@@ -495,7 +496,7 @@ namespace IMEVENT.Events
 
             foreach (KeyValuePair<string, EventAttendee> attendee in this.Attendees)
             {                
-                HallEntry aSeat = GetHallEntry(mingleAttendees ? HallSectionTypeEnum.NONE : attendee.Value.sectionType);
+                HallEntry aSeat = GetHallEntry(HallSectionTypeEnum.NONE );
                 if(aSeat == null)
                 {
                     return false;
@@ -507,7 +508,7 @@ namespace IMEVENT.Events
                     return false;
                 }
 
-                RefectoryEntry aTable = GetRefectoryEntry(mingleAttendees ? RegimeEnum.NONE : attendee.Value.RefectoryType);
+                RefectoryEntry aTable = GetRefectoryEntry( RegimeEnum.NONE );
                 if (aTable == null)
                 {
                     return false;
@@ -523,7 +524,7 @@ namespace IMEVENT.Events
             
             return true;
         }
-
+       
         public void PrintAllBadgesToFile(string FilePath, bool forceRecompute)
         {
             //format output

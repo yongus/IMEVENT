@@ -51,7 +51,7 @@ namespace IMEVENT.Controllers
                         e.StartDate = model.StartDate;
                         e.Theme = model.Theme;
                         e.Place = model.Venue;
-                        //e.MingleAttendees = false;
+                        e.MingleAttendees = false;
                         e.Fee = model.Fee;
                         e.Type = EventTypeEnum.GRANDE_RETRAITE;
                         e.persist();
