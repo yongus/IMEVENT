@@ -16,7 +16,7 @@ namespace TestLibrary
     {
         const int EVENTID = 1;
         protected Dictionary<int, Hall> GetHalls(string[] hallLines)
-        {            
+        {
             try
             {
                 Dictionary<int, Hall> ret = new Dictionary<int, Hall>();
@@ -30,7 +30,7 @@ namespace TestLibrary
                         IdHall = id,
                         Name = aHall[1],
                         Capacity = int.Parse(aHall[2]),
-                        HallType = (HallSectionTypeEnum)int.Parse(aHall[3])                        
+                        HallType = (HallSectionTypeEnum)int.Parse(aHall[3])
                     };
                 }
 
@@ -43,7 +43,7 @@ namespace TestLibrary
         }
 
         protected Dictionary<int, Dormitory> GetDorms(string[] dormLines)
-        {            
+        {
             try
             {
                 Dictionary<int, Dormitory> ret = new Dictionary<int, Dormitory>();
@@ -70,7 +70,7 @@ namespace TestLibrary
         }
 
         protected Dictionary<int, Refectory> GetRefs(string[] refLines)
-        {            
+        {
             try
             {
                 Dictionary<int, Refectory> ret = new Dictionary<int, Refectory>();
@@ -99,7 +99,7 @@ namespace TestLibrary
 
         public DormitoryTypeEnum GetDormType(string sex, string cat)
         {
-            if(sex == "M")
+            if (sex == "M")
             {
                 if (cat.ToLower().Contains("adulte"))
                 {
@@ -119,9 +119,9 @@ namespace TestLibrary
 
         protected bool GetParticipants(string[] partLines, out Dictionary<string, EventAttendee> attendee
             , out Dictionary<string, User> attendeeInfo)
-        {            
+        {
             attendee = null;
-            attendeeInfo = null;            
+            attendeeInfo = null;
 
             if (partLines == null || partLines.Length == 0)
             {
@@ -158,7 +158,7 @@ namespace TestLibrary
                 {"jeune trav maj", SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR},
                 {"jeune trav sen", SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR},
                 {"adulte m", SharingGroupCategoryEnum.ADULTE_M},
-                {"adulte s", SharingGroupCategoryEnum.ADULTE_S}                                
+                {"adulte s", SharingGroupCategoryEnum.ADULTE_S}
             };
 
             try
@@ -178,9 +178,9 @@ namespace TestLibrary
                         AmountPaid = int.Parse(aPart[10]),
                         Remarks = aPart[14],
                         Regime = aPart[15],
-                        Precision = aPart[16], 
-                        sectionType = aPart[0].ToLower().StartsWith("abbe")? HallSectionTypeEnum.SPECIAL_GUEST : HallSectionTypeEnum.NONE,
-                        DormType = GetDormType(aPart[2], aPart[8]),                                               
+                        Precision = aPart[16],
+                        sectionType = aPart[0].ToLower().StartsWith("abbe") ? HallSectionTypeEnum.SPECIAL_GUEST : HallSectionTypeEnum.NONE,
+                        DormType = GetDormType(aPart[2], aPart[8]),
                         RefectoryType = RegimeEnum.NONE
                     };
 
@@ -197,7 +197,7 @@ namespace TestLibrary
                         Language = aPart[9],
                         Email = aPart[11],
                         PhoneNumber = aPart[12],
-                        IsGroupResponsible = (aPart[13].ToLower() == "oui") ? true : false                        
+                        IsGroupResponsible = (aPart[13].ToLower() == "oui") ? true : false
                     };
                 }
                 return true;
@@ -211,10 +211,10 @@ namespace TestLibrary
         [TestMethod]
         public void TestMethod1()
         {
-            string[] hallsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Halls.txt");
-            string[] dormsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Dormitories.txt");
-            string[] refsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Refectories.txt");
-            string[] attendeeList = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\IMEVENT2\\InputData\\Reduced\\Participants.txt");
+            string[] hallsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Halls.txt");
+            string[] dormsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Dormitories.txt");
+            string[] refsLines = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Refectories.txt");
+            string[] attendeeList = File.ReadAllLines("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Participants.txt");
 
             Dictionary<int, Hall> halls = GetHalls(hallsLines);
             Dictionary<int, Dormitory> dorms = GetDorms(dormsLines);
@@ -226,7 +226,8 @@ namespace TestLibrary
                 return;
             };
 
-            DataMatchingGenerator badge = new DataMatchingGenerator(EVENTID);
+            Event ev = new Event(null);
+            DataMatchingGenerator badge = new DataMatchingGenerator(ev);
             badge.LoadDataInMatchingGenerator(attendees, attendeesInfo, halls, dorms, refs);
             if (!badge.GenerateAllBadges(false))
             {

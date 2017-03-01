@@ -29,7 +29,7 @@ namespace IMEVENT.Services
         private static readonly string COLUMN_AMOUNTPAID = "L";
         private static readonly string COLUMN_EMAIL = "M";
         private static readonly string COLUMN_PHONE = "N";
-        private static readonly string COLUMN_RESPONSIBLE= "O";
+        private static readonly string COLUMN_RESPONSIBLE = "O";
         private static readonly string COLUMN_REMARKS = "P";
         private static readonly string COLUMN_REGIME = "Q";
         private static readonly string COLUMN_PRECISION = "R";
@@ -66,12 +66,12 @@ namespace IMEVENT.Services
                 return;
             }
 
-            using(ExcelPackage package = new ExcelPackage(existingFile))
+            using (ExcelPackage package = new ExcelPackage(existingFile))
             {
                 ExcelWorksheet userWorksheet = package.Workbook.Worksheets[USER_WORKSHEET_INDEX];
                 loadUsers(userWorksheet, IdEvent);
-                ExcelWorksheet refertoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
-                loadRefertories(refertoryWorksheet, IdEvent);
+                ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
+                loadRefectories(refectoryWorksheet, IdEvent);
                 ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
                 loadHalls(hallWorksheet, IdEvent);
                 ExcelWorksheet dormWorksheet = package.Workbook.Worksheets[DORMS_WORKSHEET_INDEX];
@@ -98,12 +98,12 @@ namespace IMEVENT.Services
 
                         attendee.AmountPaid = (int)worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value;
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         attendee.AmountPaid = 0;
                     }
-                    
-                    attendee.InvitedBy = User.GetIdUserIdByName((string)worksheet.Cells[COLUMN_INVITED_BY + Convert.ToString(currentRow)].Value);
+
+                    attendee.InvitedBy = User.GetUserIdByName((string)worksheet.Cells[COLUMN_INVITED_BY + Convert.ToString(currentRow)].Value);
                     try
                     {
                         attendee.OnDiet = worksheet.Cells[COLUMN_REGIME + Convert.ToString(currentRow)].Value.Equals("OUI") ? true : false;
@@ -132,12 +132,12 @@ namespace IMEVENT.Services
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
 
-               
+
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
                     getHallsFromSpreadSheet(currentRow, worksheet, IdEvent);
-                   
+
                     maxEmpty = 0;
                 }
                 else
@@ -157,7 +157,7 @@ namespace IMEVENT.Services
             h.persist();
 
         }
-        public void loadRefertories(ExcelWorksheet worksheet, int IdEvent)
+        public void loadRefectories(ExcelWorksheet worksheet, int IdEvent)
         {
             int maxEmpty = 0;
             int currentRow = 2;
@@ -167,7 +167,7 @@ namespace IMEVENT.Services
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getRefertoryFromSpreadSheet(currentRow, worksheet, IdEvent);
+                    getRefectoryFromSpreadSheet(currentRow, worksheet, IdEvent);
 
                     maxEmpty = 0;
                 }
@@ -178,10 +178,10 @@ namespace IMEVENT.Services
                 currentRow++;
             }
         }
-        private void getRefertoryFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
+        private void getRefectoryFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
         {
             Refectory h = new Refectory();
-           
+
             h.Name = (string)sheet.Cells[REFETORY_NAME + Convert.ToString(row)].Value;
             h.IdEvent = IdEvent;
             h.persist();
@@ -199,8 +199,8 @@ namespace IMEVENT.Services
             try
             {
                 string strValue = sheet.Cells[FOR_SPECIAL_USE + Convert.ToString(row)].Value.ToString().ToLowerInvariant();
-                t.ForSpecialRegime  = strValue.Equals("oui") ? true : false;
-                
+                t.ForSpecialRegime = strValue.Equals("oui") ? true : false;
+
             }
             catch (Exception)
             {
@@ -240,21 +240,21 @@ namespace IMEVENT.Services
             h.IdEvent = IdEvent;
             h.persist();
         }
-        private User getUserFromSpreadSheet(int row, ExcelWorksheet sheet )
+        private User getUserFromSpreadSheet(int row, ExcelWorksheet sheet)
         {
             User user = new User();
             user.FirstName = (string)sheet.Cells[COLUMN_FIRSTNAME + Convert.ToString(row)].Value;
             user.LastName = (string)sheet.Cells[COLUMN_LASTNAME + Convert.ToString(row)].Value;
             user.Sex = (string)sheet.Cells[COLUMN_SEX + Convert.ToString(row)].Value;
-            user.Level = Convertors.GetMembershipLevel( (string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value);
+            user.Level = Convertors.GetMembershipLevel((string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value);
             if (sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value != null)
             {
                 string val;
                 try
                 {
-                     val = (string)sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value;
+                    val = (string)sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value;
                 }
-                catch(InvalidCastException e)
+                catch (InvalidCastException e)
                 {
                     try
                     {
@@ -264,13 +264,13 @@ namespace IMEVENT.Services
                     {
                         val = "";
                     }
-                    
+
                 }
 
                 user.PhoneNumber = val;
             }
-           
-            bool isResponsible =false;
+
+            bool isResponsible = false;
             if (sheet.Cells[COLUMN_RESPONSIBLE + Convert.ToString(row)].Value == null)
             {
                 isResponsible = false;
@@ -305,6 +305,6 @@ namespace IMEVENT.Services
             user.Id = user.persist();
             return user;
         }
-        
+
     }
 }
