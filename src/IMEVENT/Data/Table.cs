@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IMEVENT.SharedEnums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace IMEVENT.Data
         public int Capacite { get; set; }
         public bool ForSpecialRegime { get; set; }
         public string Name { get; set; }
+        public RegimeEnum RegimeType { get; set; }
 
         public int persist()
         {

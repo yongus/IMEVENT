@@ -19,7 +19,7 @@ namespace IMEVENT.Data
         public string Place { get; set; }
         public EventTypeEnum Type { get; set; }
         public int Fee { get; set; }
-       // public bool MingleAttendees { get; set; }
+        public bool MingleAttendees { get; set; }
         public Event(ApplicationDbContext context)
         {
             _context = context;

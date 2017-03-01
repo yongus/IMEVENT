@@ -80,9 +80,11 @@ namespace IMEVENT.Data
         public string persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            if (String.IsNullOrEmpty(Id))
+             Id = GetIdUserIdByName(LastName + FirstName);
+            if (!String.IsNullOrEmpty(Id))
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+               
             }
             else
             {

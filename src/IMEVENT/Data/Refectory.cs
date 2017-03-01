@@ -13,7 +13,7 @@ namespace IMEVENT.Data
         public int IdRefectory { get; set; }
 
         public int TableCapacity { get; set; }
-        public RegimeEnum RegimeType { get; set; }        
+       
         public int NumberOfTable { get; set; }
 
         public int persist()
