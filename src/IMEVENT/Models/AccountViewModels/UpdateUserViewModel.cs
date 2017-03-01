@@ -12,10 +12,7 @@ namespace IMEVENT.Models.AccountViewModels
 
         [Display(Name = "Date de Naissance")]
         public DateTime DateofBirth { get; set; }
-
-        [Display(Name = "Now de Ville")]
-        public Guid TownId { get; set; }
-
+        
         [Display(Name = "Sex")]
         public String Sex { get; set; }
 

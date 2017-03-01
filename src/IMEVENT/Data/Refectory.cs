@@ -33,8 +33,9 @@ namespace IMEVENT.Data
             return this.IdRefectory;
         }
 
+
         public int GetIdRefectoryByName(string name)
-        {            
+        {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));
             if (refectory != null)
@@ -43,12 +44,6 @@ namespace IMEVENT.Data
             }
 
             return 0;
-        }
-
-        public static Dictionary<int, Refectory> GetAllRefs(int eventID)
-        {
-            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Refectories.Where(x => x.IdEvent == eventID).ToDictionary(x => x.IdRefectory, x => x);
         }
     }
 }

@@ -36,12 +36,10 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
-
             if (dorm != null)
             {
                 return dorm.IdDormitory;
             }
-
             return 0;
         }
 
