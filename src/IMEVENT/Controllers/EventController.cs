@@ -81,8 +81,11 @@ namespace IMEVENT.Controllers
                     Console.WriteLine(ev.InnerException);
                     Thread.Sleep(2000);
                 }
-
             }
+
+            //Test Data Matching
+            Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
+            badge.GenerateAllBadges();
         }
 
     }

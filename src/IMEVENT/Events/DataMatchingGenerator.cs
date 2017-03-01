@@ -435,7 +435,7 @@ namespace IMEVENT.Events
 
         protected RefectoryEntry GetRefectoryEntry(RegimeEnum refType, int? index = null)
         {
-            if (this.ListAvailableDorms.IsNullOrEmpty()
+            if (this.ListAvailableRefectories.IsNullOrEmpty()
                 || !this.ListAvailableRefectories.ContainsKey(refType)
                 || this.ListAvailableRefectories[refType].IsNullOrEmpty())
             {
