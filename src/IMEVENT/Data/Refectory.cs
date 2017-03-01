@@ -33,6 +33,11 @@ namespace IMEVENT.Data
             return this.IdRefectory;
         }
 
+        public static Dictionary<int, Refectory> GetAllRefs(int eventId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Refectories.Where(x => x.IdEvent == eventId).ToDictionary(x => x.IdRefectory, x => x);
+        }
 
         public int GetIdRefectoryByName(string name)
         {

@@ -51,7 +51,9 @@ namespace IMEVENT.Controllers
                         e.StartDate = model.StartDate;
                         e.Theme = model.Theme;
                         e.Place = model.Venue;
-
+                        //e.MingleAttendees = false;
+                        e.Fee = model.Fee;
+                        e.Type = EventTypeEnum.GRANDE_RETRAITE;
                         e.persist();
                         Thread t = new Thread(()=>ProcessEvent(e, dataExtractor.Source));
                         t.Start();
@@ -79,8 +81,11 @@ namespace IMEVENT.Controllers
                     Console.WriteLine(ev.InnerException);
                     Thread.Sleep(2000);
                 }
-
             }
+
+            //Test Data Matching
+            Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
+            badge.GenerateAllBadges();
         }
 
     }
