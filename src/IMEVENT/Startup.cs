@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using IMEVENT.Data;
 using IMEVENT.Models;
 using IMEVENT.Services;
+using NLog.Extensions.Logging;
 
 namespace IMEVENT
 {
@@ -67,6 +68,8 @@ namespace IMEVENT
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddNLog();
+            env.ConfigureNLog("nlog.config");
 
             app.UseApplicationInsightsRequestTelemetry();
 
