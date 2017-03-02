@@ -12,8 +12,7 @@ namespace IMEVENT.Data
         [Key]
         public int IdTable { get; set; }
         public int IdRefertoire { get; set; }
-        public int Capacite { get; set; }
-        public bool ForSpecialRegime { get; set; }
+        public int Capacity { get; set; }
         public string Name { get; set; }
         public RegimeEnum RegimeType { get; set; }
 

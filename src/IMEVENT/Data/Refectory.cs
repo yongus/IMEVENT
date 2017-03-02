@@ -14,7 +14,6 @@ namespace IMEVENT.Data
 
         public int TableCapacity { get; set; }
        
-        public int NumberOfTable { get; set; }
 
         public int persist()
         {

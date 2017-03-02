@@ -222,11 +222,11 @@ namespace IMEVENT.Services
             t.IdRefertoire = h.IdRefectory;
             try
             {
-                t.Capacite = (int)sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value;
+                t.Capacity = Convert.ToInt32(sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value);
             }
             catch (Exception)
             {
-                t.Capacite = 0;
+                t.Capacity = 0;
             }
             try
             {
@@ -343,7 +343,7 @@ namespace IMEVENT.Services
             group.Id = group.persist();
             group.IdSousZone = sousZone.IdSousZone;
             group.IdZone = zone.Id;
-            user.Id = user.persist();
+            user.persist();
             return user;
         }
 
