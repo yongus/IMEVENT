@@ -43,6 +43,8 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("Fee");
 
+                    b.Property<bool>("MingleAttendees");
+
                     b.Property<string>("Place");
 
                     b.Property<DateTime>("StartDate");
@@ -81,7 +83,6 @@ namespace IMEVENT.Migrations
 
                     b.Property<string>("Precision");
 
-                    b.Property<int>("RefectoryType");
 
                     b.Property<string>("Regime");
 
@@ -89,9 +90,13 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("SeatNbr");
 
+
+                    b.Property<int>("SectionType");
+
                     b.Property<int>("TableNbr");
 
                     b.Property<int>("TableSeatNbr");
+
 
                     b.Property<string>("UserId");
 
@@ -151,7 +156,6 @@ namespace IMEVENT.Migrations
 
                     b.Property<int>("NumberOfTable");
 
-                    b.Property<int>("RegimeType");
 
                     b.Property<int>("TableCapacity");
 
@@ -203,6 +207,10 @@ namespace IMEVENT.Migrations
 
                     b.Property<string>("Name");
 
+
+                    b.Property<int>("RegimeType");
+
+
                     b.HasKey("IdTable");
 
                     b.ToTable("Tables");
@@ -233,8 +241,6 @@ namespace IMEVENT.Migrations
                     b.Property<int>("IdSousZone");
 
                     b.Property<int>("IdZone");
-
-                    b.Property<string>("InvitedBy");
 
                     b.Property<bool>("IsGroupResponsible");
 
@@ -269,8 +275,6 @@ namespace IMEVENT.Migrations
                     b.Property<int>("Status");
 
                     b.Property<string>("Town");
-
-                    b.Property<string>("TownId");
 
                     b.Property<bool>("TwoFactorEnabled");
 

@@ -20,9 +20,9 @@ namespace IMEVENT.Data
        
         public string Regime { get; set; }
         public string Precision { get; set; }
-        public HallSectionTypeEnum sectionType { get; set; }
+        public HallSectionTypeEnum SectionType { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
-        public RegimeEnum RefectoryType { get; set; }
+        public RegimeEnum TableType { get; set; }
         public int IdHall { get; set; }
         public int SeatNbr { get; set; }
         public int IdDormitory { get; set; }
