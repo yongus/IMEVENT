@@ -45,7 +45,9 @@
       "type": "build"
     },
     "Shaman.EPPlus": "1.0.1.1",
-    "System.IO.FileSystem": "4.3.0"
+    "System.IO.FileSystem": "4.3.0",
+    "NLog.Extensions.Logging": "1.0.0-rtm-alpha5"
+
   },
 
   "tools": {
@@ -88,7 +90,8 @@
       "Views",
       "Areas/**/Views",
       "appsettings.json",
-      "web.config"
+      "web.config",
+      "nlog.config"
     ]
   },
 

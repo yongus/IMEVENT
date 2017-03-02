@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog;
 
 namespace IMEVENT.Services
 {
     public class ExcelDataExtractor : IDataExtractor
     {
+        private static Logger log = LogManager.GetCurrentClassLogger();
 
         public ApplicationDbContext DBcontext { get; set; }
         public string Source { get; set; }
@@ -98,6 +100,7 @@ namespace IMEVENT.Services
                     }
                     catch
                     {
+                        log.Info("Regime import for table failed, setting regime to none");
                         attendee.TableType = RegimeEnum.NONE;
                     }
                     try
