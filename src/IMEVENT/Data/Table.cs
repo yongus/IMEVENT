@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using IMEVENT.SharedEnums;
 
 namespace IMEVENT.Data
 {
-    public class Table:IObjectPersister
+    public class Table:BaseSection,IObjectPersister
     {
         [Key]
-        public int IdTable { get; set; }
-        public int IdRefertoire { get; set; }
-        public int Capacite { get; set; }
-        public bool ForSpecialRegime { get; set; }
-        public string Name { get; set; }
+        public int TableId { get; set; }
+        public int RefectoryId { get; set; }        
+        public RegimeEnum RegimeType { get; set; }        
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdTable = GetIdTableByName(Name);
-            if (IdTable != 0)
+            TableId = GetTableIdByName(Name);
+            if (TableId != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -29,20 +28,26 @@ namespace IMEVENT.Data
             }
 
             context.SaveChanges();
-            return this.IdTable;
+            return this.TableId;
         }
 
 
-        public int GetIdTableByName(string name)
+        public int GetTableIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
+            Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
             if (table != null)
             {
-                return table.IdTable;
+                return table.TableId;
             }
 
             return 0;
         }
+
+        public static Dictionary<int, Table> GetAllTables(int eventId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Tables.Where(x => x.IdEvent == eventId).ToDictionary(x => x.TableId, x => x);
+        }        
     }
 }

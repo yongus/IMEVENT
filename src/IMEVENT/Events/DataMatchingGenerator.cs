@@ -23,12 +23,14 @@ namespace IMEVENT.Events
 
         //Test Constructor
         public void LoadDataInMatchingGenerator(Dictionary<string, EventAttendee> participants, Dictionary<string, User> participantsInfo, 
-            Dictionary<int, Hall> seats, Dictionary<int, Dormitory> beds, Dictionary<int, Refectory> tables)
+            Dictionary<int, Hall> seats, Dictionary<int, Dormitory> beds, Dictionary<int, Refectory> refs,
+            Dictionary<int, Table> tables)
         {
             attendees = participants;
             attendeesInfo = participantsInfo;
             seatsInHall = seats;
             bedsInDorms = beds;
+            refectories = refs;
             tablesInRefs = tables;
             isAllDataLoaded = true;
         }                              
@@ -75,8 +77,18 @@ namespace IMEVENT.Events
             }
         }
 
-        private Dictionary<int, Refectory> tablesInRefs;
-        public Dictionary<int, Refectory> TablesInRefs
+        private Dictionary<int, Refectory> refectories;
+        public Dictionary<int, Refectory> Refectories
+        {
+            get
+            {
+                EnsureLoaded();
+                return refectories;
+            }
+        }
+
+        private Dictionary<int, Table> tablesInRefs;
+        public Dictionary<int, Table> TablesInRefs
         {
             get
             {
@@ -87,7 +99,7 @@ namespace IMEVENT.Events
 
         public Dictionary<HallSectionTypeEnum, Stack<HallEntry>> ListAvailableSections;
         public Dictionary<DormitoryTypeEnum, Stack<DormEntry>> ListAvailableDorms;
-        public Dictionary<RegimeEnum, Stack<RefectoryEntry>> ListAvailableRefectories;
+        public Dictionary<RegimeEnum, Stack<TableEntry>> ListAvailableTables;
 
         private void EnsureLoaded()
         {
@@ -108,7 +120,7 @@ namespace IMEVENT.Events
             //get attendees information
 
             this.attendeesInfo = User.GetRegisteredUsers(this.attendees.Keys.ToList());
-            if (this.attendees == null)
+            if (this.attendeesInfo == null)
             {
                 throw new System.NullReferenceException(string.Format("Infos not available for registered users for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
@@ -117,7 +129,7 @@ namespace IMEVENT.Events
 
             //Get list of seats
             this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.IdEvent);
-            if (this.attendees == null)
+            if (this.seatsInHall == null)
             {
                 throw new System.NullReferenceException(string.Format("Seats not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
@@ -126,16 +138,25 @@ namespace IMEVENT.Events
 
             //Get list of beds
             this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.IdEvent);
-            if (this.attendees == null)
+            if (this.bedsInDorms == null)
             {
                 throw new System.NullReferenceException(string.Format("Beds not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
 
-            //Get list of tables
-            this.tablesInRefs = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
-            if (this.attendees == null)
+            //Get list of refectories
+            this.refectories = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
+            if (this.refectories == null)
+            {
+                throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString()));
+            }
+
+            //Get list of Table in refectories
+            this.tablesInRefs = Table.GetAllTables(this.CurrentEvent.IdEvent);
+            if (this.tablesInRefs == null)
             {
                 throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
@@ -433,39 +454,36 @@ namespace IMEVENT.Events
 
         #region Map Attendees to Tables in Refectories        
 
-        protected RefectoryEntry GetRefectoryEntry(RegimeEnum refType, int? index = null)
+        protected TableEntry GetTableEntry(RegimeEnum refType, int? index = null)
         {
-            if (this.ListAvailableRefectories.IsNullOrEmpty()
-                || !this.ListAvailableRefectories.ContainsKey(refType)
-                || this.ListAvailableRefectories[refType].IsNullOrEmpty())
+            if (this.ListAvailableTables.IsNullOrEmpty()
+                || !this.ListAvailableTables.ContainsKey(refType)
+                || this.ListAvailableTables[refType].IsNullOrEmpty())
             {
                 return null;
             }
 
-            return index == null ? this.ListAvailableRefectories[refType].Pop()
-                                 : this.ListAvailableRefectories[refType].ElementAt((int)index);
+            return index == null ? this.ListAvailableTables[refType].Pop()
+                                 : this.ListAvailableTables[refType].ElementAt((int)index);
         }
         
-        public bool MatchAttendeeToTablePerCategory(Dictionary<int, Refectory> inputTableList, out Stack<RefectoryEntry> outputTableList)
+        public bool MatchAttendeeToTablePerCategory(Dictionary<int, Table> inputTableList, out Stack<TableEntry> outputTableList)
         {
             Dictionary<int, Section> listofTableSeats = new Dictionary<int, Section>();
             try
             {
                 int index = 0;
-                foreach (KeyValuePair<int, Refectory> refect in inputTableList)
-                {
-                    for (int j = 1; j <= refect.Value.Capacity; j++)
-                    {
-                        for(int k = 1; k <= refect.Value.TableCapacity; k++)
-                        {                            
-                            listofTableSeats[++index] = new Section
-                            {
-                                Id = refect.Value.IdRefectory,
-                                TableNbr = j,
-                                PlaceNbr = k
-                            };
-                        }                        
-                    }
+                foreach (KeyValuePair<int, Table> table in inputTableList)
+                {                    
+                    for(int k = 1; k <= table.Value.Capacity; k++)
+                    {                            
+                        listofTableSeats[++index] = new Section
+                        {
+                            Id = table.Value.TableId,
+                            IdRef = table.Value.RefectoryId,                            
+                            PlaceNbr = k
+                        };
+                    }                                            
                 }
 
                 //Shuffle Ids
@@ -473,13 +491,13 @@ namespace IMEVENT.Events
                 tablesIds.Shuffle();
 
                 //do the assignement
-                outputTableList = new Stack<RefectoryEntry>();
+                outputTableList = new Stack<TableEntry>();
                 foreach (int refID in tablesIds)
                 {
-                    outputTableList.Push(new RefectoryEntry
+                    outputTableList.Push(new TableEntry
                     {                        
-                        IdRefectory = listofTableSeats[refID].Id,
-                        TableNbr = listofTableSeats[refID].TableNbr,
+                        RefectoryId = listofTableSeats[refID].IdRef,
+                        TableId = listofTableSeats[refID].Id,
                         SeatNbr = listofTableSeats[refID].PlaceNbr
                     });
                 }
@@ -496,45 +514,45 @@ namespace IMEVENT.Events
         public bool MatchAttendeesToTables(bool mingle = false)
         {
             //if mingle true, no need to break per categorie
-            this.ListAvailableRefectories = new Dictionary<RegimeEnum, Stack<RefectoryEntry>>();
+            this.ListAvailableTables = new Dictionary<RegimeEnum, Stack<TableEntry>>();
             if (mingle)
             { 
-                Stack<RefectoryEntry> tempStack;
+                Stack<TableEntry> tempStack;
                 if (!MatchAttendeeToTablePerCategory(this.TablesInRefs, out tempStack))
                 {
                     return false;
                 }
 
-                this.ListAvailableRefectories[RegimeEnum.NONE] = tempStack;
+                this.ListAvailableTables[RegimeEnum.NONE] = tempStack;
                 return true;
             }
 
             //Break the list per category if mingle false
-            Dictionary<RegimeEnum, Dictionary<int, Refectory>> tempDict = new Dictionary<RegimeEnum, Dictionary<int, Refectory>>();
-            foreach (KeyValuePair<int, Refectory> table in this.TablesInRefs)
+            Dictionary<RegimeEnum, Dictionary<int, Table>> tempDict = new Dictionary<RegimeEnum, Dictionary<int, Table>>();
+            foreach (KeyValuePair<int, Table> table in this.TablesInRefs)
             {
                 if (!tempDict.ContainsKey(table.Value.RegimeType))
                 {
-                    tempDict[table.Value.RegimeType] = new Dictionary<int, Refectory>
+                    tempDict[table.Value.RegimeType] = new Dictionary<int, Table>
                     {
-                        { table.Value.IdRefectory, table.Value }
+                        { table.Value.TableId, table.Value }
                     };
                 }
                 else
                 {
-                    tempDict[table.Value.RegimeType][table.Value.IdRefectory] = table.Value;
+                    tempDict[table.Value.RegimeType][table.Value.RefectoryId] = table.Value;
                 }
             }
 
             // Match per category
-            foreach (KeyValuePair<RegimeEnum, Dictionary<int, Refectory>> cat in tempDict)
+            foreach (KeyValuePair<RegimeEnum, Dictionary<int, Table>> cat in tempDict)
             {
-                Stack<RefectoryEntry> tempStack;
+                Stack<TableEntry> tempStack;
                 if (!MatchAttendeeToTablePerCategory(cat.Value, out tempStack))
                 {
                     return false;
                 }
-                this.ListAvailableRefectories[cat.Key] = tempStack;
+                this.ListAvailableTables[cat.Key] = tempStack;
             }
 
             return true;
@@ -588,7 +606,7 @@ namespace IMEVENT.Events
                     return false;
                 }
 
-                RefectoryEntry aTable = GetRefectoryEntry(mingleAttendees ? RegimeEnum.NONE : attendee.Value.RefectoryType);
+                TableEntry aTable = GetTableEntry(mingleAttendees ? RegimeEnum.NONE : attendee.Value.RefectoryType);
                 if (aTable == null)
                 {
                     return false;
@@ -597,8 +615,8 @@ namespace IMEVENT.Events
                 this.attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
                 this.attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
                 this.attendees[attendee.Key].BedNbr = aBed.BedNbr;
-                this.attendees[attendee.Key].IdRefectory = aTable.IdRefectory;
-                this.attendees[attendee.Key].TableNbr = aTable.TableNbr;
+                this.attendees[attendee.Key].IdRefectory = aTable.RefectoryId;
+                this.attendees[attendee.Key].TableId = aTable.TableId;
                 this.attendees[attendee.Key].TableSeatNbr = aTable.SeatNbr;
             }
             
@@ -629,7 +647,7 @@ namespace IMEVENT.Events
             {
                 string aMatching = String.Format("{0},{1}"
                     , attendeesInfo[entry.Key].ToString()
-                    , entry.Value.ToString(this.SeatsInHall, this.BedsInDorms, this.TablesInRefs)
+                    , entry.Value.ToString(this.SeatsInHall, this.BedsInDorms, this.Refectories, this.TablesInRefs)
                    );
 
                 temp.Add(aMatching);

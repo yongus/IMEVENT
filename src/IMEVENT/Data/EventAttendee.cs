@@ -28,7 +28,7 @@ namespace IMEVENT.Data
         public int IdDormitory { get; set; }
         public int BedNbr { get; set; }
         public int IdRefectory { get; set; }
-        public int TableNbr { get; set; }
+        public int TableId { get; set; }
         public int TableSeatNbr { get; set; }
 
         public override string ToString()
@@ -44,14 +44,15 @@ namespace IMEVENT.Data
                 , IdDormitory
                 , BedNbr
                 , IdRefectory
-                , TableNbr
+                , TableId
                 , TableSeatNbr
                 );
 
             return ret;
         }
 
-        public string ToString(Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms, Dictionary<int, Refectory> Refectories)
+        public string ToString(Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms
+            , Dictionary<int, Refectory> Refectories, Dictionary<int, Table> Tables)
         {
             string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                 , InvitedBy
@@ -64,7 +65,7 @@ namespace IMEVENT.Data
                 , Dorms[IdDormitory].Name
                 , BedNbr
                 , Refectories[IdRefectory].Name
-                , TableNbr
+                , Tables[TableId].Name
                 , TableSeatNbr
                 );
 

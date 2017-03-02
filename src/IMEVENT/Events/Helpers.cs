@@ -9,6 +9,7 @@ namespace IMEVENT.Events
     {
         public int Id { get; set; }
         public int TableNbr { get; set; }
+        public int IdRef { get; set; }
         public int PlaceNbr { get; set; }
     }
 

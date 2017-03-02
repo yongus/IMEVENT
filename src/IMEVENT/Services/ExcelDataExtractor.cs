@@ -187,24 +187,24 @@ namespace IMEVENT.Services
             h.persist();
             Table t = new Table();
             t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
-            t.IdRefertoire = h.IdRefectory;
+            t.RefectoryId = h.IdRefectory;
             try
             {
-                t.Capacite = (int)sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value;
+                t.Capacity = (int)sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value;
             }
             catch (Exception)
             {
-                t.Capacite = 0;
+                t.Capacity = 0;
             }
             try
             {
                 string strValue = sheet.Cells[FOR_SPECIAL_USE + Convert.ToString(row)].Value.ToString().ToLowerInvariant();
-                t.ForSpecialRegime = strValue.Equals("oui") ? true : false;
+                t.RegimeType = strValue.Equals("oui") ? RegimeEnum.YES : RegimeEnum.NONE;
 
             }
             catch (Exception)
             {
-                t.ForSpecialRegime = false;
+                t.RegimeType = RegimeEnum.NONE;
             }
             t.persist();
 
