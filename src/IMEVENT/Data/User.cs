@@ -9,9 +9,7 @@ namespace IMEVENT.Data
 {
     public class User:IdentityUser
     {
-        public string UserId { get; set; }
         public DateTime DateofBirth { get; set; }
-        public string TownId { get; set; }
         public string Sex { get; set; }
         public int Status { get; set; }                
         public string Language { get; set; }
@@ -79,19 +77,19 @@ namespace IMEVENT.Data
 
         public string persist()
         {
+            //This persist method behaves differently from the implementation in different classes
+            //it is due to the fact that apparently Users are generated directly with their ID at instantiation and not at
+            //the time they are saved in the database. 
+            
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-             Id = GetIdUserIdByName(LastName + FirstName);
-            if (!String.IsNullOrEmpty(Id))
-            {
-                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-               
-            }
-            else
+             String exists = GetUserIdByName(LastName + FirstName);
+            if (String.IsNullOrEmpty(exists))
             {
                 context.Users.Add(this);
+                context.SaveChanges();
             }
            
-            context.SaveChanges();
+           
             return this.Id;
         }
     }
