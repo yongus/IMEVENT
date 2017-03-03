@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace IMEVENT.Events
 {
     public class HallEntry
-    {        
+    {
         public int IdHall { get; set; }
         public int SeatNbr { get; set; }
     }

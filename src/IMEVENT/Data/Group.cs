@@ -11,8 +11,8 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get; set; }
         public String Label { get; set; }
-        public int IdSousZone { get; set; }
-        public int IdZone { get; set; }
+        public int SousZoneId { get; set; }
+        public int ZoneId { get; set; }
         public int IdResponsable { get; set; }
         public int persist()
         {

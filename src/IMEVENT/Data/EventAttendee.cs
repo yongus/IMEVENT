@@ -10,8 +10,8 @@ namespace IMEVENT.Data
     public class EventAttendee:IObjectPersister
     {
         [Key]
-        public int IdEventAttendee { get; set; }
-        public int IdEvent { get; set; }
+        public int Id { get; set; }
+        public int EventId { get; set; }
         public Int32 AmountPaid { get; set; }
         public string Remarks { get; set; }
         public bool OnDiet { get; set; }
@@ -23,9 +23,9 @@ namespace IMEVENT.Data
         public HallSectionTypeEnum SectionType { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
         public RegimeEnum TableType { get; set; }
-        public int IdHall { get; set; }
+        public int HallId { get; set; }
         public int SeatNbr { get; set; }
-        public int IdDormitory { get; set; }
+        public int DormitoryId { get; set; }
         public int BedNbr { get; set; }
         public int IdRefectory { get; set; }
         public int TableNbr { get; set; }
@@ -39,9 +39,9 @@ namespace IMEVENT.Data
                 , Remarks
                 , Regime
                 , Precision
-                , IdHall
+                , Id
                 , SeatNbr
-                , IdDormitory
+                , Id
                 , BedNbr
                 , IdRefectory
                 , TableNbr
@@ -59,9 +59,9 @@ namespace IMEVENT.Data
                 , Remarks
                 , Regime
                 , Precision
-                , Halls[IdHall].Name
+                , Halls[Id].Name
                 , SeatNbr
-                , Dorms[IdDormitory].Name
+                , Dorms[Id].Name
                 , BedNbr
                 , Refectories[IdRefectory].Name
                 , TableNbr
@@ -74,13 +74,13 @@ namespace IMEVENT.Data
         public static Dictionary<string, EventAttendee> GetAllAttendee(int eventID)
         {            
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.EventAttendees.Where(x => x.IdEvent == eventID).ToDictionary(x => x.UserId, x => x); 
+            return context.EventAttendees.Where(x => x.Id == eventID).ToDictionary(x => x.UserId, x => x); 
         }
 
         public EventAttendee GetEventAttendeeById(int eventId, string userId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            EventAttendee attendee = context.EventAttendees.Where(x => x.IdEvent == eventId).FirstOrDefault(e => e.UserId == userId);
+            EventAttendee attendee = context.EventAttendees.Where(x => x.Id == eventId).FirstOrDefault(e => e.UserId == userId);
             if (attendee != null)
             {
                 return attendee;
@@ -94,7 +94,7 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
            
-            if (IdEventAttendee != 0)
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -105,7 +105,7 @@ namespace IMEVENT.Data
 
             context.SaveChanges();
 
-            return this.IdEventAttendee;
+            return this.Id;
         }
     }
 }

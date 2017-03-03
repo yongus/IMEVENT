@@ -10,8 +10,8 @@ namespace IMEVENT.Data
     public class Table:IObjectPersister
     {
         [Key]
-        public int IdTable { get; set; }
-        public int IdRefertoire { get; set; }
+        public int Id { get; set; }
+        public int RefertoireId { get; set; }
         public int Capacity { get; set; }
         public string Name { get; set; }
         public RegimeEnum RegimeType { get; set; }
@@ -19,8 +19,8 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdTable = GetIdTableByName(Name);
-            if (IdTable != 0)
+            Id = GetIdByName(Name);
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -30,17 +30,17 @@ namespace IMEVENT.Data
             }
 
             context.SaveChanges();
-            return this.IdTable;
+            return this.Id;
         }
 
 
-        public int GetIdTableByName(string name)
+        public int GetIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
             if (table != null)
             {
-                return table.IdTable;
+                return table.Id;
             }
 
             return 0;

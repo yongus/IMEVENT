@@ -8,16 +8,16 @@ namespace IMEVENT.Data
 {
     public class SousZone:IObjectPersister
     {
-        public int IdZone { get; set; }
+        public int ZoneId { get; set; }
         [Key]
-        public int IdSousZone { get; set; }
+        public int Id { get; set; }
         public int IdParent { get; set; }
         public String Label { get; set; }
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdSousZone = GetIdSousZoneIdByLabel(Label);
-            if (IdSousZone != 0)
+            Id = GetSousZoneIdByLabel(Label);
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -27,15 +27,15 @@ namespace IMEVENT.Data
             }
            
             context.SaveChanges();
-            return this.IdSousZone;
+            return this.Id;
         }
-        public  int GetIdSousZoneIdByLabel( string label)
+        public  int GetSousZoneIdByLabel( string label)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var zone = context.SousZones.FirstOrDefault(d => d.Label.Equals(label));
             if (zone != null)
             {
-                return zone.IdSousZone;
+                return zone.Id;
             }
             else return 0;
         }

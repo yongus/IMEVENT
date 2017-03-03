@@ -38,7 +38,7 @@ namespace IMEVENT.Data
       public static  ApplicationDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>();
-            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=IMEVENTDB1;Trusted_Connection=True;MultipleActiveResultSets=true");
+            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=IMEVENTDB;Trusted_Connection=True;MultipleActiveResultSets=true");
             return new ApplicationDbContext(options.Options);
         }
 
