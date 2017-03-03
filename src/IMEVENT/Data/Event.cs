@@ -12,7 +12,7 @@ namespace IMEVENT.Data
         private  ApplicationDbContext _context;
         private IDataExtractor extractor;
         [Key]
-        public int IdEvent { get; set; }
+        public int Id { get; set; }
         public string Theme { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -28,7 +28,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             _context = ApplicationDbContext.GetDbContext();
-            if (IdEvent != 0)
+            if (Id != 0)
             {
                 _context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -38,7 +38,7 @@ namespace IMEVENT.Data
             }
             
             _context.SaveChanges();
-            return this.IdEvent;
+            return this.Id;
         }
 
         public Event(string name, IDataExtractor extractor)
@@ -50,7 +50,7 @@ namespace IMEVENT.Data
 
         public void  ExtractEventDetails(String source )
         {
-            extractor.ExtractDataFromSource(source,IdEvent);
+            extractor.ExtractDataFromSource(source,Id);
         }        
     }
 }

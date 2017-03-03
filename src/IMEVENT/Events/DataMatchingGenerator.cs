@@ -97,7 +97,7 @@ namespace IMEVENT.Events
             }
 
             //Get list of attendees
-            this.attendees = EventAttendee.GetAllAttendee(this.CurrentEvent.IdEvent);
+            this.attendees = EventAttendee.GetAllAttendee(this.CurrentEvent.Id);
             if (this.attendees == null)
             {
                 throw new System.NullReferenceException(string.Format("No Attendee registered yet for the event at {0}, starting on {1}"
@@ -116,7 +116,7 @@ namespace IMEVENT.Events
             }
 
             //Get list of seats
-            this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.IdEvent);
+            this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.Id);
             if (this.attendees == null)
             {
                 throw new System.NullReferenceException(string.Format("Seats not availaible for the event at {0}, starting on {1}"
@@ -125,7 +125,7 @@ namespace IMEVENT.Events
             }
 
             //Get list of beds
-            this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.IdEvent);
+            this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.Id);
             if (this.attendees == null)
             {
                 throw new System.NullReferenceException(string.Format("Beds not availaible for the event at {0}, starting on {1}"
@@ -134,7 +134,7 @@ namespace IMEVENT.Events
             }
 
             //Get list of tables
-            this.tablesInRefs = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
+            this.tablesInRefs = Refectory.GetAllRefs(this.CurrentEvent.Id);
             if (this.attendees == null)
             {
                 throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
@@ -239,7 +239,7 @@ namespace IMEVENT.Events
                         index++;
                         listofSeats[index] = new Section
                         {
-                            Id = seat.Value.IdHall,
+                            Id = seat.Value.Id,
                             PlaceNbr = j
                         };
                     }
@@ -298,12 +298,12 @@ namespace IMEVENT.Events
                 {
                     tempDict[section.Value.HallType] = new Dictionary<int, Hall>
                     {
-                        { section.Value.IdHall, section.Value }
+                        { section.Value.Id, section.Value }
                     };
                 }
                 else
                 {
-                    tempDict[section.Value.HallType][section.Value.IdHall] = section.Value;
+                    tempDict[section.Value.HallType][section.Value.Id] = section.Value;
                 }                
             }
 
@@ -352,7 +352,7 @@ namespace IMEVENT.Events
                         index++;
                         listofBeds[index] = new Section
                         {
-                            Id = dorm.Value.IdDormitory,
+                            Id = dorm.Value.Id,
                             PlaceNbr = j
                         };
                     }
@@ -406,12 +406,12 @@ namespace IMEVENT.Events
                 {
                     tempDict[bed.Value.DormType] = new Dictionary<int, Dormitory>
                     {
-                        { bed.Value.IdDormitory, bed.Value }
+                        { bed.Value.Id, bed.Value }
                     };
                 }
                 else
                 {
-                    tempDict[bed.Value.DormType][bed.Value.IdDormitory] = bed.Value;
+                    tempDict[bed.Value.DormType][bed.Value.Id] = bed.Value;
                 }
             }
 
@@ -460,7 +460,7 @@ namespace IMEVENT.Events
                         {                            
                             listofTableSeats[++index] = new Section
                             {
-                                Id = refect.Value.IdRefectory,
+                                Id = refect.Value.Id,
                                 TableNbr = j,
                                 PlaceNbr = k
                             };
@@ -594,9 +594,9 @@ namespace IMEVENT.Events
                 {
                     return false;
                 }
-                this.attendees[attendee.Key].IdHall = aSeat.IdHall;
+                this.attendees[attendee.Key].Id = aSeat.IdHall;
                 this.attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
-                this.attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
+                this.attendees[attendee.Key].Id = aBed.IdDormitory;
                 this.attendees[attendee.Key].BedNbr = aBed.BedNbr;
                 this.attendees[attendee.Key].IdRefectory = aTable.IdRefectory;
                 this.attendees[attendee.Key].TableNbr = aTable.TableNbr;
