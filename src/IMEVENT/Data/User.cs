@@ -16,9 +16,9 @@ namespace IMEVENT.Data
         public SharingGroupCategoryEnum Category { get; set; }
       
         public String InvitedBy { get; set; }
-        public int IdGroup { get; set; }
-        public int IdZone { get; set; }
-        public int IdSousZone { get; set; }
+        public int GroupId { get; set; }
+        public int ZoneId { get; set; }
+        public int SousZoneId { get; set; }
         public string Town { get; set; }
         public bool IsGroupResponsible { get; set; }
         public string FirstName { get; set; }
