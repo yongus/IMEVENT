@@ -10,12 +10,14 @@ using NLog;
 
 namespace IMEVENT.Services
 {
-    public class ExcelDataExtractor : IDataExtractor
+    public partial class ExcelDataExtractor : IDataExtractor
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
 
+
         public ApplicationDbContext DBcontext { get; set; }
         public string Source { get; set; }
+        public string Destination { get; set; }
         // for now we are going to stop the processing of the file if we see 5 consecutive empty lines.
         private static int MAX_EMPTY_CELLS = 5;
         private static readonly string COLUMN_LASTNAME = "B";
@@ -59,6 +61,8 @@ namespace IMEVENT.Services
         private static readonly string TYPE_DORM = "C";
         private static readonly string TYPE_HALL = "C";
 
+       
+
 
 
         public void ExtractDataFromSource(string source, int EventId)
@@ -74,12 +78,12 @@ namespace IMEVENT.Services
             {
                 ExcelWorksheet userWorksheet = package.Workbook.Worksheets[USER_WORKSHEET_INDEX];
                 loadUsers(userWorksheet, EventId);
-                ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
-                loadRefectories(refectoryWorksheet, EventId);
-                ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
-                loadHalls(hallWorksheet, EventId);
                 ExcelWorksheet dormWorksheet = package.Workbook.Worksheets[DORMS_WORKSHEET_INDEX];
                 loadDorms(dormWorksheet, EventId);
+                ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
+                loadHalls(hallWorksheet, EventId);
+                ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
+                loadRefectories(refectoryWorksheet, EventId);
             }
         }
 
@@ -132,6 +136,8 @@ namespace IMEVENT.Services
                         attendee.AmountPaid = 0;
                     }
 
+
+
                     attendee.InvitedBy = User.GetUserIdByName((string)worksheet.Cells[COLUMN_INVITED_BY + Convert.ToString(currentRow)].Value);
                     try
                     {
@@ -141,6 +147,14 @@ namespace IMEVENT.Services
                     catch (Exception)
                     {
                         attendee.OnDiet = false;
+                    }
+                    try
+                    {
+                        attendee.SharingCategory = Convertors.GetSharingGroupCategory((string)worksheet.Cells[COLUMN_SHARING_CATEGORY + Convert.ToString(currentRow)].Value);
+                    }
+                    catch
+                    {
+                        attendee.SharingCategory = SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
                     }
 
                     attendee.persist();
@@ -236,7 +250,7 @@ namespace IMEVENT.Services
             try
             {
 
-                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE_DORM + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
+                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE_TABLE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
                 
 
             }
@@ -260,7 +274,7 @@ namespace IMEVENT.Services
                 if (!String.IsNullOrEmpty(name))
                 {
                     getDormFromSpreadSheet(currentRow, worksheet, EventId);
-
+                   
                     maxEmpty = 0;
                 }
                 else
@@ -350,6 +364,6 @@ namespace IMEVENT.Services
             user.persist();
             return user;
         }
-
+        
     }
 }
