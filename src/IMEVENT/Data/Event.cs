@@ -24,7 +24,10 @@ namespace IMEVENT.Data
         {
             _context = context;
         }
-
+        public void setContext(IDataExtractor extractor)
+        {
+            this.extractor = extractor;
+        }
         public int persist()
         {
             _context = ApplicationDbContext.GetDbContext();
@@ -51,6 +54,6 @@ namespace IMEVENT.Data
         public void  ExtractEventDetails(String source )
         {
             extractor.ExtractDataFromSource(source,Id);
-        }        
+        }
     }
 }

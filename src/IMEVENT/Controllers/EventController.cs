@@ -40,7 +40,7 @@ namespace IMEVENT.Controllers
                     String filePath = Path.Combine(uploads, paths[paths.Length - 1]);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                         await file.CopyToAsync(fileStream);
+                        await file.CopyToAsync(fileStream);
                         await fileStream.FlushAsync();
                         ExcelDataExtractor dataExtractor = new ExcelDataExtractor();
                         dataExtractor.Source = filePath;

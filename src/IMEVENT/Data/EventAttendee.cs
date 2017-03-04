@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.SharedEnums;
+using IMEVENT.Services;
 
 namespace IMEVENT.Data
 {
@@ -12,20 +13,25 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get; set; }
         public int EventId { get; set; }
+       
         public Int32 AmountPaid { get; set; }
         public string Remarks { get; set; }
         public bool OnDiet { get; set; }
         public string UserId { get; set; }
-        public string InvitedBy { get; set; }        
+     
+        public string InvitedBy { get; set; }     
        
         public string Regime { get; set; }
         public string Precision { get; set; }
         public HallSectionTypeEnum SectionType { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
         public RegimeEnum TableType { get; set; }
-        public int HallId { get; set; }
+        public SharingGroupCategoryEnum SharingCategory { get; set; }
+        public int IdHall { get; set; }
+       
         public int SeatNbr { get; set; }
-        public int DormitoryId { get; set; }
+        public int IdDormitory { get; set; }
+  
         public int BedNbr { get; set; }
         public int IdRefectory { get; set; }
         public int TableNbr { get; set; }
@@ -89,6 +95,12 @@ namespace IMEVENT.Data
             return null;
         }
 
+        public static List<EventAttendee>  GetAllByEvent(int eventId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.EventAttendees.Where(x => x.EventId == eventId).ToList();
+        }
+
 
         public int persist()
         {
@@ -107,5 +119,7 @@ namespace IMEVENT.Data
 
             return this.Id;
         }
+
+       
     }
 }
