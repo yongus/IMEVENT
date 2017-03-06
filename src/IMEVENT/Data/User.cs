@@ -7,20 +7,18 @@ using IMEVENT.SharedEnums;
 
 namespace IMEVENT.Data
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
-        public string UserId { get; set; }
         public DateTime DateofBirth { get; set; }
-        public string TownId { get; set; }
         public string Sex { get; set; }
-        public int Status { get; set; }                
+        public int Status { get; set; }
         public string Language { get; set; }
         public SharingGroupCategoryEnum Category { get; set; }
-      
+
         public String InvitedBy { get; set; }
-        public int IdGroup { get; set; }
-        public int IdZone { get; set; }
-        public int IdSousZone { get; set; }
+        public int GroupId { get; set; }
+        public int ZoneId { get; set; }
+        public int SousZoneId { get; set; }
         public string Town { get; set; }
         public bool IsGroupResponsible { get; set; }
         public string FirstName { get; set; }
@@ -78,13 +76,17 @@ namespace IMEVENT.Data
                        join Item2 in context.EventAttendees
                        on Item1.Id equals Item2.UserId
                        select new { Item2, Item1 })
-                       .Where(x => x.Item2.IdEvent == eventId)
+                       .Where(x => x.Item2.EventId == eventId)
                        .ToDictionary(x => x.Item1.Id, x => x.Item1);
             return ret;            
         }
 
         public string persist()
         {
+            //This persist method behaves differently from the implementation in different classes
+            //it is due to the fact that apparently Users are generated directly with their ID at instantiation and not at
+            //the time they are saved in the database. 
+            
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             string exists = GetUserIdByName(LastName + FirstName);
             if (String.IsNullOrEmpty(exists))

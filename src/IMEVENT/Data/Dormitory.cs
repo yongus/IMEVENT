@@ -10,14 +10,15 @@ namespace IMEVENT.Data
     public class Dormitory:BaseSection,IObjectPersister
     {
         [Key]
-        public int IdDormitory { get; set; }
+        public int Id { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
+       
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdDormitory = GetDormIdByName(Name);
-            if (IdDormitory != 0)
+            Id = GetIdByName(Name);
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -29,24 +30,24 @@ namespace IMEVENT.Data
             context.SaveChanges();
             Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(this.Name));
             
-            return dorm.IdDormitory;                     
+            return dorm.Id;                     
         }
 
-        public int GetDormIdByName(string name)
+        public int GetIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
             if (dorm != null)
             {
-                return dorm.IdDormitory;
+                return dorm.Id;
             }
             return 0;
         }
 
-        public static Dictionary<int, Dormitory> GetAllDorms(int eventID)
+        public static Dictionary<int, Dormitory> GetDormitoryList(int eventID)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Dorms.Where(x => x.IdEvent == eventID).ToDictionary(x => x.IdDormitory, x => x);
+            return context.Dorms.Where(x => x.Id == eventID).ToDictionary(x => x.Id, x => x);
         }
     }
 }

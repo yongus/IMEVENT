@@ -8,6 +8,6 @@ namespace IMEVENT.Services
 {
     public interface IDataExtractor
     {
-        void ExtractDataFromSource(string source, int idEvent);
+        void ExtractDataFromSource(string source, int IdEvent);
     }
 }

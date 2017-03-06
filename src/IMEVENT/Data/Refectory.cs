@@ -10,15 +10,13 @@ namespace IMEVENT.Data
     public class Refectory:BaseSection,IObjectPersister
     {
         [Key]
-        public int IdRefectory { get; set; }
-        public int TableCapacity { get; set; }      
-        public int NumberOfTable { get; set; }
+        public int Id { get;  set; }
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdRefectory = GetIdRefectoryByName(Name);
-            if (IdRefectory != 0)
+            Id = GetIdByName(Name);
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -28,22 +26,22 @@ namespace IMEVENT.Data
             }
            
             context.SaveChanges();
-            return this.IdRefectory;
+            return this.Id;
         }
 
-        public static Dictionary<int, Refectory> GetAllRefs(int eventId)
+        public static Dictionary<int, Refectory> GetRefectoryList(int eventId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Refectories.Where(x => x.IdEvent == eventId).ToDictionary(x => x.IdRefectory, x => x);
+            return context.Refectories.Where(x => x.Id == eventId).ToDictionary(x => x.Id, x => x);
         }
 
-        public int GetIdRefectoryByName(string name)
+        public int GetIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));
             if (refectory != null)
             {
-                return refectory.IdRefectory;
+                return refectory.Id;
             }
 
             return 0;

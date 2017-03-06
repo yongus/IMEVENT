@@ -4,30 +4,34 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.SharedEnums;
+using IMEVENT.Services;
 
 namespace IMEVENT.Data
 {
     public class EventAttendee:IObjectPersister
     {
         [Key]
-        public int IdEventAttendee { get; set; }
-        public int IdEvent { get; set; }
+        public int Id { get; set; }
+        public int EventId { get; set; }
+       
         public Int32 AmountPaid { get; set; }
         public string Remarks { get; set; }
         public bool OnDiet { get; set; }
         public string UserId { get; set; }
-        public string InvitedBy { get; set; }        
+     
+        public string InvitedBy { get; set; }     
        
         public string Regime { get; set; }
         public string Precision { get; set; }
         public HallSectionTypeEnum SectionType { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
         public RegimeEnum TableType { get; set; }
-        public int IdHall { get; set; }
+        public SharingGroupCategoryEnum SharingCategory { get; set; }
+        public int HallId { get; set; }       
         public int SeatNbr { get; set; }
-        public int IdDormitory { get; set; }
+        public int DormitoryId { get; set; }  
         public int BedNbr { get; set; }
-        public int IdRefectory { get; set; }
+        public int RefectoryId { get; set; }
         public int TableId { get; set; }
         public int TableSeatNbr { get; set; }
 
@@ -39,11 +43,11 @@ namespace IMEVENT.Data
                 , Remarks
                 , Regime
                 , Precision
-                , IdHall
+                , Id
                 , SeatNbr
-                , IdDormitory
+                , Id
                 , BedNbr
-                , IdRefectory
+                , RefectoryId
                 , TableId
                 , TableSeatNbr
                 );
@@ -60,11 +64,11 @@ namespace IMEVENT.Data
                 , Remarks
                 , Regime
                 , Precision
-                , Halls[IdHall].Name
+                , Halls[Id].Name
                 , SeatNbr
-                , Dorms[IdDormitory].Name
+                , Dorms[Id].Name
                 , BedNbr
-                , Refectories[IdRefectory].Name
+                , Refectories[RefectoryId].Name
                 , Tables[TableId].Name
                 , TableSeatNbr
                 );
@@ -72,30 +76,29 @@ namespace IMEVENT.Data
             return ret;
         }
         
-        public static Dictionary<string, EventAttendee> GetAllAttendee(int eventID)
+        public static Dictionary<string, EventAttendee> GetAttendeeList(int eventID)
         {            
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.EventAttendees.Where(x => x.IdEvent == eventID).ToDictionary(x => x.UserId, x => x); 
+            return context.EventAttendees.Where(x => x.Id == eventID).ToDictionary(x => x.UserId, x => x); 
         }
 
         public EventAttendee GetEventAttendeeById(int eventId, string userId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            EventAttendee attendee = context.EventAttendees.Where(x => x.IdEvent == eventId).FirstOrDefault(e => e.UserId == userId);
-            if (attendee != null)
-            {
-                return attendee;
-            }
-
-            return null;
+            return context.EventAttendees.Where(x => x.EventId == eventId).FirstOrDefault(e => e.UserId == userId);                        
         }
 
+        public static List<EventAttendee> GetAttendeeListByEvent(int eventId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.EventAttendees.Where(x => x.EventId == eventId).ToList();
+        }
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
            
-            if (IdEventAttendee != 0)
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -106,7 +109,7 @@ namespace IMEVENT.Data
 
             context.SaveChanges();
 
-            return this.IdEventAttendee;
+            return this.Id;
         }
     }
 }

@@ -9,16 +9,17 @@ namespace IMEVENT.Data
 {
     public class Hall:BaseSection,IObjectPersister
     {
-        [Key]
-        public int IdHall { get; set; }
+       
         public HallSectionTypeEnum HallType { get; set; }
+        [Key]
+        public int Id { get;  set; }
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            IdHall = GetHallIdByName(Name); 
+            Id = GetHallIdByName(Name); 
                
-            if (IdHall != 0)
+            if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -29,7 +30,7 @@ namespace IMEVENT.Data
             }
             
             context.SaveChanges();
-            return this.IdHall;
+            return this.Id;
         }
 
         public int GetHallIdByName(string name)
@@ -38,16 +39,16 @@ namespace IMEVENT.Data
             var hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));
             if (hall != null)
             {
-                return hall.IdHall;
+                return hall.Id;
             }
             else return 0;
         }
 
 
-        public static Dictionary<int, Hall> GetAllHalls(int eventID)
+        public static Dictionary<int, Hall> GetHallSections(int eventID)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Halls.Where(x => x.IdEvent == eventID).ToDictionary(x => x.IdHall, x => x);            
+            return context.Halls.Where(x => x.Id == eventID).ToDictionary(x => x.Id, x => x);            
 
         }
 

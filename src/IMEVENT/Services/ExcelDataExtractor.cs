@@ -6,20 +6,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog;
 
 namespace IMEVENT.Services
 {
-    public class ExcelDataExtractor : IDataExtractor
+    public partial class ExcelDataExtractor : IDataExtractor
     {
+        private static Logger log = LogManager.GetCurrentClassLogger();
+
 
         public ApplicationDbContext DBcontext { get; set; }
         public string Source { get; set; }
+        public string Destination { get; set; }
         // for now we are going to stop the processing of the file if we see 5 consecutive empty lines.
         private static int MAX_EMPTY_CELLS = 5;
         private static readonly string COLUMN_LASTNAME = "B";
         private static readonly string COLUMN_FIRSTNAME = "C";
         private static readonly string COLUMN_SEX = "D";
-        private static readonly string COLUMN_RETRAITE = "E";
+        private static readonly string COLUMN_RETREAT = "E";
         private static readonly string COLUMN_TOWN = "F";
         private static readonly string COLUMN_GROUP = "G";
         private static readonly string COLUMN_LEVEL = "H";
@@ -50,17 +54,14 @@ namespace IMEVENT.Services
         private static readonly string COLUMN_NAME = "A";
         private static readonly string COLUMN_CAPACITE = "B";
 
-        private static readonly string REFETORY_NAME = "A";
+        private static readonly string REFECTORY_NAME = "A";
         private static readonly string TABLE_NAME = "B";
-        private static readonly string CAPACITY_TABLE = "C";
-        private static readonly string TYPE = "D";
-
-        private static readonly string TYPE_HALL = "C";
+        private static readonly string TABLE_CAPACITY = "C";
+        private static readonly string TYPE_TABLE = "D";
         private static readonly string TYPE_DORM = "C";
+        private static readonly string TYPE_HALL = "C";
 
-
-
-        public void ExtractDataFromSource(string source, int IdEvent)
+        public void ExtractDataFromSource(string source, int EventId)
         {
             this.Source = source;
             FileInfo existingFile = new FileInfo(source);
@@ -72,17 +73,17 @@ namespace IMEVENT.Services
             using (ExcelPackage package = new ExcelPackage(existingFile))
             {
                 ExcelWorksheet userWorksheet = package.Workbook.Worksheets[USER_WORKSHEET_INDEX];
-                loadUsers(userWorksheet, IdEvent);
-                ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
-                loadRefectories(refectoryWorksheet, IdEvent);
-                ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
-                loadHalls(hallWorksheet, IdEvent);
+                loadUsers(userWorksheet, EventId);
                 ExcelWorksheet dormWorksheet = package.Workbook.Worksheets[DORMS_WORKSHEET_INDEX];
-                loadDorms(dormWorksheet, IdEvent);
+                loadDorms(dormWorksheet, EventId);
+                ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
+                loadHalls(hallWorksheet, EventId);
+                ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
+                loadRefectories(refectoryWorksheet, EventId);
             }
         }
 
-        public void loadUsers(ExcelWorksheet worksheet, int idEvent)
+        public void loadUsers(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
@@ -93,7 +94,7 @@ namespace IMEVENT.Services
                 if (!String.IsNullOrEmpty(name))
                 {
                     User u = getUserFromSpreadSheet(currentRow, worksheet);
-                    attendee.IdEvent = idEvent;
+                    attendee.EventId = EventId;
                     attendee.UserId = u.Id;
                     try
                     {
@@ -101,6 +102,7 @@ namespace IMEVENT.Services
                     }
                     catch
                     {
+                        log.Info("Regime import for table failed, setting regime to none");
                         attendee.TableType = RegimeEnum.NONE;
                     }
                     try
@@ -140,6 +142,14 @@ namespace IMEVENT.Services
                     {
                         attendee.OnDiet = false;
                     }
+                    try
+                    {
+                        attendee.SharingCategory = Convertors.GetSharingGroupCategory((string)worksheet.Cells[COLUMN_SHARING_CATEGORY + Convert.ToString(currentRow)].Value);
+                    }
+                    catch
+                    {
+                        attendee.SharingCategory = SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
+                    }
 
                     attendee.persist();
                     maxEmpty = 0;
@@ -152,18 +162,16 @@ namespace IMEVENT.Services
             }
         }
 
-        public void loadHalls(ExcelWorksheet worksheet, int IdEvent)
+        public void loadHalls(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getHallsFromSpreadSheet(currentRow, worksheet, IdEvent);
+                    getHallsFromSpreadSheet(currentRow, worksheet, EventId);
 
                     maxEmpty = 0;
                 }
@@ -175,12 +183,12 @@ namespace IMEVENT.Services
             }
         }
 
-        private void getHallsFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
+        private void getHallsFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Hall h = new Hall();
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
             h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
-            h.IdEvent = IdEvent;
+            h.EventId = EventId;
             try
             {
                 h.HallType = Convertors.GetHallSectionType((string)sheet.Cells[TYPE_HALL + Convert.ToString(row)].Value);
@@ -190,20 +198,18 @@ namespace IMEVENT.Services
                 h.HallType = HallSectionTypeEnum.NONE;
             }
             h.persist();
-
         }
-        public void loadRefectories(ExcelWorksheet worksheet, int IdEvent)
+
+        public void loadRefectories(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getRefectoryFromSpreadSheet(currentRow, worksheet, IdEvent);
-
+                    getRefectoryFromSpreadSheet(currentRow, worksheet, EventId);
                     maxEmpty = 0;
                 }
                 else
@@ -213,49 +219,48 @@ namespace IMEVENT.Services
                 currentRow++;
             }
         }
-        private void getRefectoryFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
+
+        private void getRefectoryFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Refectory h = new Refectory();
 
-            h.Name = (string)sheet.Cells[REFETORY_NAME + Convert.ToString(row)].Value;
-            h.IdEvent = IdEvent;
+            h.Name = (string)sheet.Cells[REFECTORY_NAME + Convert.ToString(row)].Value;
+            h.EventId = EventId;
             h.persist();
             Table t = new Table();
             t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
-            t.IdRefectory = h.IdRefectory;
+            t.RefectoryId = h.Id;
             try
             {
-                t.Capacity = Convert.ToInt32(sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value);
+                t.Capacity = Convert.ToInt32(sheet.Cells[TABLE_CAPACITY + Convert.ToString(row)].Value);
             }
             catch (Exception)
             {
                 t.Capacity = 0;
             }
+
             try
-            {                
-                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());                
+            {
+                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE_TABLE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());               
             }
             catch (Exception)
             {
                 t.RegimeType = RegimeEnum.NONE;
             }
             t.persist();
-
-
         }
 
-        public void loadDorms(ExcelWorksheet worksheet, int IdEvent)
+        public void loadDorms(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getDormFromSpreadSheet(currentRow, worksheet, IdEvent);
-
+                    getDormFromSpreadSheet(currentRow, worksheet, EventId);
+                   
                     maxEmpty = 0;
                 }
                 else
@@ -265,12 +270,12 @@ namespace IMEVENT.Services
                 currentRow++;
             }
         }
-        private void getDormFromSpreadSheet(int row, ExcelWorksheet sheet, int IdEvent)
+        private void getDormFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Dormitory h = new Dormitory();
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
             h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
-            h.IdEvent = IdEvent;
+            h.EventId = EventId;
             try
             {
                 h.DormType = Convertors.GetDormirtoryType((string)sheet.Cells[TYPE_DORM + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
@@ -281,6 +286,7 @@ namespace IMEVENT.Services
             }
             h.persist();
         }
+
         private User getUserFromSpreadSheet(int row, ExcelWorksheet sheet)
         {
             User user = new User();
@@ -305,7 +311,6 @@ namespace IMEVENT.Services
                     {
                         val = "";
                     }
-
                 }
 
                 user.PhoneNumber = val;
@@ -328,24 +333,23 @@ namespace IMEVENT.Services
             zone.Label = (string)sheet.Cells[COLUMN_ZONE + Convert.ToString(row)].Value;
             zone.Id = Zone.GetIdRefectoryIdByName(DBcontext, zone.Label);
             zone.Id = zone.persist();
-            user.IdZone = zone.Id;
+            user.ZoneId = zone.Id;
 
             SousZone sousZone = new SousZone();
             sousZone.Label = (string)sheet.Cells[COLUMN_SOUS_ZONE + Convert.ToString(row)].Value;
-            sousZone.IdZone = zone.Id;
-            sousZone.IdSousZone = zone.persist();
-            user.IdSousZone = sousZone.IdSousZone;
+            sousZone.ZoneId = zone.Id;
+            sousZone.Id = sousZone.persist();
+            user.SousZoneId = sousZone.Id;
 
             Group group = new Group();
-            group.IdZone = zone.Id;
-            group.IdSousZone = sousZone.IdSousZone;
+            group.ZoneId = zone.Id;
+            group.SousZoneId = sousZone.Id;
             group.Label = (string)sheet.Cells[COLUMN_GROUP + Convert.ToString(row)].Value;
             group.Id = group.persist();
-            group.IdSousZone = sousZone.IdSousZone;
-            group.IdZone = zone.Id;
-            user.Id = user.persist();
+            user.GroupId = group.Id;
+            user.persist();
             return user;
         }
-
+        
     }
 }

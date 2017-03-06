@@ -116,7 +116,7 @@ namespace IMEVENT.Events
             }
 
             //Get list of attendees
-            this.attendees = EventAttendee.GetAllAttendee(this.CurrentEvent.IdEvent);
+            this.attendees = EventAttendee.GetAttendeeList(this.CurrentEvent.Id);
             if (this.attendees == null)
             {
                 throw new System.NullReferenceException(string.Format("No Attendee registered yet for the event at {0}, starting on {1}"
@@ -124,9 +124,8 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.StartDate.ToString()));
             }
             
-            //get attendees information
-
-            this.attendeesInfo = User.GetRegisteredUsersPerEventId(this.CurrentEvent.IdEvent);
+            //Get attendees information
+            this.attendeesInfo = User.GetRegisteredUsersPerEventId(this.CurrentEvent.Id);
             if (this.attendeesInfo == null)
             {
                 throw new System.NullReferenceException(string.Format("Infos not available for registered users for the event at {0}, starting on {1}"
@@ -136,27 +135,27 @@ namespace IMEVENT.Events
             this.IsAttendeeInfoLoaded = true;
 
             //Get list of seats
-            this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.IdEvent);
+            this.seatsInHall = Hall.GetHallSections(this.CurrentEvent.Id);
             if (this.seatsInHall == null)
             {
                 throw new System.NullReferenceException(string.Format("Seats not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
-            this.IsSeatsDataLoaded = true;
+            this.IsSeatsDataLoaded = true; 
 
             //Get list of beds
-            this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.IdEvent);
+            this.bedsInDorms = Dormitory.GetDormitoryList(this.CurrentEvent.Id);
             if (this.bedsInDorms == null)
             {
                 throw new System.NullReferenceException(string.Format("Beds not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
-            this.IsBedsDataLoaded = true;
+            this.IsBedsDataLoaded = true; 
 
             //Get list of refectories
-            this.refectories = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
+            this.refectories = Refectory.GetRefectoryList(this.CurrentEvent.Id);
             if (this.refectories == null)
             {
                 throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
@@ -164,15 +163,14 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.StartDate.ToString()));
             }            
 
-            //Get list of Table in refectories
-            this.tablesInRefs = Table.GetAllTables(this.CurrentEvent.IdEvent);
+            //Get list of tables
+            this.tablesInRefs = Table.GetTableList(this.CurrentEvent.Id);
             if (this.tablesInRefs == null)
             {
                 throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
-
             this.IsTablesDataLoaded = true;
         }
 
@@ -270,7 +268,7 @@ namespace IMEVENT.Events
                         index++;
                         listofSeats[index] = new Section
                         {
-                            Id = seat.Value.IdHall,
+                            Id = seat.Value.Id,
                             PlaceNbr = j
                         };
                     }
@@ -286,7 +284,7 @@ namespace IMEVENT.Events
                 {
                     outputSeatList.Push(new HallEntry
                     {                        
-                        IdHall = listofSeats[seatID].Id,
+                        HallId = listofSeats[seatID].Id,
                         SeatNbr = listofSeats[seatID].PlaceNbr
                     });
                 }
@@ -326,12 +324,12 @@ namespace IMEVENT.Events
                 {
                     tempDict[section.Value.HallType] = new Dictionary<int, Hall>
                     {
-                        { section.Value.IdHall, section.Value }
+                        { section.Value.Id, section.Value }
                     };
                 }
                 else
                 {
-                    tempDict[section.Value.HallType][section.Value.IdHall] = section.Value;
+                    tempDict[section.Value.HallType][section.Value.Id] = section.Value;
                 }                
             }
 
@@ -381,7 +379,7 @@ namespace IMEVENT.Events
                         index++;
                         listofBeds[index] = new Section
                         {
-                            Id = dorm.Value.IdDormitory,
+                            Id = dorm.Value.Id,
                             PlaceNbr = j
                         };
                     }
@@ -437,12 +435,12 @@ namespace IMEVENT.Events
                 {
                     tempDict[bed.Value.DormType] = new Dictionary<int, Dormitory>
                     {
-                        { bed.Value.IdDormitory, bed.Value }
+                        { bed.Value.Id, bed.Value }
                     };
                 }
                 else
                 {
-                    tempDict[bed.Value.DormType][bed.Value.IdDormitory] = bed.Value;
+                    tempDict[bed.Value.DormType][bed.Value.Id] = bed.Value;
                 }
             }
 
@@ -487,13 +485,13 @@ namespace IMEVENT.Events
                 int index = 0;
                 foreach (KeyValuePair<int, Table> table in inputTableList)
                 {                    
-                    for(int k = 1; k <= table.Value.Capacity; k++)
+                    for(int i = 1; i <= table.Value.Capacity; i++)
                     {                            
                         listofTableSeats[++index] = new Section
                         {
-                            Id = table.Value.IdTable,
-                            IdRef = table.Value.IdRefectory,                            
-                            PlaceNbr = k
+                            Id = table.Value.Id,
+                            IdRef = table.Value.RefectoryId,                            
+                            PlaceNbr = i
                         };
                     }                                            
                 }
@@ -549,12 +547,12 @@ namespace IMEVENT.Events
                 {
                     tempDict[table.Value.RegimeType] = new Dictionary<int, Table>
                     {
-                        { table.Value.IdTable, table.Value }
+                        { table.Value.Id, table.Value }
                     };
                 }
                 else
                 {                 
-                    tempDict[table.Value.RegimeType][table.Value.IdRefectory] = table.Value;
+                    tempDict[table.Value.RegimeType][table.Value.RefectoryId] = table.Value;
                 }
             }
 
@@ -624,11 +622,11 @@ namespace IMEVENT.Events
                     return;
                 }
 
-                this.attendees[attendee.Key].IdHall = aSeat.IdHall;
+                this.attendees[attendee.Key].HallId = aSeat.HallId;
                 this.attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
-                this.attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
+                this.attendees[attendee.Key].Id = aBed.IdDormitory;
                 this.attendees[attendee.Key].BedNbr = aBed.BedNbr;
-                this.attendees[attendee.Key].IdRefectory = aTable.RefectoryId;
+                this.attendees[attendee.Key].RefectoryId = aTable.RefectoryId;
                 this.attendees[attendee.Key].TableId = aTable.TableId;
                 this.attendees[attendee.Key].TableSeatNbr = aTable.SeatNbr;
                 this.attendees[attendee.Key].persist();//save data in DB

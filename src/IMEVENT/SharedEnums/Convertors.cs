@@ -70,8 +70,7 @@ namespace IMEVENT.SharedEnums
                 case "incarnateur":
                     return MembershipLevelEnum.INCARNATEUR;
                 case "responsablegeneral":
-                    return MembershipLevelEnum.RG;
-               
+                    return MembershipLevelEnum.RG;               
                 default:
                     return MembershipLevelEnum.INVITE;
             }
@@ -79,17 +78,15 @@ namespace IMEVENT.SharedEnums
 
         public static string DormitoryTypeToString(this DormitoryTypeEnum type)
         {
+            string ret = "Dortoir ";
             switch (type)
             {                
-                case DormitoryTypeEnum.MALE:
-                    return "Dortoir Hommes";
-                case DormitoryTypeEnum.FEMALE:
-                    return "Dortoir Femmes";
-                case DormitoryTypeEnum.YOUNGBOYS:
-                    return "Dortoir Jeunes Garcons";
-                case DormitoryTypeEnum.YOUNGGIRLS:
-                    return "Dortoir Jeunes Filles";
-                case DormitoryTypeEnum.NONE:                    
+                case DormitoryTypeEnum.MATELAS:
+                    return ret + "Matelas";
+                case DormitoryTypeEnum.BED:
+                    return ret + "Lits";
+                case DormitoryTypeEnum.VIP:
+                    return ret + "VIP";                
                 default:
                     return "Inconnu";
             }
