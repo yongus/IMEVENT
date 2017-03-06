@@ -12,7 +12,15 @@ namespace IMEVENT.Events
     {
         #region private data
         //Is the data loaded from the DB
-        private bool isAllDataLoaded;         
+        public bool IsAllDataLoaded
+        {
+            get
+            {
+                return this.IsAttendeeInfoLoaded && this.IsSeatsDataLoaded 
+                       && this.IsBedsDataLoaded && this.IsTablesDataLoaded;
+            }
+        }
+               
         public Event CurrentEvent { get; set; }
         //Constructor
         public DataMatchingGenerator(Event ev)
@@ -31,8 +39,7 @@ namespace IMEVENT.Events
             seatsInHall = seats;
             bedsInDorms = beds;
             refectories = refs;
-            tablesInRefs = tables;
-            isAllDataLoaded = true;
+            tablesInRefs = tables;            
         }                              
 
         //Input attendees
@@ -103,7 +110,7 @@ namespace IMEVENT.Events
 
         private void EnsureLoaded()
         {
-            if (isAllDataLoaded)
+            if (this.IsAllDataLoaded)
             {                
                 return; //data already loaded
             }
@@ -116,16 +123,17 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
-
+            
             //get attendees information
 
-            this.attendeesInfo = User.GetRegisteredUsers(this.attendees.Keys.ToList());
+            this.attendeesInfo = User.GetRegisteredUsersPerEventId(this.CurrentEvent.IdEvent);
             if (this.attendeesInfo == null)
             {
                 throw new System.NullReferenceException(string.Format("Infos not available for registered users for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
+            this.IsAttendeeInfoLoaded = true;
 
             //Get list of seats
             this.seatsInHall = Hall.GetAllHalls(this.CurrentEvent.IdEvent);
@@ -135,6 +143,7 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
+            this.IsSeatsDataLoaded = true;
 
             //Get list of beds
             this.bedsInDorms = Dormitory.GetAllDorms(this.CurrentEvent.IdEvent);
@@ -144,6 +153,7 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }
+            this.IsBedsDataLoaded = true;
 
             //Get list of refectories
             this.refectories = Refectory.GetAllRefs(this.CurrentEvent.IdEvent);
@@ -152,7 +162,7 @@ namespace IMEVENT.Events
                 throw new System.NullReferenceException(string.Format("Tables not availaible for the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
-            }
+            }            
 
             //Get list of Table in refectories
             this.tablesInRefs = Table.GetAllTables(this.CurrentEvent.IdEvent);
@@ -163,7 +173,7 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.StartDate.ToString()));
             }
 
-            isAllDataLoaded = true;
+            this.IsTablesDataLoaded = true;
         }
 
         private bool isSeatsDataLoaded;
@@ -171,7 +181,7 @@ namespace IMEVENT.Events
         {
             get
             {
-                return isAllDataLoaded && isSeatsDataLoaded;
+                return isSeatsDataLoaded;
             }
 
             set
@@ -185,7 +195,7 @@ namespace IMEVENT.Events
         {
             get
             {
-                return isAllDataLoaded && isBedsDataLoaded;
+                return isBedsDataLoaded;
             }
 
             set
@@ -199,7 +209,7 @@ namespace IMEVENT.Events
         {
             get
             {
-                return isAllDataLoaded && isTablesDataLoaded;
+                return isTablesDataLoaded;
             }
 
             set
@@ -207,29 +217,28 @@ namespace IMEVENT.Events
                 isTablesDataLoaded = value;
             }
         }
+
+        private bool isAttendeeInfoLoaded;
+        public bool IsAttendeeInfoLoaded
+        {
+            get
+            {
+                return isAttendeeInfoLoaded;
+            }
+
+            set
+            {
+                isAttendeeInfoLoaded = value;
+            }
+        }
         #endregion
 
         #region Invalidate data
         private void InvalidateAllData()
         {
-            this.isAllDataLoaded = this.IsSeatsDataLoaded
-                = this.IsBedsDataLoaded = this.IsTablesDataLoaded = false;
-        }
-
-        public void InvalidateAllButHalls()
-        {
-            this.IsBedsDataLoaded = this.IsTablesDataLoaded = false;
-        }
-
-        public void InvalidateAllButDorms()
-        {
-            this.IsSeatsDataLoaded = this.IsTablesDataLoaded = false;
-        }
-
-        public void InvalidateAllButRefectories()
-        {
-            this.IsSeatsDataLoaded = this.IsTablesDataLoaded = false;
-        }
+            this.IsAttendeeInfoLoaded = this.IsSeatsDataLoaded = 
+                this.IsBedsDataLoaded = this.IsTablesDataLoaded = false;
+        }        
         #endregion        
 
         #region Map Attendees to Seat in Halls        
@@ -240,6 +249,7 @@ namespace IMEVENT.Events
                || !this.ListAvailableSections.ContainsKey(sectionType)
                || this.ListAvailableSections[sectionType].IsNullOrEmpty())
             {
+                Console.WriteLine("GetHallEntry(): No seat available!");
                 return null;
             }
 
@@ -247,7 +257,7 @@ namespace IMEVENT.Events
                                  : this.ListAvailableSections[sectionType].ElementAt((int)index);
         }        
 
-        public bool MatchAttendeeToSeatPerCategory(Dictionary<int, Hall> inputSeatList, out Stack<HallEntry> outputSeatList)
+        public Stack<HallEntry> GetSeatsPerCategoryType(Dictionary<int, Hall> inputSeatList)
         {            
             Dictionary<int, Section> listofSeats = new Dictionary<int, Section>();
             try
@@ -271,7 +281,7 @@ namespace IMEVENT.Events
                 seatsIds.Shuffle();
 
                 //do the assignement
-                outputSeatList = new Stack<HallEntry>();
+                Stack<HallEntry> outputSeatList = new Stack<HallEntry>();
                 foreach (int seatID in seatsIds)
                 {
                     outputSeatList.Push(new HallEntry
@@ -281,29 +291,26 @@ namespace IMEVENT.Events
                     });
                 }
 
-                return true;
+                return outputSeatList;
             }
-            catch
+            catch(Exception ex)
             {
-                outputSeatList = null;
-                return false;
+                Console.WriteLine("Exception in generating Seats per category" + ex);
+                return null;
             }           
         }
 
-        public bool MatchAttendeesToSeats(bool mingle = false)
-        {
-            if (this.IsSeatsDataLoaded)
-            {
-                return true;
-            }
-            
-            //if mingle true, no need to break per categorie
+        public bool GenerateSeatsForMatching(bool mingle = false)
+        {            
+            //if mingle true, no need to break per category
+            Stack<HallEntry> tempStack;
             this.ListAvailableSections = new Dictionary<HallSectionTypeEnum, Stack<HallEntry>>();
             if (mingle)
             {
-                Stack<HallEntry> tempStack;
-                if (!MatchAttendeeToSeatPerCategory(this.SeatsInHall, out tempStack))
+                tempStack = GetSeatsPerCategoryType(this.SeatsInHall);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating seats per category with participants mingle");
                     return false;
                 }
 
@@ -331,15 +338,15 @@ namespace IMEVENT.Events
             // Match per category
             foreach(KeyValuePair<HallSectionTypeEnum, Dictionary<int, Hall>> cat in tempDict)
             {
-                Stack<HallEntry> tempStack;
-                if (!MatchAttendeeToSeatPerCategory(cat.Value, out tempStack))
+                tempStack = GetSeatsPerCategoryType(cat.Value);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating seats per category with participants not mingle");
                     return false;
                 }
                 this.ListAvailableSections[cat.Key] = tempStack;
             }
-
-            this.IsSeatsDataLoaded = true;
+            
             return true;
         }
         #endregion
@@ -352,6 +359,7 @@ namespace IMEVENT.Events
                 || !this.ListAvailableDorms.ContainsKey(dormType)
                 || this.ListAvailableDorms[dormType].IsNullOrEmpty())
             {
+                Console.WriteLine("GetDormEntry(): No bed available!");
                 return null;
             }
 
@@ -359,7 +367,7 @@ namespace IMEVENT.Events
                                  : this.ListAvailableDorms[dormType].ElementAt((int)index);
         }
                 
-        public bool MatchAttendeeToBedPerCategory(Dictionary<int, Dormitory> inputBedList, out Stack<DormEntry> outputBedList)
+        public Stack<DormEntry> GetBedsPerCategoryType(Dictionary<int, Dormitory> inputBedList)
         {
             Dictionary<int, Section> listofBeds = new Dictionary<int, Section>();
             try
@@ -384,7 +392,7 @@ namespace IMEVENT.Events
                 bedsIds.Shuffle();
 
                 //Perform the assignement
-                outputBedList = new Stack<DormEntry>();
+                Stack<DormEntry> outputBedList = new Stack<DormEntry>();
                 foreach (int bedId in bedsIds)
                 {
                     outputBedList.Push(new DormEntry
@@ -394,24 +402,26 @@ namespace IMEVENT.Events
                     });
                 }
 
-                return true;
+                return outputBedList;
             }
-            catch
+            catch(Exception ex)
             {
-                outputBedList = null;
-                return false;
+                Console.WriteLine("Exception in generating Beds per category" + ex);
+                return null;
             }
         }
 
-        public bool MatchAttendeesToBeds(bool mingle = false)
+        public bool GenerateBedsForMatching(bool mingle = false)
         {
-            //if mingle true, no need to break per categorie
+            //if mingle true, no need to break per category            
+            Stack<DormEntry> tempStack;
             this.ListAvailableDorms = new Dictionary<DormitoryTypeEnum, Stack<DormEntry>>();
             if (mingle)
             {
-                Stack<DormEntry> tempStack;
-                if (!MatchAttendeeToBedPerCategory(this.BedsInDorms, out tempStack))
+                tempStack = GetBedsPerCategoryType(this.BedsInDorms);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating beds per category with participants mingle");
                     return false;
                 }
 
@@ -439,9 +449,10 @@ namespace IMEVENT.Events
             // Match per category
             foreach (KeyValuePair<DormitoryTypeEnum, Dictionary<int,Dormitory>> cat in tempDict)
             {
-                Stack<DormEntry> tempStack;
-                if (!MatchAttendeeToBedPerCategory(cat.Value, out tempStack))
+                tempStack = GetBedsPerCategoryType(cat.Value);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating beds per category with participants not mingle");
                     return false;
                 }
                 this.ListAvailableDorms[cat.Key] = tempStack;
@@ -460,6 +471,7 @@ namespace IMEVENT.Events
                 || !this.ListAvailableTables.ContainsKey(refType)
                 || this.ListAvailableTables[refType].IsNullOrEmpty())
             {
+                Console.WriteLine("GetTableEntry(): No table available!");
                 return null;
             }
 
@@ -467,7 +479,7 @@ namespace IMEVENT.Events
                                  : this.ListAvailableTables[refType].ElementAt((int)index);
         }
         
-        public bool MatchAttendeeToTablePerCategory(Dictionary<int, Table> inputTableList, out Stack<TableEntry> outputTableList)
+        public Stack<TableEntry> GetTablesPerCategoryType(Dictionary<int, Table> inputTableList)
         {
             Dictionary<int, Section> listofTableSeats = new Dictionary<int, Section>();
             try
@@ -479,8 +491,8 @@ namespace IMEVENT.Events
                     {                            
                         listofTableSeats[++index] = new Section
                         {
-                            Id = table.Value.TableId,
-                            IdRef = table.Value.RefectoryId,                            
+                            Id = table.Value.IdTable,
+                            IdRef = table.Value.IdRefectory,                            
                             PlaceNbr = k
                         };
                     }                                            
@@ -491,7 +503,7 @@ namespace IMEVENT.Events
                 tablesIds.Shuffle();
 
                 //do the assignement
-                outputTableList = new Stack<TableEntry>();
+                Stack<TableEntry> outputTableList = new Stack<TableEntry>();
                 foreach (int refID in tablesIds)
                 {
                     outputTableList.Push(new TableEntry
@@ -502,24 +514,26 @@ namespace IMEVENT.Events
                     });
                 }
 
-                return true;
+                return outputTableList;
             }
-            catch
+            catch(Exception ex)
             {
-                outputTableList = null;
-                return false;
+                Console.WriteLine("Exception in generating Tables per category" + ex);
+                return null;
             }
         }
 
-        public bool MatchAttendeesToTables(bool mingle = false)
+        public bool GenerateTablesForMatching(bool mingle = false)
         {
-            //if mingle true, no need to break per categorie
+            //if mingle true, no need to break per category            
+            Stack<TableEntry> tempStack;
             this.ListAvailableTables = new Dictionary<RegimeEnum, Stack<TableEntry>>();
             if (mingle)
             { 
-                Stack<TableEntry> tempStack;
-                if (!MatchAttendeeToTablePerCategory(this.TablesInRefs, out tempStack))
+                tempStack = GetTablesPerCategoryType(this.TablesInRefs);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating tables per category with participants mingle");
                     return false;
                 }
 
@@ -535,21 +549,22 @@ namespace IMEVENT.Events
                 {
                     tempDict[table.Value.RegimeType] = new Dictionary<int, Table>
                     {
-                        { table.Value.TableId, table.Value }
+                        { table.Value.IdTable, table.Value }
                     };
                 }
                 else
-                {
-                    tempDict[table.Value.RegimeType][table.Value.RefectoryId] = table.Value;
+                {                 
+                    tempDict[table.Value.RegimeType][table.Value.IdRefectory] = table.Value;
                 }
             }
 
             // Match per category
             foreach (KeyValuePair<RegimeEnum, Dictionary<int, Table>> cat in tempDict)
             {
-                Stack<TableEntry> tempStack;
-                if (!MatchAttendeeToTablePerCategory(cat.Value, out tempStack))
+                tempStack = GetTablesPerCategoryType(cat.Value);
+                if (tempStack == null)
                 {
+                    Console.WriteLine("Error in generating tables per category with participants not mingle");
                     return false;
                 }
                 this.ListAvailableTables[cat.Key] = tempStack;
@@ -559,33 +574,30 @@ namespace IMEVENT.Events
         }
 
         #endregion
-
-        public bool GenerateAllBadges(bool mingleAttendees = false)
+       
+        public void GenerateAllBadges(bool mingleAttendees = false)
         {
-            if (!this.MatchAttendeesToSeats(mingleAttendees))
+            if (!this.GenerateSeatsForMatching(mingleAttendees)
+                || !this.GenerateBedsForMatching(mingleAttendees)
+                || !this.GenerateTablesForMatching(mingleAttendees))
             {
-                return false;
-            }
-            
-            if (!this.MatchAttendeesToBeds(mingleAttendees))
-            {
-                return false;
-            }
-            
-            if (!this.MatchAttendeesToTables(mingleAttendees))
-            {
-                return false;
+                return;
             }
 
-            /* Check that we have enough places (Seats, beds, tables) available for the matching
-            if (ListAvailableSections.Count() < this.TotalAttendees 
-               || AttendeeToBeds.Count() < this.TotalAttendees
-               || AttendeeToTables.Count() < this.TotalAttendees)
+            // Check that we have enough places (Seats, beds, tables) available for the matching
+            int nbrAttendees = this.attendees.Count;
+            int nbrSections = ListAvailableSections.Count();
+            int nbrDorms = ListAvailableDorms.Count();
+            int nbrTables = ListAvailableTables.Count();
+            if (nbrSections < nbrAttendees
+               || nbrDorms < nbrAttendees
+               || nbrTables < nbrAttendees)
             {
-                return false;
+                Console.WriteLine(String.Format("Not enought resources available for registered attendees! " +
+                    "Sections: {0}, Dorms: {1}, Tables: {2}", nbrSections, nbrDorms, nbrTables));
+                return;
             }
-            */
-
+            
             //List of participants to an event                        
             List<string> attendeesKeys = new List<string>(this.Attendees.Keys);
 
@@ -594,23 +606,24 @@ namespace IMEVENT.Events
 
             foreach (KeyValuePair<string, EventAttendee> attendee in this.Attendees)
             {                
-                HallEntry aSeat = GetHallEntry(mingleAttendees ? HallSectionTypeEnum.NONE : attendee.Value.sectionType);
+                HallEntry aSeat = GetHallEntry(mingleAttendees ? HallSectionTypeEnum.NONE : attendee.Value.SectionType);
                 if(aSeat == null)
                 {
-                    return false;
+                    return;
                 }
 
                 DormEntry aBed = GetDormEntry(mingleAttendees ? DormitoryTypeEnum.NONE : attendee.Value.DormType);
                 if (aBed == null)
                 {
-                    return false;
+                    return;
                 }
 
-                TableEntry aTable = GetTableEntry(mingleAttendees ? RegimeEnum.NONE : attendee.Value.RefectoryType);
+                TableEntry aTable = GetTableEntry(mingleAttendees ? RegimeEnum.NONE : attendee.Value.TableType);
                 if (aTable == null)
                 {
-                    return false;
+                    return;
                 }
+
                 this.attendees[attendee.Key].IdHall = aSeat.IdHall;
                 this.attendees[attendee.Key].SeatNbr = aSeat.SeatNbr;
                 this.attendees[attendee.Key].IdDormitory = aBed.IdDormitory;
@@ -618,24 +631,30 @@ namespace IMEVENT.Events
                 this.attendees[attendee.Key].IdRefectory = aTable.RefectoryId;
                 this.attendees[attendee.Key].TableId = aTable.TableId;
                 this.attendees[attendee.Key].TableSeatNbr = aTable.SeatNbr;
-            }
-            
-            return true;
+                this.attendees[attendee.Key].persist();//save data in DB
+            }                        
         }
-
+       
         public void PrintAllBadgesToFile(string FilePath, bool forceRecompute)
         {
             //format output
             List<string> temp = new List<string>();
             if (forceRecompute || this.Attendees == null || !this.Attendees.Any())
             {
-                if (!GenerateAllBadges())
-                {
-                    return;
-                }
+                GenerateAllBadges();
             }
 
             //file header
+            temp.Add(String.Format("Evenenemnt organise du {1} {2} au {3} {4} dans la ville de {0}"
+                     , this.CurrentEvent.Place
+                     , this.CurrentEvent.StartDate.DayOfWeek
+                     , this.CurrentEvent.StartDate
+                     , this.CurrentEvent.EndDate.DayOfWeek
+                     , this.CurrentEvent.EndDate));            
+            temp.Add(String.Format("Theme: \"{0}\"",this.CurrentEvent.Theme));
+            temp.Add(",,,,,,,,,,,,,,,,,,,,,,");
+            temp.Add(String.Format(" Prix: {0} Fcfa", this.CurrentEvent.Fee));
+            temp.Add(",,,,,,,,,,,,,,,,,,,,,,");
             string header = "Nom,Prenom,Sexe,Ville,Groupe,Responsable Groupe,Niveau,Categorie,Langue,Email,Telehone,"
                             + "Invite Par,Frais Payes,Remarques,Regime,Precision,Section Hall,Siege Hall,Dortoir,"
                             + "Lit,Refectoire,Table, Siege Refectoire";

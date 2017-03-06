@@ -37,9 +37,9 @@ namespace IMEVENT.Services
         private static readonly string COLUMN_SOUS_ZONE = "T";
         private static readonly string COLUMN_ORIGIN_TOWN = "U";
         private static readonly string COLUMN_ORIGIN_GROUP = "V";
-        private static readonly string COLUMN_HALL = "W";
-        private static readonly string COLUMN_REFECTORY = "X";
-        private static readonly string COLUMN_DORMITORY = "Y";
+        private static readonly string COLUMN_HALL_TYPE = "W";
+        private static readonly string COLUMN_TABLE_TYPE = "X";
+        private static readonly string COLUMN_DORM_TYPE = "Y";
         private static readonly string COLUMN_PART = "Z";
 
         private static readonly int USER_WORKSHEET_INDEX = 1;
@@ -53,7 +53,10 @@ namespace IMEVENT.Services
         private static readonly string REFETORY_NAME = "A";
         private static readonly string TABLE_NAME = "B";
         private static readonly string CAPACITY_TABLE = "C";
-        private static readonly string FOR_SPECIAL_USE = "D";
+        private static readonly string TYPE = "D";
+
+        private static readonly string TYPE_HALL = "C";
+        private static readonly string TYPE_DORM = "C";
 
 
 
@@ -92,6 +95,30 @@ namespace IMEVENT.Services
                     User u = getUserFromSpreadSheet(currentRow, worksheet);
                     attendee.IdEvent = idEvent;
                     attendee.UserId = u.Id;
+                    try
+                    {
+                        attendee.TableType = Convertors.GetRegimeType((string)worksheet.Cells[COLUMN_TABLE_TYPE + Convert.ToString(currentRow)].Value);
+                    }
+                    catch
+                    {
+                        attendee.TableType = RegimeEnum.NONE;
+                    }
+                    try
+                    {
+                        attendee.SectionType = Convertors.GetHallSectionType((string)worksheet.Cells[COLUMN_HALL_TYPE + Convert.ToString(currentRow)].Value);
+                    }
+                    catch
+                    {
+                        attendee.SectionType = HallSectionTypeEnum.NONE;
+                    }
+                    try
+                    {
+                        attendee.DormType = Convertors.GetDormirtoryType((string)worksheet.Cells[COLUMN_DORM_TYPE + Convert.ToString(currentRow)].Value);
+                    }
+                    catch
+                    {
+                        attendee.SectionType = HallSectionTypeEnum.NONE;
+                    }
                     attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
                     try
                     {
@@ -154,6 +181,14 @@ namespace IMEVENT.Services
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
             h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
             h.IdEvent = IdEvent;
+            try
+            {
+                h.HallType = Convertors.GetHallSectionType((string)sheet.Cells[TYPE_HALL + Convert.ToString(row)].Value);
+            }
+            catch (Exception)
+            {
+                h.HallType = HallSectionTypeEnum.NONE;
+            }
             h.persist();
 
         }
@@ -187,20 +222,18 @@ namespace IMEVENT.Services
             h.persist();
             Table t = new Table();
             t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
-            t.RefectoryId = h.IdRefectory;
+            t.IdRefectory = h.IdRefectory;
             try
             {
-                t.Capacity = (int)sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value;
+                t.Capacity = Convert.ToInt32(sheet.Cells[CAPACITY_TABLE + Convert.ToString(row)].Value);
             }
             catch (Exception)
             {
                 t.Capacity = 0;
             }
             try
-            {
-                string strValue = sheet.Cells[FOR_SPECIAL_USE + Convert.ToString(row)].Value.ToString().ToLowerInvariant();
-                t.RegimeType = strValue.Equals("oui") ? RegimeEnum.YES : RegimeEnum.NONE;
-
+            {                
+                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());                
             }
             catch (Exception)
             {
@@ -238,6 +271,14 @@ namespace IMEVENT.Services
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
             h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
             h.IdEvent = IdEvent;
+            try
+            {
+                h.DormType = Convertors.GetDormirtoryType((string)sheet.Cells[TYPE_DORM + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
+            }
+            catch (Exception)
+            {
+                h.DormType = DormitoryTypeEnum.NONE;
+            }
             h.persist();
         }
         private User getUserFromSpreadSheet(int row, ExcelWorksheet sheet)

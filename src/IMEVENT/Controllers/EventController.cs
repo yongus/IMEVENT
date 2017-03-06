@@ -51,7 +51,7 @@ namespace IMEVENT.Controllers
                         e.StartDate = model.StartDate;
                         e.Theme = model.Theme;
                         e.Place = model.Venue;
-                        //e.MingleAttendees = false;
+                        e.MingleAttendees = false;
                         e.Fee = model.Fee;
                         e.Type = EventTypeEnum.GRANDE_RETRAITE;
                         e.persist();
@@ -85,7 +85,8 @@ namespace IMEVENT.Controllers
 
             //Test Data Matching
             Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
-            badge.GenerateAllBadges();
+            badge.GenerateAllBadges(e.MingleAttendees);
+            badge.PrintAllBadgesToFile("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Results_Test.csv", false);
         }
 
     }

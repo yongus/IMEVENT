@@ -71,25 +71,30 @@ namespace IMEVENT.Data
             return user.Id;
         }
 
-        public static Dictionary<string, User> GetRegisteredUsers(List<string> keys)
+        public static Dictionary<string, User> GetRegisteredUsersPerEventId(int eventId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Users.Where(x => keys.Contains(x.Id)).ToDictionary(x => x.Id, x => x);
+            var ret = (from Item1 in context.Users
+                       join Item2 in context.EventAttendees
+                       on Item1.Id equals Item2.UserId
+                       select new { Item2, Item1 })
+                       .Where(x => x.Item2.IdEvent == eventId)
+                       .ToDictionary(x => x.Item1.Id, x => x.Item1);
+            return ret;            
         }
 
         public string persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            if (String.IsNullOrEmpty(Id))
-            {
-                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            }
-            else
+            string exists = GetUserIdByName(LastName + FirstName);
+            if (String.IsNullOrEmpty(exists))
             {
                 context.Users.Add(this);
+                context.SaveChanges();
+                return this.Id;
             }
-           
-            context.SaveChanges();
+
+            this.Id = exists;
             return this.Id;
         }
     }

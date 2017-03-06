@@ -95,6 +95,24 @@ namespace IMEVENT.SharedEnums
             }
         }
 
+        public static DormitoryTypeEnum GetDormirtoryType(string type)
+        {
+            type = type.ToLower().Trim();
+            switch (type)
+            {
+                case "male":
+                    return DormitoryTypeEnum.MALE;
+                case "female":
+                    return DormitoryTypeEnum.FEMALE;
+                case "youngboys":
+                    return DormitoryTypeEnum.YOUNGBOYS;
+                case "younggirls":
+                    return DormitoryTypeEnum.YOUNGGIRLS;
+                default:
+                    return DormitoryTypeEnum.NONE;
+            }
+
+        }
         public static string SharingGroupCategoryToString(this SharingGroupCategoryEnum type)
         {
             switch (type)
@@ -124,6 +142,37 @@ namespace IMEVENT.SharedEnums
             }
         }        
 
+        public static SharingGroupCategoryEnum GetSharingGroupCategory(string type)
+        {
+            type = type.ToLower().Trim();
+            switch (type)
+            {
+                case "adultesenior":
+                    return SharingGroupCategoryEnum.ADULTE_S;
+                case "adultemajeur":
+                    return SharingGroupCategoryEnum.ADULTE_M;
+                case "universitairedebutant":
+                    return SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT;
+                case "universitairemajeur":
+                    return SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR;
+                case "jeunemarie":
+                    return SharingGroupCategoryEnum.JEUNE_MARIE;
+                case "jeunetravailleurmajeur":
+                    return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR;
+                case "jeunetravailleur":
+                    return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
+                case "jeunetravailleursenior":
+                    return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR;
+                case "secondaireintermediaire":
+                    return SharingGroupCategoryEnum.SECOND_INTERMEDIARE;
+                case "secondairejunior":
+                    return SharingGroupCategoryEnum.SECOND_JUNIOR;
+                default:
+                    return SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT;
+
+            }
+        }
+
         public static string RegimeToString(this RegimeEnum type)
         {
             switch (type)
@@ -141,5 +190,76 @@ namespace IMEVENT.SharedEnums
                     return "Inconnu";
             }
         }
+
+        public static RegimeEnum GetRegimeType(string type)
+        {
+            type = type.ToLower().Trim();
+            switch (type)
+            {
+                case "oui":
+                    return RegimeEnum.YES;
+                case "non":
+                    return RegimeEnum.NO;
+                case "age":
+                    return RegimeEnum.AGE;
+                case "ras":
+                    return RegimeEnum.NONE;
+                default:
+                    return RegimeEnum.NONE;
+                 
+            }
+
+        }
+        public static string HallSectionTypeToString(HallSectionTypeEnum type)
+        {
+            switch (type)
+            {
+                case HallSectionTypeEnum.NONE:
+                    return "Aucune";
+                case HallSectionTypeEnum.RESPONSABLE_GENERAL:
+                    return "Responsable General";
+                case HallSectionTypeEnum.SERVICE_CHANT:
+                    return "Service Chant";
+                case HallSectionTypeEnum.SERVICE_INSTRUMENT:
+                    return "Service Instruments";
+                case HallSectionTypeEnum.SERVICE_TRADUCTION:
+                    return "Service Traduction";
+                case HallSectionTypeEnum.SPECIAL_GUEST:
+                    return "Invite special";
+                default:
+                    return "Inconnu";
+
+            }
+        }
+
+        public static HallSectionTypeEnum GetHallSectionType(string type)
+        {
+            type = type.ToLower().Trim();
+            switch (type)
+            {
+                case "aucune":
+                    return HallSectionTypeEnum.NONE;
+                case "responsablegeneral":
+                    return HallSectionTypeEnum.RESPONSABLE_GENERAL;
+                case "servicechant":
+                    return HallSectionTypeEnum.SERVICE_CHANT;
+                case "serviceinstruments":
+                    return HallSectionTypeEnum.SERVICE_INSTRUMENT;
+                case "servicetraduction":
+                    return HallSectionTypeEnum.SERVICE_TRADUCTION;
+                case "invitespecial":
+                    return HallSectionTypeEnum.SPECIAL_GUEST;
+                default:
+                    return HallSectionTypeEnum.NONE;
+            }
+
+        }
+
+       
+       
     }
+
+
+    
+    
 }

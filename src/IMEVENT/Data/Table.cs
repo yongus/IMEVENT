@@ -1,24 +1,27 @@
-﻿using System;
+﻿using IMEVENT.SharedEnums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using IMEVENT.SharedEnums;
+using IMEVENT.Events;
 
 namespace IMEVENT.Data
 {
-    public class Table:BaseSection,IObjectPersister
+    public class Table:IObjectPersister
     {
-        [Key]
-        public int TableId { get; set; }
-        public int RefectoryId { get; set; }        
-        public RegimeEnum RegimeType { get; set; }        
+        [Key]                                      
+        public int IdTable { get; set; }
+        public int IdRefectory { get; set; }
+        public int Capacity { get; set; }
+        public string Name { get; set; }
+        public RegimeEnum RegimeType { get; set; }
 
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            TableId = GetTableIdByName(Name);
-            if (TableId != 0)
+            IdTable = GetTableIdByName(Name);
+            if (IdTable != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
@@ -28,7 +31,7 @@ namespace IMEVENT.Data
             }
 
             context.SaveChanges();
-            return this.TableId;
+            return this.IdTable;
         }
 
 
@@ -38,7 +41,7 @@ namespace IMEVENT.Data
             Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
             if (table != null)
             {
-                return table.TableId;
+                return table.IdTable;
             }
 
             return 0;
@@ -47,7 +50,14 @@ namespace IMEVENT.Data
         public static Dictionary<int, Table> GetAllTables(int eventId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Tables.Where(x => x.IdEvent == eventId).ToDictionary(x => x.TableId, x => x);
+            Dictionary<int, Table> ret = (from Item1 in context.Refectories
+                       join Item2 in context.Tables
+                       on Item1.IdRefectory equals Item2.IdRefectory
+                       select new { Item1, Item2 })
+                       .Where(x => x.Item1.IdEvent == eventId)
+                       .ToDictionary(x => x.Item2.IdTable, x => x.Item2);
+
+            return ret;            
         }        
     }
 }
