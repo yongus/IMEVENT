@@ -44,7 +44,7 @@ namespace IMEVENT.SharedEnums
 
         public static MembershipLevelEnum GetMembershipLevel( string text)
         {
-            text = text.ToLower().Trim();
+            text = text.Replace(" ", string.Empty).ToLower();
             switch (text)
             {
                 case "simple":
@@ -76,54 +76,75 @@ namespace IMEVENT.SharedEnums
             }
         }
 
-        public static string DormitoryTypeToString(this DormitoryTypeEnum type)
+        public static string DormitoryCategoryToString(this DormitoryCategoryEnum type)
         {
-            string ret = "Dortoir ";
             switch (type)
             {                
-                case DormitoryTypeEnum.MATELAS:
-                    return ret + "Matelas";
-                case DormitoryTypeEnum.BED:
-                    return ret + "Lits";
-                case DormitoryTypeEnum.VIP:
-                    return ret + "VIP";                
+                case DormitoryCategoryEnum.MATELAS:
+                    return "Matelas";
+                case DormitoryCategoryEnum.BED:
+                    return "Lits";
+                case DormitoryCategoryEnum.VIP:
+                    return "VIP";                
                 default:
                     return "Inconnu";
             }
         }
 
-        public static DormitoryTypeEnum GetDormirtoryType(string type)
+        public static string DormitoryTypeToString(this DormitoryTypeEnum type)
         {
-            type = type.ToLower().Trim();
+            string ret = "Dortoir ";
             switch (type)
             {
-                case "male":
-                    return DormitoryTypeEnum.MALE;
-                case "female":
-                    return DormitoryTypeEnum.FEMALE;
-                case "youngboys":
-                    return DormitoryTypeEnum.YOUNGBOYS;
-                case "younggirls":
-                    return DormitoryTypeEnum.YOUNGGIRLS;
+                case DormitoryTypeEnum.MEN:
+                    return ret + "Homme";
+                case DormitoryTypeEnum.WOMEN:
+                    return ret + "Femme";
+                case DormitoryTypeEnum.NONE:
+                    return ret + "Commun";
+                default:
+                    return "Inconnu";
+            }
+        }
+
+        public static DormitoryCategoryEnum GetDormirtoryCategory(string type)
+        {
+            type = type.Replace(" ", string.Empty).ToLower();
+            switch (type)
+            {
+                case "vip":
+                    return DormitoryCategoryEnum.VIP;
+                case "lit":
+                    return DormitoryCategoryEnum.BED;
+                case "matelas":                                   
+                default:
+                    return DormitoryCategoryEnum.MATELAS;
+            }
+        }
+
+        public static DormitoryTypeEnum GetDormirtoryType(string type)
+        {
+            type = type.Replace(" ", string.Empty).ToLower();
+            switch (type)
+            {
+                case "femme":
+                    return DormitoryTypeEnum.WOMEN;
+                case "homme":
+                    return DormitoryTypeEnum.MEN;
+                case "commun":
                 default:
                     return DormitoryTypeEnum.NONE;
             }
-
         }
+
         public static string SharingGroupCategoryToString(this SharingGroupCategoryEnum type)
         {
             switch (type)
-            {
-                case SharingGroupCategoryEnum.ADULTE_S:
-                    return "Adulte Senior";
-                case SharingGroupCategoryEnum.ADULTE_M:
-                    return "Adulte Majeur";
+            {                
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT:
                     return "Universitaire Debutant";
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR:
-                    return "Universitaire Majeur";
-                case SharingGroupCategoryEnum.JEUNE_MARIE:
-                    return "Jeune Marie";
+                    return "Universitaire Majeur";                
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR:
                     return "Jeune Travailleur Majeur";
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR:
@@ -134,14 +155,18 @@ namespace IMEVENT.SharedEnums
                     return "Secondaire Intermediaire";
                 case SharingGroupCategoryEnum.SECOND_JUNIOR:
                     return "Secondaire Junior";
+                case SharingGroupCategoryEnum.ADULTE_S:                    
+                case SharingGroupCategoryEnum.ADULTE_M:                    
+                case SharingGroupCategoryEnum.JEUNE_MARIE:                    
+                case SharingGroupCategoryEnum.ADULTE:                    
                 default:
-                    return "Inconnu";
+                    return "Adulte";
             }
         }        
 
         public static SharingGroupCategoryEnum GetSharingGroupCategory(string type)
         {
-            type = type.ToLower().Trim();
+            type = type.ToLower().Replace(" ", string.Empty);
             switch (type)
             {
                 case "adultesenior":
@@ -164,9 +189,9 @@ namespace IMEVENT.SharedEnums
                     return SharingGroupCategoryEnum.SECOND_INTERMEDIARE;
                 case "secondairejunior":
                     return SharingGroupCategoryEnum.SECOND_JUNIOR;
+                case "adulte": 
                 default:
-                    return SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT;
-
+                    return SharingGroupCategoryEnum.ADULTE;
             }
         }
 
@@ -174,89 +199,150 @@ namespace IMEVENT.SharedEnums
         {
             switch (type)
             {
-                case RegimeEnum.YES:
-                    return "Oui";
-                case RegimeEnum.NO:
-                    return "Non";
-                case RegimeEnum.AGE:
-                    return "Age";
-                case RegimeEnum.NONE:
-                    return "RAS";
-                case RegimeEnum.OTHER:
+                case RegimeEnum.CLERICAL:
+                    return "Clerge";
+                case RegimeEnum.COOKING:
+                    return "Cuisine";
+                case RegimeEnum.DISABLED:
+                    return "Handicape";
+                case RegimeEnum.FULL_MEMBER:
+                    return "Membre Plein";
+                case RegimeEnum.GENERAL_MANAGER:
+                    return "Responsable General";
+                case RegimeEnum.HEALTH_SERVICE:
+                    return "Service Sante";
+                case RegimeEnum.MUSIC_INSTRUMENT_SERVICE:
+                    return "Service Instrument";
+                case RegimeEnum.NEW_BORN:
+                    return "Nouveaux-nes";
+                case RegimeEnum.RELIGIOUS:
+                    return "Religieux";
+                case RegimeEnum.SECOND_LANGUAGE:
+                    return "Seconde Langue";
+                case RegimeEnum.SONG_SERVICE:
+                    return "Service Chant";
+                case RegimeEnum.SPECIAL_GUEST:
+                    return "Invite Special";
+                case RegimeEnum.TRANSLATION_SERVICE:
+                    return "Service Traduction";
+                case RegimeEnum.WITHOUT_SALT_WITHOUT_OIL:
+                    return "Sans Sel / sans Huile";
+                case RegimeEnum.NONE:                    
                 default:
-                    return "Inconnu";
+                    return "Sans Regime";
             }
         }
 
         public static RegimeEnum GetRegimeType(string type)
         {
-            type = type.ToLower().Trim();
+            type = type.Replace(" ", string.Empty).ToLower();
             switch (type)
-            {
-                case "oui":
-                    return RegimeEnum.YES;
-                case "non":
-                    return RegimeEnum.NO;
-                case "age":
-                    return RegimeEnum.AGE;
-                case "ras":
-                    return RegimeEnum.NONE;
+            {                
+                case "sanssel-sanshuile":
+                    return RegimeEnum.WITHOUT_SALT_WITHOUT_OIL;
+                case "invitéspécial":
+                    return RegimeEnum.SPECIAL_GUEST;
+                case "membreplein":
+                    return RegimeEnum.FULL_MEMBER;
+                case "handicapé":
+                    return RegimeEnum.DISABLED;
+                case "clergé":
+                    return RegimeEnum.CLERICAL;
+                case "santé":
+                    return RegimeEnum.HEALTH_SERVICE;
+                case "nouveauné":
+                    return RegimeEnum.NEW_BORN;
+                case "cuisine":
+                    return RegimeEnum.COOKING;
+                case "rg":
+                    return RegimeEnum.GENERAL_MANAGER;
+                case "secondelangue":
+                    return RegimeEnum.SECOND_LANGUAGE;
+                case "servicechant":
+                    return RegimeEnum.SONG_SERVICE;
+                case "servicetraduction":
+                    return RegimeEnum.TRANSLATION_SERVICE;
+                case "serviceinstrument":
+                    return RegimeEnum.MUSIC_INSTRUMENT_SERVICE;
+                case "religieux":
+                    return RegimeEnum.RELIGIOUS;
+                case "aucun":                    
                 default:
-                    return RegimeEnum.NONE;
-                 
+                    return RegimeEnum.NONE;                 
             }
-
         }
+
         public static string HallSectionTypeToString(HallSectionTypeEnum type)
         {
             switch (type)
             {
-                case HallSectionTypeEnum.NONE:
-                    return "Aucune";
-                case HallSectionTypeEnum.RESPONSABLE_GENERAL:
-                    return "Responsable General";
-                case HallSectionTypeEnum.SERVICE_CHANT:
+                case HallSectionTypeEnum.CLERICAL:
+                    return "Clerge";
+                case HallSectionTypeEnum.COOKING:
+                    return "Cuisine";
+                case HallSectionTypeEnum.DISABLED:
+                    return "Handicape";
+                case HallSectionTypeEnum.FULL_MEMBER:
+                    return "Membre Plein";
+                case HallSectionTypeEnum.GENERAL_MANAGER:
+                    return "Responsable Général";
+                case HallSectionTypeEnum.HEALTH_SERVICE:
+                    return "Service Santé";
+                case HallSectionTypeEnum.MUSIC_INSTRUMENT_SERVICE:
+                    return "Service Instrument";
+                case HallSectionTypeEnum.NEW_BORN:
+                    return "Nouveaux-né";
+                case HallSectionTypeEnum.RELIGIOUS:
+                    return "Religieux";
+                case HallSectionTypeEnum.SECOND_LANGUAGE:
+                    return "Seconde Langue";
+                case HallSectionTypeEnum.SONG_SERVICE:
                     return "Service Chant";
-                case HallSectionTypeEnum.SERVICE_INSTRUMENT:
-                    return "Service Instruments";
-                case HallSectionTypeEnum.SERVICE_TRADUCTION:
-                    return "Service Traduction";
                 case HallSectionTypeEnum.SPECIAL_GUEST:
-                    return "Invite special";
+                    return "Invité Spécial";
+                case HallSectionTypeEnum.TRANSLATION_SERVICE:
+                    return "Service Traduction";
+                case HallSectionTypeEnum.NONE:
                 default:
-                    return "Inconnu";
-
+                    return "Public";
             }
         }
 
         public static HallSectionTypeEnum GetHallSectionType(string type)
         {
-            type = type.ToLower().Trim();
+            type = type.Replace(" ", string.Empty).ToLower();
             switch (type)
-            {
-                case "aucune":
-                    return HallSectionTypeEnum.NONE;
-                case "responsablegeneral":
-                    return HallSectionTypeEnum.RESPONSABLE_GENERAL;
+            {                
+                case "rg":
+                    return HallSectionTypeEnum.GENERAL_MANAGER;
                 case "servicechant":
-                    return HallSectionTypeEnum.SERVICE_CHANT;
-                case "serviceinstruments":
-                    return HallSectionTypeEnum.SERVICE_INSTRUMENT;
+                    return HallSectionTypeEnum.SONG_SERVICE;
+                case "serviceinstrument":
+                    return HallSectionTypeEnum.MUSIC_INSTRUMENT_SERVICE;
                 case "servicetraduction":
-                    return HallSectionTypeEnum.SERVICE_TRADUCTION;
-                case "invitespecial":
+                    return HallSectionTypeEnum.TRANSLATION_SERVICE;
+                case "invitéspécial":
                     return HallSectionTypeEnum.SPECIAL_GUEST;
+                case "secondelangue":
+                    return HallSectionTypeEnum.SECOND_LANGUAGE;
+                case "membreplein":
+                    return HallSectionTypeEnum.FULL_MEMBER;
+                case "handicapé":
+                    return HallSectionTypeEnum.DISABLED;
+                case "clergé":
+                    return HallSectionTypeEnum.CLERICAL;
+                case "santé":
+                    return HallSectionTypeEnum.HEALTH_SERVICE;
+                case "nouveau-né":
+                    return HallSectionTypeEnum.NEW_BORN;
+                case "cuisine":
+                    return HallSectionTypeEnum.COOKING;
+                case "religieux":
+                    return HallSectionTypeEnum.RELIGIOUS;
+                case "aucun":                    
                 default:
                     return HallSectionTypeEnum.NONE;
             }
-
         }
-
-       
-       
     }
-
-
-    
-    
 }

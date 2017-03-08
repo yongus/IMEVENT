@@ -12,9 +12,7 @@ namespace IMEVENT.Data
         public DateTime DateofBirth { get; set; }
         public string Sex { get; set; }
         public int Status { get; set; }
-        public string Language { get; set; }
-        public SharingGroupCategoryEnum Category { get; set; }
-
+        public string Language { get; set; }        
         public String InvitedBy { get; set; }
         public int GroupId { get; set; }
         public int ZoneId { get; set; }
@@ -26,16 +24,15 @@ namespace IMEVENT.Data
         public MembershipLevelEnum Level { get; set; }
 
         public override string ToString()
-        {
-            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}"
+        {            
+            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}"
                  , LastName
                  , FirstName
                  , Sex
                  , Town
                  , ""//TODO - read group
                  , IsGroupResponsible ? "Oui" : "Non"
-                 , Level.MemberShipLevelToString()
-                 , Category.SharingGroupCategoryToString()
+                 , Level.MemberShipLevelToString()                 
                  , Language
                  , Email
                  , PhoneNumber

@@ -7,13 +7,16 @@ namespace IMEVENT.SharedEnums
 {
     public enum SharingGroupCategoryEnum
     {
-        ADULTE = 0, //(ADULTE_S, ADULTE_M, JEUNE_MARIE)
-        UNIVERSITAIRE_DEBUTANT = 2,
-        UNIVERSITAIRE_MAJEUR = 3,
-        JEUNE_TRAVAILLEUR = 9,
-        JEUNE_TRAVAILLEUR_MAJEUR = 4,
-        JEUNE_TRAVAILLEUR_SENIOR = 5,
-        SECOND_JUNIOR = 6,
-        SECOND_INTERMEDIARE = 7       
+        ADULTE = 0,// the default group
+        SECOND_JUNIOR = 1,
+        SECOND_INTERMEDIARE = 2,
+        UNIVERSITAIRE_DEBUTANT = 3,
+        UNIVERSITAIRE_MAJEUR = 4,                 
+        JEUNE_TRAVAILLEUR_MAJEUR = 5,
+        JEUNE_TRAVAILLEUR_SENIOR = 6,
+        JEUNE_TRAVAILLEUR = 7,
+        ADULTE_M = 8,
+        ADULTE_S = 9,
+        JEUNE_MARIE = 10               
     }
 }

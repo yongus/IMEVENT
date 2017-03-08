@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class DormEntry
-    {        
-        public int IdDormitory { get; set; }
-        public int BedNbr { get; set; }
+    public class GroupSharingEntry :  BaseSectionEntry
+    {
+        public string UserId { get; set; }
     }
 }

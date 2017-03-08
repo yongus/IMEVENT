@@ -85,7 +85,7 @@ namespace IMEVENT.Controllers
 
             //Test Data Matching
             Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
-            badge.GenerateAllBadges(e.MingleAttendees);
+            badge.GenerateAllBadges();
             badge.PrintAllBadgesToFile("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Results_Test.csv", false);
         }
 

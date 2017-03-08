@@ -8,6 +8,6 @@ namespace IMEVENT.Events
     public class BaseSectionEntry
     {        
         public int Id { get; set; }        
-        public int SeatNbr { get; set; }        
+        public int Place { get; set; }        
     }
 }

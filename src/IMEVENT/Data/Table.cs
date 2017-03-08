@@ -20,7 +20,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetIdByName(Name);
+            this.Id = GetIdByName(Name);
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -38,12 +38,7 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
-            if (table != null)
-            {
-                return table.Id;
-            }
-
-            return 0;
+            return (table == null)? 0 : table.Id;
         }
 
         public static Dictionary<int, Table> GetTableList(int eventId)

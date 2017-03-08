@@ -86,5 +86,21 @@ namespace IMEVENT.Events
 
             return ret;
         }
+
+        public static int Count<T,P,H>(this Dictionary<T, Dictionary<P,Stack<H>>> elem)
+        {
+            if (elem == null || !elem.Any())
+            {
+                return 0;
+            }
+
+            int ret = 0;
+            foreach (KeyValuePair<T, Dictionary<P, Stack<H>>> e in elem)
+            {               
+               ret += e.Value.Count();               
+            }
+
+            return ret;
+        }
     }
 }
