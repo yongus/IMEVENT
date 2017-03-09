@@ -13,7 +13,7 @@ namespace IMEVENT.Data
         public string Sex { get; set; }
         public int Status { get; set; }
         public string Language { get; set; }        
-        public String InvitedBy { get; set; }
+        public string InvitedBy { get; set; }
         public int GroupId { get; set; }
         public int ZoneId { get; set; }
         public int SousZoneId { get; set; }
@@ -51,16 +51,16 @@ namespace IMEVENT.Data
         /// <returns></returns>
         public static String GetUserIdByName(string fullName)
         {
-            if (String.IsNullOrEmpty(fullName))
+            if (string.IsNullOrEmpty(fullName))
             {
-                return String.Empty;
+                return string.Empty;
             }
             fullName = fullName.Trim();
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             User user = context.Users.FirstOrDefault(d => (d.LastName + d.FirstName).Equals(fullName));        
             if (user == null)
             {
-                return String.Empty; 
+                return string.Empty; 
             }
 
             return user.Id;
@@ -86,13 +86,14 @@ namespace IMEVENT.Data
             
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             string exists = GetUserIdByName(LastName + FirstName);
-            if (String.IsNullOrEmpty(exists))
+            if (string.IsNullOrEmpty(exists))
             {
                 context.Users.Add(this);
                 context.SaveChanges();
                 return this.Id;
             }
 
+            //user already exists - TODO : find a way to update user info in DB            
             this.Id = exists;
             return this.Id;
         }

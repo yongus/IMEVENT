@@ -86,8 +86,8 @@ namespace IMEVENT.Controllers
             //Test Data Matching
             Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
             badge.GenerateAllBadges();
-            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            badge.PrintAllBadgesToFile(uploads + "\\Results_Test.csv", false);
+            string uploadDir = Path.Combine(_environment.WebRootPath, "uploads");
+            badge.PrintBadgesToFile(uploadDir, false, true);
         }
 
     }

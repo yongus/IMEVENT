@@ -33,13 +33,13 @@ namespace IMEVENT.Data
         public int persist()
         {
             _context = ApplicationDbContext.GetDbContext();
-            if (Id != 0)
+            if (Id == 0)
             {
-                _context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Events.Add(this);                
             }
             else
             {
-                _context.Events.Add(this);
+                _context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
             
             _context.SaveChanges();
@@ -49,13 +49,12 @@ namespace IMEVENT.Data
         public Event(string name, IDataExtractor extractor)
         {
             this.extractor = extractor;
-            this.Theme = name;
-            
+            this.Theme = name;            
         }
 
         public void  ExtractEventDetails(String source )
         {
-            extractor.ExtractDataFromSource(source,Id);
+            this.extractor.ExtractDataFromSource(source, this.Id);
         }
     }
 }

@@ -21,13 +21,13 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             this.Id = GetIdByName(Name);
-            if (Id != 0)
+            if (Id == 0)
             {
-                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.Tables.Add(this);                
             }
             else
             {
-                context.Tables.Add(this);
+                context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
 
             context.SaveChanges();
