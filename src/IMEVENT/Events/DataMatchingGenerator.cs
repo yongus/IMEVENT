@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.Data;
 using IMEVENT.SharedEnums;
+using System.Text;
 
 namespace IMEVENT.Events
 {
@@ -827,8 +828,8 @@ namespace IMEVENT.Events
 
                 temp.Add(aMatching);
             }
-
-            File.WriteAllLines(FilePath, temp.ToArray());
+           
+            File.WriteAllLines(FilePath, temp.ToArray(), Encoding.Unicode);
         }
 
         #endregion
