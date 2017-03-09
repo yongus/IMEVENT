@@ -28,16 +28,17 @@ namespace IMEVENT.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(EventCreateViewModel model, ICollection<IFormFile> files)
         {
             var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            foreach (var file in files)
+            foreach (IFormFile file in files)
             {
                 if (file.Length > 0)
                 {
-                    String[] paths = file.FileName.Split('\\');
-                    String filePath = Path.Combine(uploads, paths[paths.Length - 1]);
+                    string[] paths = file.FileName.Split('\\');
+                    string filePath = Path.Combine(uploads, paths[paths.Length - 1]);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -46,7 +47,7 @@ namespace IMEVENT.Controllers
                         dataExtractor.Source = filePath;
                         dataExtractor.DBcontext = ApplicationDbContext.GetDbContext(); 
                      
-                        Event e = new Event(model.EventName, dataExtractor );
+                        Event e = new Event(model.EventName, dataExtractor);
                         e.EndDate = model.EndDate;
                         e.StartDate = model.StartDate;
                         e.Theme = model.Theme;
@@ -55,9 +56,8 @@ namespace IMEVENT.Controllers
                         e.Fee = model.Fee;
                         e.Type = EventTypeEnum.GRANDE_RETRAITE;
                         e.persist();
-                        Thread t = new Thread(()=>ProcessEvent(e, dataExtractor.Source));
-                        t.Start();
-                            
+                        Thread t = new Thread(() => ProcessEvent(e, dataExtractor.Source));
+                        t.Start();                            
                     }
                 }
             }
@@ -86,6 +86,7 @@ namespace IMEVENT.Controllers
             //Test Data Matching
             Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
             badge.GenerateAllBadges();
+            badge.PrintAllBadgesToFile("C:\\Users\\fyonga\\Source\\Repos\\InputData\\Reduced\\Results_Test.csv", false);
         }
 
     }

@@ -9,6 +9,7 @@ namespace IMEVENT.Events
     {
         public int Id { get; set; }
         public int TableNbr { get; set; }
+        public int IdRef { get; set; }
         public int PlaceNbr { get; set; }
     }
 
@@ -68,6 +69,38 @@ namespace IMEVENT.Events
             }
 
             return false;
+        }
+
+        public static int Count<T, H>(this Dictionary<T, Stack<H>> elem)
+        {
+            if (elem == null || !elem.Any())
+            {
+                return 0;
+            }
+
+            int ret = 0;
+            foreach (KeyValuePair<T, Stack<H>> e in elem)
+            {
+                ret += e.Value.Count;
+            }
+
+            return ret;
+        }
+
+        public static int Count<T,P,H>(this Dictionary<T, Dictionary<P,Stack<H>>> elem)
+        {
+            if (elem == null || !elem.Any())
+            {
+                return 0;
+            }
+
+            int ret = 0;
+            foreach (KeyValuePair<T, Dictionary<P, Stack<H>>> e in elem)
+            {               
+               ret += e.Value.Count();               
+            }
+
+            return ret;
         }
     }
 }

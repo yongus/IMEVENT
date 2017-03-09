@@ -34,22 +34,21 @@ namespace IMEVENT.Services
         private static readonly string COLUMN_EMAIL = "M";
         private static readonly string COLUMN_PHONE = "N";
         private static readonly string COLUMN_RESPONSIBLE = "O";
-        private static readonly string COLUMN_REMARKS = "P";
-        private static readonly string COLUMN_REGIME = "Q";
-        private static readonly string COLUMN_PRECISION = "R";
-        private static readonly string COLUMN_ZONE = "S";
-        private static readonly string COLUMN_SOUS_ZONE = "T";
-        private static readonly string COLUMN_ORIGIN_TOWN = "U";
-        private static readonly string COLUMN_ORIGIN_GROUP = "V";
-        private static readonly string COLUMN_HALL_TYPE = "W";
-        private static readonly string COLUMN_TABLE_TYPE = "X";
-        private static readonly string COLUMN_DORM_TYPE = "Y";
-        private static readonly string COLUMN_PART = "Z";
+        private static readonly string COLUMN_REMARKS = "P";        
+        private static readonly string COLUMN_PRECISION = "Q";
+        private static readonly string COLUMN_ZONE = "R";
+        private static readonly string COLUMN_SOUS_ZONE = "S";
+        private static readonly string COLUMN_ORIGIN_TOWN = "T";
+        private static readonly string COLUMN_ORIGIN_GROUP = "U";
+        private static readonly string COLUMN_HALL_TYPE = "V";
+        private static readonly string COLUMN_TABLE_TYPE = "W";
+        private static readonly string COLUMN_DORM_TYPE = "X";        
 
         private static readonly int USER_WORKSHEET_INDEX = 1;
         private static readonly int REF_WORKSHEET_INDEX = 2;
         private static readonly int HALL_WORKSHEET_INDEX = 3;
         private static readonly int DORMS_WORKSHEET_INDEX = 4;
+        private static readonly int SHARING_GROUP_WORKSHEET_INDEX = 5;
 
         private static readonly string COLUMN_NAME = "A";
         private static readonly string COLUMN_CAPACITE = "B";
@@ -59,11 +58,13 @@ namespace IMEVENT.Services
         private static readonly string TABLE_CAPACITY = "C";
         private static readonly string TYPE_TABLE = "D";
         private static readonly string TYPE_DORM = "C";
+        private static readonly string CATEGORY_DORM = "D";
+
         private static readonly string TYPE_HALL = "C";
 
-       
-
-
+        //Sharing group        
+        private static readonly string TYPE_SG = "A";
+        private static readonly string TYPE_SG_CAPACITY = "B";
 
         public void ExtractDataFromSource(string source, int EventId)
         {
@@ -77,17 +78,19 @@ namespace IMEVENT.Services
             using (ExcelPackage package = new ExcelPackage(existingFile))
             {
                 ExcelWorksheet userWorksheet = package.Workbook.Worksheets[USER_WORKSHEET_INDEX];
-                loadUsers(userWorksheet, EventId);
+                LoadUsers(userWorksheet, EventId);
                 ExcelWorksheet dormWorksheet = package.Workbook.Worksheets[DORMS_WORKSHEET_INDEX];
-                loadDorms(dormWorksheet, EventId);
+                LoadDorms(dormWorksheet, EventId);
                 ExcelWorksheet hallWorksheet = package.Workbook.Worksheets[HALL_WORKSHEET_INDEX];
-                loadHalls(hallWorksheet, EventId);
+                LoadHalls(hallWorksheet, EventId);
                 ExcelWorksheet refectoryWorksheet = package.Workbook.Worksheets[REF_WORKSHEET_INDEX];
-                loadRefectories(refectoryWorksheet, EventId);
+                LoadRefectories(refectoryWorksheet, EventId);
+                ExcelWorksheet sharingGroupWorksheet = package.Workbook.Worksheets[SHARING_GROUP_WORKSHEET_INDEX];
+                LoadSharingGroups(sharingGroupWorksheet, EventId);
             }
         }
 
-        public void loadUsers(ExcelWorksheet worksheet, int EventId)
+        public void LoadUsers(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
@@ -97,7 +100,7 @@ namespace IMEVENT.Services
                 string name = (string)worksheet.Cells[COLUMN_FIRSTNAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    User u = getUserFromSpreadSheet(currentRow, worksheet);
+                    User u = GetUserFromSpreadSheet(currentRow, worksheet);
                     attendee.EventId = EventId;
                     attendee.UserId = u.Id;
                     try
@@ -119,16 +122,16 @@ namespace IMEVENT.Services
                     }
                     try
                     {
-                        attendee.DormType = Convertors.GetDormirtoryType((string)worksheet.Cells[COLUMN_DORM_TYPE + Convert.ToString(currentRow)].Value);
+                        attendee.DormCategory = Convertors.GetDormirtoryCategory((string)worksheet.Cells[COLUMN_DORM_TYPE + Convert.ToString(currentRow)].Value);
                     }
                     catch
                     {
                         attendee.SectionType = HallSectionTypeEnum.NONE;
                     }
+
                     attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
                     try
                     {
-
                         attendee.AmountPaid = (int)worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value;
                     }
                     catch (Exception)
@@ -136,25 +139,15 @@ namespace IMEVENT.Services
                         attendee.AmountPaid = 0;
                     }
 
+                    attendee.InvitedBy = User.GetUserIdByName((string)worksheet.Cells[COLUMN_INVITED_BY + Convert.ToString(currentRow)].Value);                    
 
-
-                    attendee.InvitedBy = User.GetUserIdByName((string)worksheet.Cells[COLUMN_INVITED_BY + Convert.ToString(currentRow)].Value);
-                    try
-                    {
-                        attendee.OnDiet = worksheet.Cells[COLUMN_REGIME + Convert.ToString(currentRow)].Value.Equals("OUI") ? true : false;
-
-                    }
-                    catch (Exception)
-                    {
-                        attendee.OnDiet = false;
-                    }
                     try
                     {
                         attendee.SharingCategory = Convertors.GetSharingGroupCategory((string)worksheet.Cells[COLUMN_SHARING_CATEGORY + Convert.ToString(currentRow)].Value);
                     }
                     catch
                     {
-                        attendee.SharingCategory = SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
+                        attendee.SharingCategory = SharingGroupCategoryEnum.ADULTE;
                     }
 
                     attendee.persist();
@@ -168,18 +161,16 @@ namespace IMEVENT.Services
             }
         }
 
-        public void loadHalls(ExcelWorksheet worksheet, int EventId)
+        public void LoadHalls(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getHallsFromSpreadSheet(currentRow, worksheet, EventId);
+                    GetHallsFromSpreadSheet(currentRow, worksheet, EventId);
 
                     maxEmpty = 0;
                 }
@@ -191,7 +182,7 @@ namespace IMEVENT.Services
             }
         }
 
-        private void getHallsFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
+        private void GetHallsFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Hall h = new Hall();
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
@@ -206,20 +197,18 @@ namespace IMEVENT.Services
                 h.HallType = HallSectionTypeEnum.NONE;
             }
             h.persist();
-
         }
-        public void loadRefectories(ExcelWorksheet worksheet, int EventId)
+
+        public void LoadRefectories(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getRefectoryFromSpreadSheet(currentRow, worksheet, EventId);
-
+                    GetRefectoryFromSpreadSheet(currentRow, worksheet, EventId);
                     maxEmpty = 0;
                 }
                 else
@@ -229,7 +218,8 @@ namespace IMEVENT.Services
                 currentRow++;
             }
         }
-        private void getRefectoryFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
+
+        private void GetRefectoryFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Refectory h = new Refectory();
 
@@ -238,7 +228,7 @@ namespace IMEVENT.Services
             h.persist();
             Table t = new Table();
             t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
-            t.RefertoireId = h.Id;
+            t.RefectoryId = h.Id;
             try
             {
                 t.Capacity = Convert.ToInt32(sheet.Cells[TABLE_CAPACITY + Convert.ToString(row)].Value);
@@ -247,33 +237,28 @@ namespace IMEVENT.Services
             {
                 t.Capacity = 0;
             }
+
             try
             {
-
-                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE_TABLE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
-                
-
+                t.RegimeType = Convertors.GetRegimeType((string)sheet.Cells[TYPE_TABLE + Convert.ToString(row)].Value.ToString().ToLowerInvariant());               
             }
             catch (Exception)
             {
                 t.RegimeType = RegimeEnum.NONE;
             }
-            t.persist();
-
-
+            t.persist();            
         }
 
-        public void loadDorms(ExcelWorksheet worksheet, int EventId)
+        public void LoadDorms(ExcelWorksheet worksheet, int EventId)
         {
             int maxEmpty = 0;
             int currentRow = 2;
             while (maxEmpty < MAX_EMPTY_CELLS)
             {
-
                 string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
                 if (!String.IsNullOrEmpty(name))
                 {
-                    getDormFromSpreadSheet(currentRow, worksheet, EventId);
+                    GetDormFromSpreadSheet(currentRow, worksheet, EventId);
                    
                     maxEmpty = 0;
                 }
@@ -284,12 +269,14 @@ namespace IMEVENT.Services
                 currentRow++;
             }
         }
-        private void getDormFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
+
+        private void GetDormFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
         {
             Dormitory h = new Dormitory();
             h.Capacity = Convert.ToInt32(sheet.Cells[COLUMN_CAPACITE + Convert.ToString(row)].Value);
             h.Name = (string)sheet.Cells[COLUMN_NAME + Convert.ToString(row)].Value;
             h.EventId = EventId;
+
             try
             {
                 h.DormType = Convertors.GetDormirtoryType((string)sheet.Cells[TYPE_DORM + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
@@ -298,9 +285,20 @@ namespace IMEVENT.Services
             {
                 h.DormType = DormitoryTypeEnum.NONE;
             }
+
+            try
+            {
+                h.DormCategory = Convertors.GetDormirtoryCategory((string)sheet.Cells[CATEGORY_DORM + Convert.ToString(row)].Value.ToString().ToLowerInvariant());
+            }
+            catch (Exception)
+            {
+                h.DormCategory = DormitoryCategoryEnum.MATELAS;
+            }
+
             h.persist();
         }
-        private User getUserFromSpreadSheet(int row, ExcelWorksheet sheet)
+
+        private User GetUserFromSpreadSheet(int row, ExcelWorksheet sheet)
         {
             User user = new User();
             user.FirstName = (string)sheet.Cells[COLUMN_FIRSTNAME + Convert.ToString(row)].Value;
@@ -324,7 +322,6 @@ namespace IMEVENT.Services
                     {
                         val = "";
                     }
-
                 }
 
                 user.PhoneNumber = val;
@@ -364,6 +361,41 @@ namespace IMEVENT.Services
             user.persist();
             return user;
         }
-        
+
+        public void LoadSharingGroups(ExcelWorksheet worksheet, int EventId)
+        {
+            int maxEmpty = 0;
+            int currentRow = 2;
+            while (maxEmpty < MAX_EMPTY_CELLS)
+            {
+                string name = (string)worksheet.Cells[COLUMN_NAME + Convert.ToString(currentRow)].Value;
+                if (!string.IsNullOrEmpty(name))
+                {
+                    GetSharingGroupsFromSpreadSheet(currentRow, worksheet, EventId);
+                    maxEmpty = 0;
+                }
+                else
+                {
+                    maxEmpty++;
+                }
+                currentRow++;
+            }
+        }
+
+        private void GetSharingGroupsFromSpreadSheet(int row, ExcelWorksheet sheet, int EventId)
+        {
+            SharingGroup sg = new SharingGroup();
+            sg.Capacity = Convert.ToInt32(sheet.Cells[TYPE_SG_CAPACITY + Convert.ToString(row)].Value);            
+            sg.EventId = EventId;
+            try
+            {
+                sg.Type = Convertors.GetSharingGroupCategory((string)sheet.Cells[TYPE_SG + Convert.ToString(row)].Value);
+            }
+            catch (Exception)
+            {
+                sg.Type = SharingGroupCategoryEnum.ADULTE;
+            }
+            sg.persist();
+        }
     }
 }

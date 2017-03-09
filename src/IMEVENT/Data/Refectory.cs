@@ -9,9 +9,6 @@ namespace IMEVENT.Data
 {
     public class Refectory:BaseSection,IObjectPersister
     {
-       
-
-        public int TableCapacity { get; set; }
         [Key]
         public int Id { get;  set; }
 
@@ -32,22 +29,17 @@ namespace IMEVENT.Data
             return this.Id;
         }
 
-        public static Dictionary<int, Refectory> GetAllRefs(int eventId)
+        public static Dictionary<int, Refectory> GetRefectoryList(int eventId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Refectories.Where(x => x.Id == eventId).ToDictionary(x => x.Id, x => x);
+            return context.Refectories.Where(x => x.EventId == eventId).ToDictionary(x => x.Id, x => x);
         }
 
         public int GetIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));
-            if (refectory != null)
-            {
-                return refectory.Id;
-            }
-
-            return 0;
+            Refectory refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));            
+            return (refectory == null) ? 0 : refectory.Id;                        
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class DormEntry
+    public class BaseSectionEntry
     {        
-        public int IdDormitory { get; set; }
-        public int BedNbr { get; set; }
+        public int Id { get; set; }        
+        public int Place { get; set; }        
     }
 }

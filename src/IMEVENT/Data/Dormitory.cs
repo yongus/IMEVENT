@@ -12,7 +12,7 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get; set; }
         public DormitoryTypeEnum DormType { get; set; }
-       
+        public DormitoryCategoryEnum DormCategory { get; set; }
 
         public int persist()
         {
@@ -44,10 +44,10 @@ namespace IMEVENT.Data
             return 0;
         }
 
-        public static Dictionary<int, Dormitory> GetAllDorms(int eventID)
+        public static Dictionary<int, Dormitory> GetDormitoryList(int eventID)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Dorms.Where(x => x.Id == eventID).ToDictionary(x => x.Id, x => x);
+            return context.Dorms.Where(x => x.EventId == eventID).ToDictionary(x => x.Id, x => x);
         }
     }
 }

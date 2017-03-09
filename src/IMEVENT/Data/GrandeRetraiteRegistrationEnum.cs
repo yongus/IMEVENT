@@ -7,8 +7,8 @@ namespace IMEVENT.Data
 {
     public enum GrandeRetraiteRegistrationEnum
     {
-        FistWeek =0,
-        SecondWeek =1,
-        Both =2
+        FistWeek = 0,
+        SecondWeek = 1,
+        Both = 2
     }
 }

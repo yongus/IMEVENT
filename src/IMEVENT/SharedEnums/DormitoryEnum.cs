@@ -8,9 +8,14 @@ namespace IMEVENT.SharedEnums
     public enum DormitoryTypeEnum
     {
         NONE = 0,
-        MALE = 1,
-        FEMALE = 2,
-        YOUNGBOYS = 3,
-        YOUNGGIRLS = 4
+        MEN = 1,
+        WOMEN = 2
     }
+
+    public enum DormitoryCategoryEnum
+    {
+        MATELAS = 0,
+        BED = 1,
+        VIP = 2            
+    }   
 }

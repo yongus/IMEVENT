@@ -24,8 +24,7 @@ namespace IMEVENT.Data
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
             else
-            {
-                
+            {                
                 context.Halls.Add(this);
             }
             
@@ -36,21 +35,14 @@ namespace IMEVENT.Data
         public int GetHallIdByName(string name)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));
-            if (hall != null)
-            {
-                return hall.Id;
-            }
-            else return 0;
+            Hall hall = context.Halls.FirstOrDefault(d => d.Name.Equals(name));            
+            return (hall == null)? 0 : hall.Id;
         }
 
-
-        public static Dictionary<int, Hall> GetAllHalls(int eventID)
+        public static Dictionary<int, Hall> GetHallSections(int eventID)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.Halls.Where(x => x.Id == eventID).ToDictionary(x => x.Id, x => x);            
-
-        }
-
+            return context.Halls.Where(x => x.EventId == eventID).ToDictionary(x => x.Id, x => x);            
+        }    
     }
 }
