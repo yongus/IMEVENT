@@ -9,14 +9,12 @@ using IMEVENT.Models;
 namespace IMEVENT.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
-    {
-        
-
-       
+    {        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
         public DbSet<Group> Groups { get; set; }
         public DbSet<Zone> Zones { get; set;}
         public DbSet<Responsable> Responsables{get;set;}
@@ -36,13 +34,12 @@ namespace IMEVENT.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-      public static  ApplicationDbContext GetDbContext()
+
+        public static  ApplicationDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>();
             options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=IMEVENTDB;Trusted_Connection=True;MultipleActiveResultSets=true");
             return new ApplicationDbContext(options.Options);
         }
-
-       
     }
 }

@@ -34,7 +34,7 @@ namespace IMEVENT.Data
 
         public override string ToString()
         {
-            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                 , InvitedBy
                 , AmountPaid
                 , Remarks                
@@ -52,24 +52,26 @@ namespace IMEVENT.Data
             return ret;
         }
 
-        public string ToString(Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms
+        public string ToString(Dictionary<string, User> AttendeeInfo, Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms
             , Dictionary<int, Refectory> Refectories, Dictionary<int, Table> Tables)
-        {            
-            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
-                , InvitedBy
-                , AmountPaid
-                , Remarks                
-                , Precision
-                , Halls[HallId].Name
-                , SeatNbr
-                , Dorms[DormitoryId].Name
-                , BedNbr
-                , Refectories[RefectoryId].Name
-                , Tables[TableId].Name
-                , TableSeatNbr
-                , string.Format("{0} {1}"
-                                , SharingCategory.SharingGroupCategoryToString()
-                                , SharingGroupNbr)
+        {
+            string invitedBy = (AttendeeInfo.ContainsKey(this.InvitedBy))
+                            ? string.Format("{0} {1}", AttendeeInfo[InvitedBy].FirstName, AttendeeInfo[InvitedBy].LastName)
+                            : "";
+
+            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+                    , invitedBy
+                    , AmountPaid
+                    , Remarks                
+                    , Precision
+                    , Halls[HallId].Name
+                    , SeatNbr
+                    , Dorms[DormitoryId].Name
+                    , BedNbr
+                    , Refectories[RefectoryId].Name
+                    , Tables[TableId].Name
+                    , TableSeatNbr
+                    , string.Format("{0} {1}", SharingCategory.SharingGroupCategoryToString(), SharingGroupNbr)
                 );
 
             return ret;

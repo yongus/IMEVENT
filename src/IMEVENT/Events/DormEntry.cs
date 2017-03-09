@@ -7,7 +7,7 @@ namespace IMEVENT.Events
 {
     public class DormEntry
     {        
-        public int IdDormitory { get; set; }
+        public int DormitoryId { get; set; }
         public int BedNbr { get; set; }
     }
 }
