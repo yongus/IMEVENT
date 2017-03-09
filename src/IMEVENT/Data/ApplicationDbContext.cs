@@ -28,6 +28,7 @@ namespace IMEVENT.Data
         public DbSet<Refectory> Refectories { get; set; }
         public DbSet<EventAttendee> EventAttendees { get; set; }
         public DbSet<Table> Tables { get; set; }
+        public DbSet<SharingGroup> SharingGroups { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

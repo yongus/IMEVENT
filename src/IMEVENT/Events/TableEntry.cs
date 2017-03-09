@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class RefectoryEntry
+    public class TableEntry
     {        
-        public int IdRefectory { get; set; }
-        public int TableNbr { get; set; }
+        public int RefectoryId { get; set; }
+        public int TableId { get; set; }
         public int SeatNbr { get; set; }
     }
 }

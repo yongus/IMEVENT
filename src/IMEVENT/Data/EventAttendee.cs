@@ -15,92 +15,83 @@ namespace IMEVENT.Data
         public int EventId { get; set; }
        
         public Int32 AmountPaid { get; set; }
-        public string Remarks { get; set; }
-        public bool OnDiet { get; set; }
-        public string UserId { get; set; }
-     
-        public string InvitedBy { get; set; }     
-       
-        public string Regime { get; set; }
+        public string Remarks { get; set; }        
+        public string UserId { get; set; }     
+        public string InvitedBy { get; set; }                    
         public string Precision { get; set; }
         public HallSectionTypeEnum SectionType { get; set; }
-        public DormitoryTypeEnum DormType { get; set; }
+        public DormitoryCategoryEnum DormCategory { get; set; }
         public RegimeEnum TableType { get; set; }
         public SharingGroupCategoryEnum SharingCategory { get; set; }
-        public int IdHall { get; set; }
-       
+        public int HallId { get; set; }       
         public int SeatNbr { get; set; }
-        public int IdDormitory { get; set; }
-  
+        public int DormitoryId { get; set; }  
         public int BedNbr { get; set; }
-        public int IdRefectory { get; set; }
-        public int TableNbr { get; set; }
+        public int RefectoryId { get; set; }
+        public int TableId { get; set; }
         public int TableSeatNbr { get; set; }
+        public int SharingGroupNbr { get; set; }
 
         public override string ToString()
         {
             string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                 , InvitedBy
                 , AmountPaid
-                , Remarks
-                , Regime
+                , Remarks                
                 , Precision
                 , Id
                 , SeatNbr
                 , Id
                 , BedNbr
-                , IdRefectory
-                , TableNbr
+                , RefectoryId
+                , TableId
                 , TableSeatNbr
+                , SharingGroupNbr
                 );
 
             return ret;
         }
 
-        public string ToString(Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms, Dictionary<int, Refectory> Refectories)
-        {
+        public string ToString(Dictionary<int, Hall> Halls, Dictionary<int, Dormitory> Dorms
+            , Dictionary<int, Refectory> Refectories, Dictionary<int, Table> Tables)
+        {            
             string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                 , InvitedBy
                 , AmountPaid
-                , Remarks
-                , Regime
+                , Remarks                
                 , Precision
-                , Halls[Id].Name
+                , Halls[HallId].Name
                 , SeatNbr
-                , Dorms[Id].Name
+                , Dorms[DormitoryId].Name
                 , BedNbr
-                , Refectories[IdRefectory].Name
-                , TableNbr
+                , Refectories[RefectoryId].Name
+                , Tables[TableId].Name
                 , TableSeatNbr
+                , string.Format("{0} {1}"
+                                , SharingCategory.SharingGroupCategoryToString()
+                                , SharingGroupNbr)
                 );
 
             return ret;
         }
         
-        public static Dictionary<string, EventAttendee> GetAllAttendee(int eventID)
+        public static Dictionary<string, EventAttendee> GetAttendeeList(int eventID)
         {            
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            return context.EventAttendees.Where(x => x.Id == eventID).ToDictionary(x => x.UserId, x => x); 
+            return context.EventAttendees.Where(x => x.EventId == eventID).ToDictionary(x => x.UserId, x => x); 
         }
 
         public EventAttendee GetEventAttendeeById(int eventId, string userId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            EventAttendee attendee = context.EventAttendees.Where(x => x.Id == eventId).FirstOrDefault(e => e.UserId == userId);
-            if (attendee != null)
-            {
-                return attendee;
-            }
-
-            return null;
+            return context.EventAttendees.Where(x => x.EventId == eventId).FirstOrDefault(e => e.UserId == userId);                        
         }
 
-        public static List<EventAttendee>  GetAllByEvent(int eventId)
+        public static List<EventAttendee> GetAttendeeListByEvent(int eventId)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.EventAttendees.Where(x => x.EventId == eventId).ToList();
         }
-
 
         public int persist()
         {
@@ -119,7 +110,5 @@ namespace IMEVENT.Data
 
             return this.Id;
         }
-
-       
     }
 }
