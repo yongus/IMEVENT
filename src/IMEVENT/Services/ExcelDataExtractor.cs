@@ -98,7 +98,7 @@ namespace IMEVENT.Services
             {
                 EventAttendee attendee = new EventAttendee();
                 string name = (string)worksheet.Cells[COLUMN_FIRSTNAME + Convert.ToString(currentRow)].Value;
-                if (!String.IsNullOrEmpty(name))
+                if (!string.IsNullOrEmpty(name))
                 {
                     User u = GetUserFromSpreadSheet(currentRow, worksheet);
                     attendee.EventId = EventId;
@@ -132,7 +132,7 @@ namespace IMEVENT.Services
                     attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
                     try
                     {
-                        attendee.AmountPaid = (int)worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value;
+                        attendee.AmountPaid = Convert.ToInt32(worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value);
                     }
                     catch (Exception)
                     {
@@ -305,6 +305,9 @@ namespace IMEVENT.Services
             user.LastName = (string)sheet.Cells[COLUMN_LASTNAME + Convert.ToString(row)].Value;
             user.Sex = (string)sheet.Cells[COLUMN_SEX + Convert.ToString(row)].Value;
             user.Level = Convertors.GetMembershipLevel((string)sheet.Cells[COLUMN_LEVEL + Convert.ToString(row)].Value);
+            user.Language = (string)sheet.Cells[COLUMN_LANGUAGE + Convert.ToString(row)].Value;
+            user.Email = (string)sheet.Cells[COLUMN_EMAIL + Convert.ToString(row)].Value; 
+
             if (sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value != null)
             {
                 string val;
@@ -312,7 +315,7 @@ namespace IMEVENT.Services
                 {
                     val = (string)sheet.Cells[COLUMN_PHONE + Convert.ToString(row)].Value;
                 }
-                catch (InvalidCastException e)
+                catch (InvalidCastException)
                 {
                     try
                     {

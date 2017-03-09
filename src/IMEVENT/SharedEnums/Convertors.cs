@@ -14,7 +14,7 @@ namespace IMEVENT.SharedEnums
                 case MembershipLevelEnum.SIMPLE:
                     return "Simple";
                 case MembershipLevelEnum.REGULIER:
-                    return "Regulier";
+                    return "Régulier";
                 case MembershipLevelEnum.ACTIF_1:
                     return "Actif I";
                 case MembershipLevelEnum.ACTIF_2:
@@ -34,9 +34,9 @@ namespace IMEVENT.SharedEnums
                 case MembershipLevelEnum.INCARNATEUR:
                     return "Incarnateur";
                 case MembershipLevelEnum.RG:
-                    return "Responsable General";
+                    return "Responsable Général";
                 case MembershipLevelEnum.INVITE:
-                    return "Invited";
+                    return "Invité";
                 default:
                     return "Inconnu";
             }
@@ -49,13 +49,13 @@ namespace IMEVENT.SharedEnums
             {
                 case "simple":
                     return MembershipLevelEnum.SIMPLE;
-                case "regulier":
+                case "régulier":
                     return MembershipLevelEnum.REGULIER;
-                case "actifI":
+                case "actif1":
                     return MembershipLevelEnum.ACTIF_1;
-                case "actifII":
+                case "actif2":
                     return MembershipLevelEnum.ACTIF_2;
-                case "actifIII":
+                case "actif3":
                     return MembershipLevelEnum.ACTIF_3;
                 case "jeunephare":
                     return MembershipLevelEnum.JEUNE_PHARE;
@@ -69,8 +69,9 @@ namespace IMEVENT.SharedEnums
                     return MembershipLevelEnum.MP;
                 case "incarnateur":
                     return MembershipLevelEnum.INCARNATEUR;
-                case "responsablegeneral":
-                    return MembershipLevelEnum.RG;               
+                case "responsablegénéral":
+                    return MembershipLevelEnum.RG;
+                case "invité":
                 default:
                     return MembershipLevelEnum.INVITE;
             }
@@ -83,7 +84,7 @@ namespace IMEVENT.SharedEnums
                 case DormitoryCategoryEnum.MATELAS:
                     return "Matelas";
                 case DormitoryCategoryEnum.BED:
-                    return "Lits";
+                    return "Lit";
                 case DormitoryCategoryEnum.VIP:
                     return "VIP";                
                 default:
@@ -200,36 +201,36 @@ namespace IMEVENT.SharedEnums
             switch (type)
             {
                 case RegimeEnum.CLERICAL:
-                    return "Clerge";
+                    return "Clergé";
                 case RegimeEnum.COOKING:
                     return "Cuisine";
                 case RegimeEnum.DISABLED:
-                    return "Handicape";
+                    return "Handicapé";
                 case RegimeEnum.FULL_MEMBER:
                     return "Membre Plein";
                 case RegimeEnum.GENERAL_MANAGER:
-                    return "Responsable General";
+                    return "Responsable Général";
                 case RegimeEnum.HEALTH_SERVICE:
-                    return "Service Sante";
+                    return "Service Santé";
                 case RegimeEnum.MUSIC_INSTRUMENT_SERVICE:
                     return "Service Instrument";
                 case RegimeEnum.NEW_BORN:
-                    return "Nouveaux-nes";
+                    return "Nouveaux-né";
                 case RegimeEnum.RELIGIOUS:
-                    return "Religieux";
+                    return "Réligieux";
                 case RegimeEnum.SECOND_LANGUAGE:
                     return "Seconde Langue";
                 case RegimeEnum.SONG_SERVICE:
                     return "Service Chant";
                 case RegimeEnum.SPECIAL_GUEST:
-                    return "Invite Special";
+                    return "Invite Spécial";
                 case RegimeEnum.TRANSLATION_SERVICE:
                     return "Service Traduction";
                 case RegimeEnum.WITHOUT_SALT_WITHOUT_OIL:
-                    return "Sans Sel / sans Huile";
+                    return "Sans Sel - sans Huile";
                 case RegimeEnum.NONE:                    
                 default:
-                    return "Sans Regime";
+                    return "Sans Régime";
             }
         }
 
@@ -277,11 +278,11 @@ namespace IMEVENT.SharedEnums
             switch (type)
             {
                 case HallSectionTypeEnum.CLERICAL:
-                    return "Clerge";
+                    return "Clergé";
                 case HallSectionTypeEnum.COOKING:
                     return "Cuisine";
                 case HallSectionTypeEnum.DISABLED:
-                    return "Handicape";
+                    return "Handicapé";
                 case HallSectionTypeEnum.FULL_MEMBER:
                     return "Membre Plein";
                 case HallSectionTypeEnum.GENERAL_MANAGER:

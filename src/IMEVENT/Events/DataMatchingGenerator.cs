@@ -11,7 +11,7 @@ namespace IMEVENT.Events
 {
     public class DataMatchingGenerator
     {
-        #region private data
+        #region internal data definition
 
         //Is the data loaded from the DB
         public bool IsAllDataLoaded
@@ -287,7 +287,7 @@ namespace IMEVENT.Events
 
         #region Assign attendees to seat in halls        
 
-        protected HallEntry GetHallEntry(HallSectionTypeEnum sectionType, int? index = null)
+        protected HallEntry GetHallEntry(HallSectionTypeEnum sectionType)
         {
             if(this.ListAvailableSections.IsNullOrEmpty() 
                || !this.ListAvailableSections.ContainsKey(sectionType)
@@ -297,8 +297,7 @@ namespace IMEVENT.Events
                 return null;
             }
 
-            return index == null ? this.ListAvailableSections[sectionType].Pop() 
-                                 : this.ListAvailableSections[sectionType].ElementAt((int)index);
+            return this.ListAvailableSections[sectionType].Pop();
         }        
 
         public Stack<HallEntry> ShuffleHallSectionEntries(Dictionary<int, Hall> inputSeatList)
@@ -397,7 +396,7 @@ namespace IMEVENT.Events
 
         #region Assgin attendees to beds in Dorms  
               
-        protected DormEntry GetDormEntry(DormitoryTypeEnum dormType, DormitoryCategoryEnum dormCat, int? index = null)
+        protected DormEntry GetDormEntry(DormitoryTypeEnum dormType, DormitoryCategoryEnum dormCat)
         {
             if (this.ListAvailableDorms.IsNullOrEmpty() 
                 || !this.ListAvailableDorms.ContainsKey(dormType)
@@ -410,8 +409,7 @@ namespace IMEVENT.Events
                 return null;
             }
 
-            return index == null ? this.ListAvailableDorms[dormType][dormCat].Pop()
-                                 : this.ListAvailableDorms[dormType][dormCat].ElementAt((int)index);
+            return this.ListAvailableDorms[dormType][dormCat].Pop();
         }
                 
         public Stack<DormEntry> ShuffleBedEntries(Dictionary<int, Dormitory> inputBedList)
@@ -444,7 +442,7 @@ namespace IMEVENT.Events
                 {
                     outputBedList.Push(new DormEntry
                     {                        
-                        IdDormitory = listofBeds[bedId].Id,
+                        DormitoryId = listofBeds[bedId].Id,
                         BedNbr = listofBeds[bedId].PlaceNbr
                     });
                 }
@@ -523,7 +521,7 @@ namespace IMEVENT.Events
 
         #region Assign attendees to tables in refectories        
 
-        protected TableEntry GetTableEntry(RegimeEnum refType, int? index = null)
+        protected TableEntry GetTableEntry(RegimeEnum refType)
         {
             if (this.ListAvailableTables.IsNullOrEmpty()
                 || !this.ListAvailableTables.ContainsKey(refType)
@@ -533,8 +531,7 @@ namespace IMEVENT.Events
                 return null;
             }
 
-            return index == null ? this.ListAvailableTables[refType].Pop()
-                                 : this.ListAvailableTables[refType].ElementAt((int)index);
+            return this.ListAvailableTables[refType].Pop();
         }
         
         public Stack<TableEntry> ShuffleTableEntries(Dictionary<int, Table> inputTableList)
@@ -770,7 +767,7 @@ namespace IMEVENT.Events
                     this.attendees[attendeeKey].HallId = aSeat.HallId;
                     this.attendees[attendeeKey].SeatNbr = aSeat.SeatNbr;
 
-                    this.attendees[attendeeKey].DormitoryId = aBed.IdDormitory;
+                    this.attendees[attendeeKey].DormitoryId = aBed.DormitoryId;
                     this.attendees[attendeeKey].BedNbr = aBed.BedNbr;
 
                     this.attendees[attendeeKey].RefectoryId = aTable.RefectoryId;
@@ -784,6 +781,7 @@ namespace IMEVENT.Events
                 }                                
             }
             
+            //Just a check to make sure all attendees have been assigned
             if(nbAssignment != nbrAttendees)
             {
                 throw new System.NullReferenceException(string.Format("Failure to generate badges of registered participants for the event at {0}, starting on {1}"
@@ -791,47 +789,181 @@ namespace IMEVENT.Events
                     , this.CurrentEvent.StartDate.ToString()));
             }                        
         }
-       
-        public void PrintAllBadgesToFile(string FilePath, bool forceRecompute)
+
+        #endregion
+
+        #region Print helpers
+        public List<string> GetStringListOfAssignedAttendees()
         {
-            //format output
-            List<string> temp = new List<string>();
-            if (forceRecompute || this.Attendees == null || !this.Attendees.Any())
+            List<string> ret = new List<string>
+            {
+                //Add file header
+                string.Format("Evenement organisé du {1} {2} au {3} {4} dans la ville de {0}"
+                         , this.CurrentEvent.Place
+                         , this.CurrentEvent.StartDate.DayOfWeek
+                         , this.CurrentEvent.StartDate
+                         , this.CurrentEvent.EndDate.DayOfWeek
+                         , this.CurrentEvent.EndDate)
+            };
+
+            ret.Add(String.Format("Theme: \"{0}\"", this.CurrentEvent.Theme));
+            ret.Add(",,,,,,,,,,,,,,,,,,,,,,,");
+            ret.Add(String.Format(" Prix: {0} Fcfa", this.CurrentEvent.Fee));
+            ret.Add(",,,,,,,,,,,,,,,,,,,,,,,");
+            string header = "Nom,Prenom,Sexe,Ville,Groupe,Responsable Groupe,Niveau,Langue,Email,Téléphone,"
+                            + "Invité Par,Frais Payés,Remarques,Précision,Section Hall,Nr Siège,Dortoir,"
+                            + "Nr Lit,Réfectoire,Nr Table, Nr Siège, Groupe Partage";
+
+            ret.Add(header);
+
+            //Add rows
+            foreach (KeyValuePair<string, EventAttendee> entry in this.Attendees)
+            {
+                string aMatching = string.Format("{0},{1}"
+                    , attendeesInfo[entry.Key].ToString()
+                    , entry.Value.ToString(this.attendeesInfo, this.seatsInHall, this.bedsInDorms, this.refectories, this.tablesInRefs));
+
+                ret.Add(aMatching);
+            }
+
+            return ret;
+        }
+
+        public List<string> GetStringListOfEmptySections()
+        {
+            List<string> ret = new List<string>
+            {
+                //Add file header
+                string.Format("Evènement organisé du {1} {2} au {3} {4} dans la ville de {0}"
+                         , this.CurrentEvent.Place
+                         , this.CurrentEvent.StartDate.DayOfWeek
+                         , this.CurrentEvent.StartDate
+                         , this.CurrentEvent.EndDate.DayOfWeek
+                         , this.CurrentEvent.EndDate)
+            };
+
+            if (this.ListAvailableSections.Count() == 0)
+            {
+                ret.Add("Plus de place disponible dans le Hall!");
+                return ret;
+            }            
+
+            ret.Add("Type Section,Nom Section,Nr Siège");
+            foreach (KeyValuePair<HallSectionTypeEnum, Stack<HallEntry>> elem in this.ListAvailableSections)
+            {
+                foreach (HallEntry hall in elem.Value)
+                {
+                    ret.Add(string.Format("{0},{1},{2}"
+                            , Convertors.HallSectionTypeToString(elem.Key)
+                            , this.seatsInHall[hall.HallId].Name
+                            , hall.SeatNbr));
+                }                
+            }
+
+            return ret;
+        }
+
+        public List<string> GetStringListOfEmptyBeds()
+        {
+            List<string> ret = new List<string>
+            {
+                //Add file header
+                string.Format("Evènement organisé du {1} {2} au {3} {4} dans la ville de {0}"
+                         , this.CurrentEvent.Place
+                         , this.CurrentEvent.StartDate.DayOfWeek
+                         , this.CurrentEvent.StartDate
+                         , this.CurrentEvent.EndDate.DayOfWeek
+                         , this.CurrentEvent.EndDate)
+            };
+
+            if (this.ListAvailableDorms.Count() == 0)
+            {
+                ret.Add("Plus de lit disponible dans les dortoirs!");
+                return ret;
+            }
+
+            ret.Add("Type Dortoir,Catégorie,Nom Dortoir,Nr Lit");
+            foreach (KeyValuePair<DormitoryTypeEnum, Dictionary<DormitoryCategoryEnum, Stack<DormEntry>>> elem1 in this.ListAvailableDorms)
+            {
+                foreach(KeyValuePair<DormitoryCategoryEnum, Stack<DormEntry>> elem2 in elem1.Value)
+                {
+                    foreach (DormEntry elem3 in elem2.Value)
+                    {
+                        ret.Add(string.Format("{0},{1},{2},{3}"
+                                , Convertors.DormitoryTypeToString(elem1.Key)
+                                , Convertors.DormitoryCategoryToString(elem2.Key)
+                                , this.bedsInDorms[elem3.DormitoryId].Name                                
+                                , elem3.BedNbr));
+                    }
+                }                
+            }
+
+            return ret;
+        }
+
+        public List<string> GetStringListOfEmptyTables()
+        {
+            List<string> ret = new List<string>
+            {
+                //Add file header
+                string.Format("Evènement organisé du {1} {2} au {3} {4} dans la ville de {0}"
+                         , this.CurrentEvent.Place
+                         , this.CurrentEvent.StartDate.DayOfWeek
+                         , this.CurrentEvent.StartDate
+                         , this.CurrentEvent.EndDate.DayOfWeek
+                         , this.CurrentEvent.EndDate)
+            };
+
+            if (this.ListAvailableTables.Count() == 0)
+            {
+                ret.Add("Plus de place disponible dans les Réfectoires!");
+                return ret;
+            }
+
+            ret.Add("Type Table,Réfectoire,Table,Nr Siège");
+            foreach (KeyValuePair<RegimeEnum, Stack<TableEntry>> elem in this.ListAvailableTables)
+            {
+                foreach (TableEntry table in elem.Value)
+                {
+                    ret.Add(string.Format("{0},{1},{2},{3}"
+                            , Convertors.RegimeToString(elem.Key)
+                            , this.refectories[table.RefectoryId].Name
+                            , this.tablesInRefs[table.TableId].Name
+                            , table.SeatNbr));
+                }
+            }
+
+            return ret;
+        }
+
+        public void PrintBadgesToFile(string directoryPath, bool forceRecompute, bool printFreeSpots)
+        {                       
+            if (this.Attendees == null || !this.Attendees.Any() || forceRecompute)
             {
                 GenerateAllBadges();
             }
 
-            //file header
-            temp.Add(String.Format("Evenenemnt organise du {1} {2} au {3} {4} dans la ville de {0}"
-                     , this.CurrentEvent.Place
-                     , this.CurrentEvent.StartDate.DayOfWeek
-                     , this.CurrentEvent.StartDate
-                     , this.CurrentEvent.EndDate.DayOfWeek
-                     , this.CurrentEvent.EndDate));            
-            temp.Add(String.Format("Theme: \"{0}\"",this.CurrentEvent.Theme));
-            temp.Add(",,,,,,,,,,,,,,,,,,,,,,,");
-            temp.Add(String.Format(" Prix: {0} Fcfa", this.CurrentEvent.Fee));
-            temp.Add(",,,,,,,,,,,,,,,,,,,,,,,");
-            string header = "Nom,Prenom,Sexe,Ville,Groupe,Responsable Groupe,Niveau,Langue,Email,Telehone,"
-                            + "Invite Par,Frais Payes,Remarques,Precision,Section Hall,Nr Siege,Dortoir,"
-                            + "Nr Lit,Refectoire,Nr Table, Nr Siege, Groupe Partage";
+            List<string> temp = GetStringListOfAssignedAttendees();
+            string outputBadgesFile = string.Format("{0}\\Donnees_Badges.csv", directoryPath);
+            File.WriteAllLines(outputBadgesFile, temp.ToArray(), Encoding.Unicode);            
 
-            temp.Add(header);
-
-            //Rows
-            foreach (var entry in this.Attendees)
+            if (!printFreeSpots)
             {
-                string aMatching = String.Format("{0},{1}"
-                    , attendeesInfo[entry.Key].ToString()
-                    , entry.Value.ToString(this.seatsInHall, this.bedsInDorms, this.refectories, this.tablesInRefs)
-                   );
-
-                temp.Add(aMatching);
+                return;
             }
-           
-            File.WriteAllLines(FilePath, temp.ToArray(), Encoding.Unicode);
-        }
 
+            temp = GetStringListOfEmptySections();            
+            string freePlacesFile = string.Format("{0}\\Liste_Sieges_Hall_Disponibles.csv", directoryPath);
+            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
+
+            temp = GetStringListOfEmptyBeds();
+            freePlacesFile = string.Format("{0}\\Liste_Lits_Dortoir_Disponibles.csv", directoryPath);
+            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
+
+            temp = GetStringListOfEmptyTables();
+            freePlacesFile = string.Format("{0}\\Liste_Tables_Refectoire_Disponibles.csv", directoryPath);
+            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);            
+        }
         #endregion
     }
 }
