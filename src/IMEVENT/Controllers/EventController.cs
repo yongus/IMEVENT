@@ -10,6 +10,7 @@ using IMEVENT.Models.EventViewModels;
 using IMEVENT.Data;
 using IMEVENT.Services;
 using System.Threading;
+using NLog;
 
 namespace IMEVENT.Controllers
 {
@@ -18,7 +19,8 @@ namespace IMEVENT.Controllers
         private IHostingEnvironment _environment;
         private  ApplicationDbContext _context;
         private readonly int MAX_RETRY = 4;
-       
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public EventController(ApplicationDbContext context,IHostingEnvironment environment)
         {
             _environment = environment;
@@ -78,7 +80,10 @@ namespace IMEVENT.Controllers
                 catch (IOException ev)
                 {
                     i = i + 1;
-                    Console.WriteLine(ev.InnerException);
+                    if (i == MAX_RETRY)
+                    {
+                        logger.Log(LogLevel.Error, "Unable to create event detail " + ev.StackTrace);
+                    }
                     Thread.Sleep(2000);
                 }
             }
