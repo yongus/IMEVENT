@@ -15,8 +15,8 @@ namespace IMEVENT.SharedEnums
         JEUNE_TRAVAILLEUR_MAJEUR = 5,
         JEUNE_TRAVAILLEUR_SENIOR = 6,
         JEUNE_TRAVAILLEUR = 7,
-        ADULTE_M = 8,
-        ADULTE_S = 9,
+        ADULTE_MARIE = 8,
+        ADULTE_SINGLE = 9,
         JEUNE_MARIE = 10               
     }
 }

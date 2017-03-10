@@ -2,11 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using IMEVENT.Data;
 namespace IMEVENT.SharedEnums
 {
     public static class Convertors
     {
+
+        public static string EventTypeToString(this EventTypeEnum evt, bool forFilename)
+        {
+            switch (evt)
+            {
+                case EventTypeEnum.RETRAITE_CAREME:
+                    return forFilename ? "Retraite_Careme" : "Retraite de Careme";
+                case EventTypeEnum.RETRAITE_DE_COUPLE:
+                    return forFilename ? "Retraite_Couples" : "Retraite des Couple";
+                case EventTypeEnum.RETRAITE_MEMBRE_ACTIF:
+                    return forFilename ? "Retraite_Membre_Actif" : "Retraite des Membres Actifs";
+                case EventTypeEnum.RETRAITE_RESPONSABLE:
+                    return forFilename ? "Retraite_Responsable" : "Retraite des Responsables";
+                case EventTypeEnum.RETRAITE_SINGLE:
+                    return forFilename ? "Retraite_Single" : "Retraite Personne Single";
+                case EventTypeEnum.GRANDE_RETRAITE:
+                default:
+                    return forFilename ? "Grande_Retraite" : "Grande Retraite";
+            }
+        }
+
         public static string MemberShipLevelToString(this MembershipLevelEnum level)
         {
             switch (level)
@@ -69,7 +90,7 @@ namespace IMEVENT.SharedEnums
                     return MembershipLevelEnum.MP;
                 case "incarnateur":
                     return MembershipLevelEnum.INCARNATEUR;
-                case "responsablegénéral":
+                case "rg":
                     return MembershipLevelEnum.RG;
                 case "invité":
                 default:
@@ -143,7 +164,7 @@ namespace IMEVENT.SharedEnums
             switch (type)
             {                
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT:
-                    return "Universitaire Debutant";
+                    return "Universitaire Débutant";
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR:
                     return "Universitaire Majeur";                
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR:
@@ -151,13 +172,13 @@ namespace IMEVENT.SharedEnums
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR:
                     return "Jeune Travailleur";
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR:
-                    return "Jeune Travailleur Senior";
+                    return "Jeune Travailleur Sénior";
                 case SharingGroupCategoryEnum.SECOND_INTERMEDIARE:
-                    return "Secondaire Intermediaire";
+                    return "Secondaire Intermédiaire";
                 case SharingGroupCategoryEnum.SECOND_JUNIOR:
                     return "Secondaire Junior";
-                case SharingGroupCategoryEnum.ADULTE_S:                    
-                case SharingGroupCategoryEnum.ADULTE_M:                    
+                case SharingGroupCategoryEnum.ADULTE_SINGLE:                    
+                case SharingGroupCategoryEnum.ADULTE_MARIE:                    
                 case SharingGroupCategoryEnum.JEUNE_MARIE:                    
                 case SharingGroupCategoryEnum.ADULTE:                    
                 default:
@@ -170,23 +191,23 @@ namespace IMEVENT.SharedEnums
             type = type.ToLower().Replace(" ", string.Empty);
             switch (type)
             {
-                case "adultesenior":
-                    return SharingGroupCategoryEnum.ADULTE_S;
-                case "adultemajeur":
-                    return SharingGroupCategoryEnum.ADULTE_M;
-                case "universitairedebutant":
+                case "adultesingle":
+                    return SharingGroupCategoryEnum.ADULTE_SINGLE;
+                case "adultemarié":
+                    return SharingGroupCategoryEnum.ADULTE_MARIE;
+                case "universitairedébutant":
                     return SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT;
                 case "universitairemajeur":
                     return SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR;
-                case "jeunemarie":
+                case "jeunemarié":
                     return SharingGroupCategoryEnum.JEUNE_MARIE;
                 case "jeunetravailleurmajeur":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR;
                 case "jeunetravailleur":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
-                case "jeunetravailleursenior":
+                case "jeunetravailleursénior":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR;
-                case "secondaireintermediaire":
+                case "secondaireintermédiaire":
                     return SharingGroupCategoryEnum.SECOND_INTERMEDIARE;
                 case "secondairejunior":
                     return SharingGroupCategoryEnum.SECOND_JUNIOR;
