@@ -13,6 +13,7 @@ using IMEVENT.Data;
 using IMEVENT.Models;
 using IMEVENT.Services;
 using NLog.Extensions.Logging;
+using IMEVENT.Exceptions;
 
 namespace IMEVENT
 {
@@ -55,8 +56,8 @@ namespace IMEVENT
             } ).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
-
+            var builder = services.AddMvc();
+            builder.AddMvcOptions(o => o.Filters.Add(new GlobalExceptionHandling()));
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
@@ -69,7 +70,9 @@ namespace IMEVENT
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             loggerFactory.AddNLog();
-            env.ConfigureNLog("nlog.config");
+            
+           
+           
 
             app.UseApplicationInsightsRequestTelemetry();
 
