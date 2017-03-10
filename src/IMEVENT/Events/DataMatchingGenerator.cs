@@ -675,8 +675,8 @@ namespace IMEVENT.Events
             {
                 //ADULTE_S | ADULTE_M | JEUNE_MARIE are mapped to ADULTE
                 SharingGroupCategoryEnum sGroup = ((attendee.Value.SharingCategory == SharingGroupCategoryEnum.JEUNE_MARIE)
-                                                    || (attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_M)
-                                                    || ((attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_S)))
+                                                    || (attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_MARIE)
+                                                    || ((attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_SINGLE)))
                                                     ? SharingGroupCategoryEnum.ADULTE : attendee.Value.SharingCategory;
 
                 if (!tempDict.ContainsKey(sGroup))
@@ -943,8 +943,9 @@ namespace IMEVENT.Events
                 GenerateAllBadges();
             }
 
+            string extFile = Convertors.EventTypeToString(this.CurrentEvent.Type, true);
             List<string> temp = GetStringListOfAssignedAttendees();
-            string outputBadgesFile = string.Format("{0}\\Donnees_Badges.csv", directoryPath);
+            string outputBadgesFile = string.Format("{0}\\{1}_Badges.csv", directoryPath, extFile);
             File.WriteAllLines(outputBadgesFile, temp.ToArray(), Encoding.Unicode);            
 
             if (!printFreeSpots)
@@ -953,15 +954,15 @@ namespace IMEVENT.Events
             }
 
             temp = GetStringListOfEmptySections();            
-            string freePlacesFile = string.Format("{0}\\Liste_Sieges_Hall_Disponibles.csv", directoryPath);
+            string freePlacesFile = string.Format("{0}\\{1}_Liste_Place_Vide_Hall.csv", directoryPath, extFile);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyBeds();
-            freePlacesFile = string.Format("{0}\\Liste_Lits_Dortoir_Disponibles.csv", directoryPath);
+            freePlacesFile = string.Format("{0}\\{1}_Liste_Lit_Vide_Dortoir.csv", directoryPath, extFile);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyTables();
-            freePlacesFile = string.Format("{0}\\Liste_Tables_Refectoire_Disponibles.csv", directoryPath);
+            freePlacesFile = string.Format("{0}\\{1}_Liste_Tables_Vide_Refectoire.csv", directoryPath, extFile);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);            
         }
         #endregion
