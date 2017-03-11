@@ -102,5 +102,28 @@ namespace IMEVENT.Events
 
             return ret;
         }
+
+        public static Stack<T> PushStack<T>(this Stack<T> inp, Stack<T> outp)
+        {
+            //output stack empty
+            if (outp.IsNullOrEmpty())
+            {                
+                return inp;
+            }
+
+            //input stack empty
+            if (inp.IsNullOrEmpty())
+            {
+                return new Stack<T>(outp);
+            }
+
+            Stack<T> ret = new Stack<T>(inp);
+            foreach (T elem in outp)
+            {
+                ret.Push(elem);
+            }
+
+            return ret;
+        }
     }
 }

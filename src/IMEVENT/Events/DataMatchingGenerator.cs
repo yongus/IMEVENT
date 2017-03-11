@@ -300,6 +300,33 @@ namespace IMEVENT.Events
             return this.ListAvailableSections[sectionType].Pop();
         }        
 
+        public List<Section> BalanceShuffle(Dictionary<int, Stack<Section>> inputList)
+        {
+            if (inputList == null || !inputList.Any())
+            {
+                return null;
+            }
+
+            List<Section> ret = new List<Section>();
+            int index = 0;
+            int nbrElem = inputList.Count();//total seats in the list
+            int count = 0;
+            while (count < nbrElem)
+            {
+                index = index % inputList.Count;
+                if (inputList[index].IsNullOrEmpty())
+                {
+                    index++;
+                    continue;
+                }
+
+                Section tmp = inputList[index++].Pop();
+                ret.Add(tmp);
+                count++;
+            }
+            return null;  
+        }
+
         public Stack<HallEntry> ShuffleHallSectionEntries(Dictionary<int, Hall> inputSeatList)
         {            
             Dictionary<int, Section> listofSeats = new Dictionary<int, Section>();
@@ -597,32 +624,49 @@ namespace IMEVENT.Events
             }
 
             //Break the list per category if mingle false
-            Dictionary<RegimeEnum, Dictionary<int, Table>> tempDict = new Dictionary<RegimeEnum, Dictionary<int, Table>>();
+            Dictionary<RegimeEnum, Dictionary<int,Dictionary<int, Table>>> tempDict = new Dictionary<RegimeEnum, Dictionary<int, Dictionary<int, Table>>>();            
             foreach (KeyValuePair<int, Table> table in this.tablesInRefs)
             {
                 if (!tempDict.ContainsKey(table.Value.RegimeType))
                 {
-                    tempDict[table.Value.RegimeType] = new Dictionary<int, Table>
-                    {
-                        { table.Value.Id, table.Value }
-                    };
+                    tempDict[table.Value.RegimeType] = new Dictionary<int, Dictionary<int, Table>>();
+                    tempDict[table.Value.RegimeType][table.Value.RefectoryId] = new Dictionary<int, Table>();
+                    tempDict[table.Value.RegimeType][table.Value.RefectoryId][table.Value.Id] = table.Value;                    
                 }
                 else
-                {                 
-                    tempDict[table.Value.RegimeType][table.Value.RefectoryId] = table.Value;
+                {
+                    if (!tempDict[table.Value.RegimeType].ContainsKey(table.Value.RefectoryId))
+                    {
+                        tempDict[table.Value.RegimeType][table.Value.RefectoryId] = new Dictionary<int, Table>();
+                        tempDict[table.Value.RegimeType][table.Value.RefectoryId][table.Value.Id] = table.Value;
+                    }
+                    else
+                    {
+                        tempDict[table.Value.RegimeType][table.Value.RefectoryId][table.Value.Id] = table.Value;
+                    }                        
                 }
             }
 
             // Match per category
-            foreach (KeyValuePair<RegimeEnum, Dictionary<int, Table>> cat in tempDict)
+            foreach (KeyValuePair<RegimeEnum, Dictionary<int, Dictionary<int, Table>>> cat in tempDict)
             {
-                tempStack = ShuffleTableEntries(cat.Value);
-                if (tempStack == null)
+                foreach(KeyValuePair<int, Dictionary<int, Table>> refect in cat.Value)
                 {
-                    Console.WriteLine("Error in generating tables per category with participants not mingle");
-                    return false;
-                }
-                this.ListAvailableTables[cat.Key] = tempStack;
+                    tempStack = ShuffleTableEntries(refect.Value);
+                    if (tempStack == null)
+                    {
+                        Console.WriteLine("Error in generating tables per category with participants not mingle");
+                        return false;
+                    }
+                    if (!this.ListAvailableTables.ContainsKey(cat.Key))
+                    {
+                        this.ListAvailableTables[cat.Key] = new Stack<TableEntry>(tempStack);
+                        continue;
+                    }
+
+                    this.ListAvailableTables[cat.Key] = this.ListAvailableTables[cat.Key].PushStack(tempStack);
+                    //this.ListAvailableTables[cat.Key].ToList().AddRange(tempStack);
+                }                
             }
 
             return true;
@@ -784,7 +828,7 @@ namespace IMEVENT.Events
             //Just a check to make sure all attendees have been assigned
             if(nbAssignment != nbrAttendees)
             {
-                throw new System.NullReferenceException(string.Format("Failure to generate badges of registered participants for the event at {0}, starting on {1}"
+                throw new System.NullReferenceException(string.Format("Failure to generate badges for all registered participants of the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
             }                        
