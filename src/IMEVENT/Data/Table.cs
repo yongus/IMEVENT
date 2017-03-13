@@ -21,6 +21,9 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             Id = Convert.ToInt32(GetRecordID());
+
+           
+
             if (Id == 0)
             {
                 context.Tables.Add(this);                
@@ -34,10 +37,11 @@ namespace IMEVENT.Data
             return Id;
         }
 
-        public int GetIdByName(string name)
+        public int GetIdByProperties(string name, int RefectoryId, RegimeEnum RegimeType)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
+            Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name) 
+                            && d.RefectoryId == RefectoryId && d.RegimeType == RegimeType);
             return (table == null)? 0 : table.Id;
         }
 
@@ -58,7 +62,7 @@ namespace IMEVENT.Data
 
         public object GetRecordID()
         {
-           return GetIdByName(Name);
+           return GetIdByProperties(Name, RefectoryId, RegimeType);
         }
     }
 }

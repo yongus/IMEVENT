@@ -17,7 +17,11 @@ namespace IMEVENT.Data
         public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+
             Id = Convert.ToInt32(GetRecordID()) ;
+
+            
+
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -33,14 +37,17 @@ namespace IMEVENT.Data
             return dorm.Id;                     
         }
 
-        public int GetIdByName(string name)
+        public int GetIdByProperties(string name, DormitoryTypeEnum type, DormitoryCategoryEnum cat)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name));
+            Dormitory dorm = context.Dorms.FirstOrDefault(d => d.Name.Equals(name)
+                            && d.DormType == type && d.DormCategory == cat);
+
             if (dorm != null)
             {
                 return dorm.Id;
             }
+
             return 0;
         }
 
@@ -52,7 +59,7 @@ namespace IMEVENT.Data
 
         public object GetRecordID()
         {
-            return GetIdByName(Name);
+            return  GetIdByProperties(Name, DormType, DormCategory); 
         }
     }
 }
