@@ -20,7 +20,7 @@ namespace IMEVENT.Data
         public int persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            this.Id = GetIdByName(Name);
+            this.Id = GetIdByProperties(Name, RefectoryId, RegimeType);
             if (Id == 0)
             {
                 context.Tables.Add(this);                
@@ -34,10 +34,11 @@ namespace IMEVENT.Data
             return this.Id;
         }
 
-        public int GetIdByName(string name)
+        public int GetIdByProperties(string name, int RefectoryId, RegimeEnum RegimeType)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name));
+            Table table = context.Tables.FirstOrDefault(d => d.Name.Equals(name) 
+                            && d.RefectoryId == RefectoryId && d.RegimeType == RegimeType);
             return (table == null)? 0 : table.Id;
         }
 
