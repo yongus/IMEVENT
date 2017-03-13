@@ -95,10 +95,10 @@ namespace IMEVENT.Data
             return context.EventAttendees.Where(x => x.EventId == eventId).ToList();
         }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-           
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -111,6 +111,11 @@ namespace IMEVENT.Data
             context.SaveChanges();
 
             return this.Id;
+        }
+
+        public object GetRecordID()
+        {
+            return Id;
         }
     }
 }

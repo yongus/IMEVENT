@@ -80,7 +80,7 @@ namespace IMEVENT.Data
 
         public string persist()
         {
-            //This persist method behaves differently from the implementation in different classes
+            //This Persist method behaves differently from the implementation in different classes
             //it is due to the fact that apparently Users are generated directly with their ID at instantiation and not at
             //the time they are saved in the database. 
             

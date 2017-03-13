@@ -6,7 +6,7 @@
 <div class="content">
     <form method="post" asp-action="Index" asp-controller="Event" enctype="multipart/form-data">
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label" >event name.</label>
+            <label class="col-sm-2 col-form-label">event name.</label>
             <div class="col-sm-10">
                 <input type="text" asp-for="EventName" name="eventName" />
             </div>
@@ -48,18 +48,34 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label" >Enter event details</label>
+            <label class="col-sm-2 col-form-label">Enter event details</label>
             <div class="col-sm-10">
                 <input type="file" name="files" multiple />
             </div>
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
-            <input type="submit" value="Upload" />
-</form>
+        <input type="submit" value="Upload" />
+    </form>
+</div>
+
+<div>
+    <p>
+        Download latest Badge data  <a href="uploads/Donnees_Badges.csv">here .</a>
+    </p>
+    <p>
+        Download list of availlable dormitories  <a href="uploads/Liste_Lits_Dortoir_Disponibles.csv">here.</a>
+    </p>
+    <p>
+        Download list of availlable Halls <a href="uploads/Liste_Sieges_Hall_Disponibles.csv">here.</a>
+    </p>
+    <p>
+        Download list of availlable refectories <a href="uploads/Liste_Tables_Refectoire_Disponibles.csv">here.</a>
+    </p>
+
 </div>
 <script>
     $(function () {
-     
+
       //$("#startdate").datepicker();
       //$("#enddate").datepicker();
   } );
