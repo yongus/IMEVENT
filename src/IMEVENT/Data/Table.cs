@@ -17,10 +17,10 @@ namespace IMEVENT.Data
         public string Name { get; set; }
         public RegimeEnum RegimeType { get; set; }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            this.Id = GetIdByName(Name);
+            Id = Convert.ToInt32(GetRecordID());
             if (Id == 0)
             {
                 context.Tables.Add(this);                
@@ -31,7 +31,7 @@ namespace IMEVENT.Data
             }
 
             context.SaveChanges();
-            return this.Id;
+            return Id;
         }
 
         public int GetIdByName(string name)
@@ -54,6 +54,11 @@ namespace IMEVENT.Data
                       );
 
             return ret;            
-        }        
+        }
+
+        public object GetRecordID()
+        {
+           return GetIdByName(Name);
+        }
     }
 }
