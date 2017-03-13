@@ -70,9 +70,6 @@ namespace IMEVENT
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             loggerFactory.AddNLog();
-            
-           
-           
 
             app.UseApplicationInsightsRequestTelemetry();
 
