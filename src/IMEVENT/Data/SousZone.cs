@@ -13,10 +13,10 @@ namespace IMEVENT.Data
         public int Id { get; set; }
         public int IdParent { get; set; }
         public String Label { get; set; }
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetSousZoneIdByLabel(Label);
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -38,6 +38,11 @@ namespace IMEVENT.Data
                 return zone.Id;
             }
             else return 0;
+        }
+
+        public object GetRecordID()
+        {
+            return GetSousZoneIdByLabel(Label);
         }
     }
 }

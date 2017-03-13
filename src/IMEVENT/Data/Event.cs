@@ -30,9 +30,10 @@ namespace IMEVENT.Data
             this.extractor = extractor;
         }
 
-        public int persist()
+        public int Persist()
         {
             _context = ApplicationDbContext.GetDbContext();
+            Id = Convert.ToInt32(GetRecordID());
             if (Id == 0)
             {
                 _context.Events.Add(this);                
@@ -55,6 +56,12 @@ namespace IMEVENT.Data
         public void  ExtractEventDetails(String source )
         {
             this.extractor.ExtractDataFromSource(source, this.Id);
+        }
+
+        public object GetRecordID()
+        {
+            /*when we figure out uniqueness criteria on the event this will change */
+            return Id;
         }
     }
 }

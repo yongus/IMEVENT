@@ -14,10 +14,14 @@ namespace IMEVENT.Data
         public DormitoryTypeEnum DormType { get; set; }
         public DormitoryCategoryEnum DormCategory { get; set; }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetIdByProperties(Name, DormType, DormCategory);
+
+            Id = Convert.ToInt32(GetRecordID()) ;
+
+            
+
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -51,6 +55,11 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.Dorms.Where(x => x.EventId == eventID).ToDictionary(x => x.Id, x => x);
+        }
+
+        public object GetRecordID()
+        {
+            return  GetIdByProperties(Name, DormType, DormCategory); 
         }
     }
 }

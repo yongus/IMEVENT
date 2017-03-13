@@ -820,7 +820,7 @@ namespace IMEVENT.Events
                     
                     this.attendees[attendeeKey].SharingGroupNbr = gshare.Place + 1; //+1 because groups are numbered from 0on...
 
-                    this.attendees[attendeeKey].persist();//save data in DB
+                    this.attendees[attendeeKey].Persist();//save data in DB
                     nbAssignment++;
                 }                                
             }
@@ -989,7 +989,7 @@ namespace IMEVENT.Events
 
             string extFile = Convertors.EventTypeToString(this.CurrentEvent.Type, true);
             List<string> temp = GetStringListOfAssignedAttendees();
-            string outputBadgesFile = string.Format("{0}\\{1}_Badges.csv", directoryPath, extFile);
+            string outputBadgesFile = string.Format("{0}\\Donnees_Badges.csv", directoryPath);
             File.WriteAllLines(outputBadgesFile, temp.ToArray(), Encoding.Unicode);            
 
             if (!printFreeSpots)
@@ -998,15 +998,15 @@ namespace IMEVENT.Events
             }
 
             temp = GetStringListOfEmptySections();            
-            string freePlacesFile = string.Format("{0}\\{1}_Liste_Place_Vide_Hall.csv", directoryPath, extFile);
+            string freePlacesFile = string.Format("{0}\\Liste_Sieges_Hall_Disponibles.csv", directoryPath);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyBeds();
-            freePlacesFile = string.Format("{0}\\{1}_Liste_Lit_Vide_Dortoir.csv", directoryPath, extFile);
+            freePlacesFile = string.Format("{0}\\Liste_Lits_Dortoir_Disponibles.csv", directoryPath);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyTables();
-            freePlacesFile = string.Format("{0}\\{1}_Liste_Tables_Vide_Refectoire.csv", directoryPath, extFile);
+            freePlacesFile = string.Format("{0}\\Liste_Tables_Refectoire_Disponibles.csv", directoryPath);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);            
         }
         #endregion

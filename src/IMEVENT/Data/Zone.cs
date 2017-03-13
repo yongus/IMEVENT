@@ -11,11 +11,11 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get; set; }
         public String Label { get; set; }
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-           
-           
+
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -38,5 +38,9 @@ namespace IMEVENT.Data
             else return 0;
         }
 
+        public object GetRecordID()
+        {
+            return Id;
+        }
     }
 }
