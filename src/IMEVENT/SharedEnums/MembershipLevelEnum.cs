@@ -16,11 +16,10 @@ namespace IMEVENT.SharedEnums
         JEUNE_PHARE = 6,
         ACCOMPAGNATEUR = 7,
         AEF = 8,
-        CMP = 9,
+        CANDIDATE_FULL_MEMBER = 9,
         MP = 10,
         INCARNATEUR = 11,
         RG = 12
-        
     }    
     
 }

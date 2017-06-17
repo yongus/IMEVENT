@@ -48,7 +48,7 @@ namespace IMEVENT.SharedEnums
                     return "Accompagnateur";
                 case MembershipLevelEnum.AEF:
                     return "AEF";
-                case MembershipLevelEnum.CMP:
+                case MembershipLevelEnum.CANDIDATE_FULL_MEMBER:
                     return "Candidat Membre Plein";
                 case MembershipLevelEnum.MP:
                     return "Membre Plein";
@@ -85,7 +85,7 @@ namespace IMEVENT.SharedEnums
                 case "aef":
                     return MembershipLevelEnum.AEF;
                 case "candidatmembreplein":
-                    return MembershipLevelEnum.CMP;
+                    return MembershipLevelEnum.CANDIDATE_FULL_MEMBER;
                 case "membreplein":
                     return MembershipLevelEnum.MP;
                 case "incarnateur":
@@ -106,6 +106,10 @@ namespace IMEVENT.SharedEnums
                     return "Matelas";
                 case DormitoryCategoryEnum.BED:
                     return "Lit";
+                case DormitoryCategoryEnum.BED_E:
+                    return "Lit_E";
+                case DormitoryCategoryEnum.BED_R:
+                    return "Lit_R";
                 case DormitoryCategoryEnum.VIP:
                     return "VIP";                
                 default:
@@ -138,6 +142,10 @@ namespace IMEVENT.SharedEnums
                     return DormitoryCategoryEnum.VIP;
                 case "lit":
                     return DormitoryCategoryEnum.BED;
+                case "lit_e":
+                    return DormitoryCategoryEnum.BED_E;
+                case "lit_r":
+                    return DormitoryCategoryEnum.BED_R;
                 case "matelas":                                   
                 default:
                     return DormitoryCategoryEnum.MATELAS;
@@ -229,6 +237,8 @@ namespace IMEVENT.SharedEnums
                     return "Handicapé";
                 case RegimeEnum.FULL_MEMBER:
                     return "Membre Plein";
+                case RegimeEnum.CANDIDATE_FULL_MEMBER:
+                    return "Candidat Membre Plein";
                 case RegimeEnum.GENERAL_MANAGER:
                     return "Responsable Général";
                 case RegimeEnum.HEALTH_SERVICE:
@@ -266,6 +276,8 @@ namespace IMEVENT.SharedEnums
                     return RegimeEnum.SPECIAL_GUEST;
                 case "membreplein":
                     return RegimeEnum.FULL_MEMBER;
+                case "candidatmembreplein":
+                    return RegimeEnum.CANDIDATE_FULL_MEMBER;
                 case "handicapé":
                     return RegimeEnum.DISABLED;
                 case "clergé":
@@ -306,6 +318,8 @@ namespace IMEVENT.SharedEnums
                     return "Handicapé";
                 case HallSectionTypeEnum.FULL_MEMBER:
                     return "Membre Plein";
+                case HallSectionTypeEnum.CANDIDATE_FULL_MEMBER:
+                    return "Candidat Membre Plein";
                 case HallSectionTypeEnum.GENERAL_MANAGER:
                     return "Responsable Général";
                 case HallSectionTypeEnum.HEALTH_SERVICE:
@@ -324,6 +338,8 @@ namespace IMEVENT.SharedEnums
                     return "Invité Spécial";
                 case HallSectionTypeEnum.TRANSLATION_SERVICE:
                     return "Service Traduction";
+                case HallSectionTypeEnum.MASS_REQUEST:
+                    return "Demande Messe";
                 case HallSectionTypeEnum.NONE:
                 default:
                     return "Public";
@@ -349,6 +365,8 @@ namespace IMEVENT.SharedEnums
                     return HallSectionTypeEnum.SECOND_LANGUAGE;
                 case "membreplein":
                     return HallSectionTypeEnum.FULL_MEMBER;
+                case "candidatmembreplein":
+                    return HallSectionTypeEnum.CANDIDATE_FULL_MEMBER;
                 case "handicapé":
                     return HallSectionTypeEnum.DISABLED;
                 case "clergé":
@@ -361,6 +379,8 @@ namespace IMEVENT.SharedEnums
                     return HallSectionTypeEnum.COOKING;
                 case "religieux":
                     return HallSectionTypeEnum.RELIGIOUS;
+                case "demandemesse":
+                    return HallSectionTypeEnum.MASS_REQUEST;
                 case "aucun":                    
                 default:
                     return HallSectionTypeEnum.NONE;
