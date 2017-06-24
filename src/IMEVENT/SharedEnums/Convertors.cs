@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.Data;
+using NLog;
+
 namespace IMEVENT.SharedEnums
 {
     public static class Convertors
     {
+        private static Logger log = LogManager.GetCurrentClassLogger();
 
         public static string EventTypeToString(this EventTypeEnum evt, bool forFilename)
         {
@@ -23,8 +26,12 @@ namespace IMEVENT.SharedEnums
                 case EventTypeEnum.RETRAITE_SINGLE:
                     return forFilename ? "Retraite_Single" : "Retraite Personne Single";
                 case EventTypeEnum.GRANDE_RETRAITE:
-                default:
                     return forFilename ? "Grande_Retraite" : "Grande Retraite";
+                default:
+                    log.Error(string.Format("EventTypeToString: unknown Event Type={0}"
+                        , evt));
+                    throw new System.NullReferenceException(string.Format("EventTypeToString: unknown Event Type={0}"
+                        , evt));
             }
         }
 
@@ -34,67 +41,70 @@ namespace IMEVENT.SharedEnums
             {                
                 case MembershipLevelEnum.SIMPLE:
                     return "Simple";
-                case MembershipLevelEnum.REGULIER:
+                case MembershipLevelEnum.REGULAR:
                     return "Régulier";
-                case MembershipLevelEnum.ACTIF_1:
+                case MembershipLevelEnum.AKTIV_1:
                     return "Actif I";
-                case MembershipLevelEnum.ACTIF_2:
+                case MembershipLevelEnum.AKTIV_2:
                     return "Actif II";
-                case MembershipLevelEnum.ACTIF_3:
+                case MembershipLevelEnum.AKTIV_3:
                     return "Actif III";
-                case MembershipLevelEnum.JEUNE_PHARE:
-                    return "Jeune Phare";
-                case MembershipLevelEnum.ACCOMPAGNATEUR:
-                    return "Accompagnateur";
+                case MembershipLevelEnum.YOUNG_MODEL:
+                    return "Jeune Phare";                
                 case MembershipLevelEnum.AEF:
-                    return "AEF";
+                    return "A.E.F.";
                 case MembershipLevelEnum.CANDIDATE_FULL_MEMBER:
                     return "Candidat Membre Plein";
-                case MembershipLevelEnum.MP:
+                case MembershipLevelEnum.FULL_MEMBER:
                     return "Membre Plein";
-                case MembershipLevelEnum.INCARNATEUR:
+                case MembershipLevelEnum.INCARNATOR:
                     return "Incarnateur";
                 case MembershipLevelEnum.RG:
                     return "Responsable Général";
-                case MembershipLevelEnum.INVITE:
+                case MembershipLevelEnum.INVITED:
                     return "Invité";
                 default:
-                    return "Inconnu";
+                    log.Error(string.Format("MemberShipLevelToString: unknown MembershipLevelEnum={0}"
+                        , level));
+                    throw new System.NullReferenceException(string.Format("MemberShipLevelToString: unknown MembershipLevelEnum={0}"
+                        , level));
             }
         }
 
-        public static MembershipLevelEnum GetMembershipLevel( string text)
+        public static MembershipLevelEnum GetMembershipLevel(string type)
         {
-            text = text.Replace(" ", string.Empty).ToLower();
-            switch (text)
+            string tmp = type.Replace(" ", string.Empty).ToLower();
+            switch (tmp)
             {
                 case "simple":
                     return MembershipLevelEnum.SIMPLE;
                 case "régulier":
-                    return MembershipLevelEnum.REGULIER;
+                    return MembershipLevelEnum.REGULAR;
                 case "actif1":
-                    return MembershipLevelEnum.ACTIF_1;
+                    return MembershipLevelEnum.AKTIV_1;
                 case "actif2":
-                    return MembershipLevelEnum.ACTIF_2;
+                    return MembershipLevelEnum.AKTIV_2;
                 case "actif3":
-                    return MembershipLevelEnum.ACTIF_3;
+                    return MembershipLevelEnum.AKTIV_3;
                 case "jeunephare":
-                    return MembershipLevelEnum.JEUNE_PHARE;
-                case "accompagnateur":
-                    return MembershipLevelEnum.ACCOMPAGNATEUR;
-                case "aef":
+                    return MembershipLevelEnum.YOUNG_MODEL;
+                case "accompagnateurenformation":
                     return MembershipLevelEnum.AEF;
                 case "candidatmembreplein":
                     return MembershipLevelEnum.CANDIDATE_FULL_MEMBER;
                 case "membreplein":
-                    return MembershipLevelEnum.MP;
+                    return MembershipLevelEnum.FULL_MEMBER;
                 case "incarnateur":
-                    return MembershipLevelEnum.INCARNATEUR;
+                    return MembershipLevelEnum.INCARNATOR;
                 case "rg":
                     return MembershipLevelEnum.RG;
                 case "invité":
+                    return MembershipLevelEnum.INVITED;
                 default:
-                    return MembershipLevelEnum.INVITE;
+                    log.Error(string.Format("GetMembershipLevel: unknown MembershipLevelEnum={0}; input text={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetMembershipLevel: unknown MembershipLevelEnum={0}; input text={1}"
+                        , tmp, type));                    
             }
         }
 
@@ -113,7 +123,10 @@ namespace IMEVENT.SharedEnums
                 case DormitoryCategoryEnum.VIP:
                     return "VIP";                
                 default:
-                    return "Inconnu";
+                    log.Error(string.Format("DormitoryCategoryToString: unknown DormitoryCategoryEnum={0}"
+                        , type));
+                    throw new System.NullReferenceException(string.Format("DormitoryCategoryToString: unknown DormitoryCategoryEnum={0}"
+                        , type));                    
             }
         }
 
@@ -129,14 +142,17 @@ namespace IMEVENT.SharedEnums
                 case DormitoryTypeEnum.NONE:
                     return ret + "Commun";
                 default:
-                    return "Inconnu";
+                    log.Error(string.Format("DormitoryTypeToString: unknown DormitoryTypeEnum={0}"
+                        , type));
+                    throw new System.NullReferenceException(string.Format("DormitoryTypeToString: unknown DormitoryTypeEnum={0}"
+                        , type));
             }
         }
 
         public static DormitoryCategoryEnum GetDormirtoryCategory(string type)
         {
-            type = type.Replace(" ", string.Empty).ToLower();
-            switch (type)
+            string tmp = type.Replace(" ", string.Empty).ToLower();
+            switch (tmp)
             {
                 case "vip":
                     return DormitoryCategoryEnum.VIP;
@@ -146,24 +162,32 @@ namespace IMEVENT.SharedEnums
                     return DormitoryCategoryEnum.BED_E;
                 case "lit_r":
                     return DormitoryCategoryEnum.BED_R;
-                case "matelas":                                   
-                default:
+                case "matelas":
                     return DormitoryCategoryEnum.MATELAS;
+                default:
+                    log.Error(string.Format("GetDormirtoryCategory: unknown DormitoryCategoryEnum={0}; input={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetDormirtoryCategory: unknown DormitoryCategoryEnum={0}; input={1}"
+                        , tmp, type));
             }
         }
 
         public static DormitoryTypeEnum GetDormirtoryType(string type)
         {
-            type = type.Replace(" ", string.Empty).ToLower();
-            switch (type)
+            string tmp = type.Replace(" ", string.Empty).ToLower();
+            switch (tmp)
             {
                 case "femme":
                     return DormitoryTypeEnum.WOMEN;
                 case "homme":
                     return DormitoryTypeEnum.MEN;
                 case "commun":
-                default:
                     return DormitoryTypeEnum.NONE;
+                default:
+                    log.Error(string.Format("GetDormirtoryType: unknown DormitoryTypeEnum={0}; input={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetDormirtoryType: unknown DormitoryTypeEnum={0}; input={1}"
+                        , tmp, type));
             }
         }
 
@@ -186,18 +210,22 @@ namespace IMEVENT.SharedEnums
                 case SharingGroupCategoryEnum.SECOND_JUNIOR:
                     return "Secondaire Junior";
                 case SharingGroupCategoryEnum.ADULTE_SINGLE:                    
-                case SharingGroupCategoryEnum.ADULTE_MARIE:                    
-                case SharingGroupCategoryEnum.JEUNE_MARIE:                    
-                case SharingGroupCategoryEnum.ADULTE:                    
-                default:
+                case SharingGroupCategoryEnum.ADULTE_MARIE:                   
+                case SharingGroupCategoryEnum.JEUNE_MARIE:                   
+                case SharingGroupCategoryEnum.ADULTE:
                     return "Adulte";
+                default:
+                    log.Error(string.Format("SharingGroupCategoryToString: unknown SharingGroupCategoryEnum={0}"
+                        , type));
+                    throw new System.NullReferenceException(string.Format("SharingGroupCategoryToString: unknown SharingGroupCategoryEnum={0}"
+                        , type));
             }
         }        
 
         public static SharingGroupCategoryEnum GetSharingGroupCategory(string type)
         {
-            type = type.ToLower().Replace(" ", string.Empty);
-            switch (type)
+            string tmp = type.ToLower().Replace(" ", string.Empty);
+            switch (tmp)
             {
                 case "adultesingle":
                     return SharingGroupCategoryEnum.ADULTE_SINGLE;
@@ -219,9 +247,13 @@ namespace IMEVENT.SharedEnums
                     return SharingGroupCategoryEnum.SECOND_INTERMEDIARE;
                 case "secondairejunior":
                     return SharingGroupCategoryEnum.SECOND_JUNIOR;
-                case "adulte": 
-                default:
+                case "adulte":
                     return SharingGroupCategoryEnum.ADULTE;
+                default:
+                    log.Error(string.Format("GetSharingGroupCategory: unknown SharingGroupCategoryEnum={0}; input={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetSharingGroupCategory: unknown SharingGroupCategoryEnum={0}; input={1}"
+                        , tmp, type));                    
             }
         }
 
@@ -259,16 +291,22 @@ namespace IMEVENT.SharedEnums
                     return "Service Traduction";
                 case RegimeEnum.WITHOUT_SALT_WITHOUT_OIL:
                     return "Sans Sel - sans Huile";
-                case RegimeEnum.NONE:                    
-                default:
+                case RegimeEnum.AEF:
+                    return "A.E.F.";
+                case RegimeEnum.NONE:
                     return "Sans Régime";
+                default:
+                    log.Error(string.Format("RegimeToString: unknown RegimeEnum={0}"
+                        , type));
+                    throw new System.NullReferenceException(string.Format("RegimeToString: unknown RegimeEnum={0}"
+                        , type));                    
             }
         }
 
         public static RegimeEnum GetRegimeType(string type)
         {
-            type = type.Replace(" ", string.Empty).ToLower();
-            switch (type)
+            string tmp = type.Replace(" ", string.Empty).ToLower();
+            switch (tmp)
             {                
                 case "sanssel-sanshuile":
                     return RegimeEnum.WITHOUT_SALT_WITHOUT_OIL;
@@ -284,7 +322,7 @@ namespace IMEVENT.SharedEnums
                     return RegimeEnum.CLERICAL;
                 case "santé":
                     return RegimeEnum.HEALTH_SERVICE;
-                case "nouveauné":
+                case "nouveau-né":
                     return RegimeEnum.NEW_BORN;
                 case "cuisine":
                     return RegimeEnum.COOKING;
@@ -300,9 +338,15 @@ namespace IMEVENT.SharedEnums
                     return RegimeEnum.MUSIC_INSTRUMENT_SERVICE;
                 case "religieux":
                     return RegimeEnum.RELIGIOUS;
-                case "aucun":                    
+                case "accompagnateurenformation":
+                    return RegimeEnum.AEF;
+                case "aucun":
+                    return RegimeEnum.NONE;
                 default:
-                    return RegimeEnum.NONE;                 
+                    log.Error(string.Format("GetRegimeType: unknown RegimeEnum={0}; input={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetRegimeType: unknown RegimeEnum={0}; input={1}"
+                        , tmp, type));                                   
             }
         }
 
@@ -340,16 +384,22 @@ namespace IMEVENT.SharedEnums
                     return "Service Traduction";
                 case HallSectionTypeEnum.MASS_REQUEST:
                     return "Demande Messe";
+                case HallSectionTypeEnum.AEF:
+                    return "A.E.F.";
                 case HallSectionTypeEnum.NONE:
-                default:
                     return "Public";
+                default:
+                    log.Error(string.Format("HallSectionTypeToString: unknown HallSectionTypeEnum={0}"
+                        , type));
+                    throw new System.NullReferenceException(string.Format("HallSectionTypeToString: unknown HallSectionTypeEnum={0}"
+                        , type));                    
             }
         }
 
         public static HallSectionTypeEnum GetHallSectionType(string type)
         {
-            type = type.Replace(" ", string.Empty).ToLower();
-            switch (type)
+            string tmp = type.Replace(" ", string.Empty).ToLower();
+            switch (tmp)
             {                
                 case "rg":
                     return HallSectionTypeEnum.GENERAL_MANAGER;
@@ -381,9 +431,15 @@ namespace IMEVENT.SharedEnums
                     return HallSectionTypeEnum.RELIGIOUS;
                 case "demandemesse":
                     return HallSectionTypeEnum.MASS_REQUEST;
-                case "aucun":                    
-                default:
+                case "accompagnateurenformation":
+                    return HallSectionTypeEnum.AEF;
+                case "aucun":
                     return HallSectionTypeEnum.NONE;
+                default:
+                    log.Error(string.Format("GetHallSectionType: unknown HallSectionTypeEnum={0}; input={1}"
+                        , tmp, type));
+                    throw new System.NullReferenceException(string.Format("GetHallSectionType: unknown HallSectionTypeEnum={0}; input={1}"
+                        , tmp, type));
             }
         }
     }

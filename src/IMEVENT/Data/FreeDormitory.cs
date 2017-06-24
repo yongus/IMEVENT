@@ -55,14 +55,13 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeDormitory sec = context.FreeDormitories.Where(x => x.EventId == eventId && x.Type == type && x.CatType == catType).FirstOrDefault();
-            if (sec == null || !invalidate)
+            if (sec != null && invalidate)
             {
-                return sec;
-            }
-
-            //Mark item as used and update DB
-            context.FreeDormitories.Remove(sec);
-            context.SaveChanges();
+                //Mark item as used and update DB
+                context.FreeDormitories.Remove(sec);
+                context.SaveChanges();             
+            }            
+            
             return sec;
         }
 

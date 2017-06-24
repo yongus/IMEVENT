@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class RefectoryMatching : BaseEventResource
+    public class RefectoryMatching : BaseEventResourceManager
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
         public RefectoryMatching(Event eventI) : base(eventI)

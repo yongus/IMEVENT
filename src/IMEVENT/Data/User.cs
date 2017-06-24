@@ -23,14 +23,14 @@ namespace IMEVENT.Data
         public string LastName { get; set; }
         public MembershipLevelEnum Level { get; set; }
 
-        public override string ToString()
+        public string ToString(Dictionary<int, string> groups)
         {            
             string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}"
                  , LastName
                  , FirstName
                  , Sex
                  , Town
-                 , ""//TODO - read group
+                 , (groups == null || !groups.ContainsKey(GroupId))? "" : groups[GroupId]
                  , IsGroupResponsible ? "Oui" : "Non"
                  , Level.MemberShipLevelToString()                 
                  , Language

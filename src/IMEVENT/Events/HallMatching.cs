@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class HallMatching : BaseEventResource
+    public class HallMatching : BaseEventResourceManager
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
         private Dictionary<int, Hall> seats;

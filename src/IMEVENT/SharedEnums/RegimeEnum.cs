@@ -23,5 +23,6 @@ namespace IMEVENT.SharedEnums
         TRANSLATION_SERVICE = 13,
         MUSIC_INSTRUMENT_SERVICE = 14,
         CANDIDATE_FULL_MEMBER = 15,
+        AEF = 16
     }
 }

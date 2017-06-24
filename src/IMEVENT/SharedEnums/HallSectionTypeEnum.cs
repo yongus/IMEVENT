@@ -23,5 +23,6 @@ namespace IMEVENT.SharedEnums
         SECOND_LANGUAGE = 13,
         CANDIDATE_FULL_MEMBER = 14,
         MASS_REQUEST = 15,
+        AEF = 16
     }
 }

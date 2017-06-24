@@ -46,13 +46,13 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeRefectory sec = context.FreeRefectories.Where(x => x.EventId == eventId && x.Type == type).FirstOrDefault();
-            if (sec == null || !invalidate)
+            if (sec != null && invalidate)
             {
-                return sec;
+                //Remove item in DB and update
+                context.FreeRefectories.Remove(sec);
+                context.SaveChanges();
             }
-            //Remove item in DB and update
-            context.FreeRefectories.Remove(sec);
-            context.SaveChanges();
+            
             return sec;
         }
 

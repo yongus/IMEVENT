@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public abstract class BaseEventResource
+    public abstract class BaseEventResourceManager
     {
 
-        public BaseEventResource(Event eventI)
+        public BaseEventResourceManager(Event eventI)
         {            
             this.Event = eventI;
             this.IsDataLoaded = false;

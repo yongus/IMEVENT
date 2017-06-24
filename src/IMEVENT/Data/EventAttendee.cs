@@ -31,10 +31,11 @@ namespace IMEVENT.Data
         public int TableId { get; set; }
         public int TableSeatNbr { get; set; }
         public int SharingGroupNbr { get; set; }
+        public int SharingTableNbr { get; set; }
 
         public override string ToString()
         {
-            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}"
                 , InvitedBy
                 , AmountPaid
                 , Remarks                
@@ -47,6 +48,7 @@ namespace IMEVENT.Data
                 , TableId
                 , TableSeatNbr
                 , SharingGroupNbr
+                , SharingTableNbr
                 );
 
             return ret;
@@ -71,7 +73,7 @@ namespace IMEVENT.Data
                     , Refectories[RefectoryId].Name
                     , Tables[TableId].Name
                     , TableSeatNbr
-                    , string.Format("{0} {1}", SharingCategory.SharingGroupCategoryToString(), SharingGroupNbr)
+                    , string.Format("{0} {1}/T{2}", SharingCategory.SharingGroupCategoryToString(), SharingGroupNbr, SharingTableNbr)
                 );
 
             return ret;

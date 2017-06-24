@@ -8,5 +8,6 @@ namespace IMEVENT.Events
     public class GroupSharingEntry :  BaseSectionEntry
     {
         public string UserId { get; set; }
+        public int Table { get; set; }
     }
 }

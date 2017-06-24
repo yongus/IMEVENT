@@ -126,14 +126,24 @@ namespace IMEVENT.Events
         }        
         #endregion         
 
-        #region Badge Generation
-        public void GenerateAllBadges()
+        public bool GenerateAllItems()
         {
-            EnsureLoaded();
             if (!this.seatsInHall.GenerateItemsForMatching()
                 || !this.bedsInDorm.GenerateItemsForMatching()
                 || !this.tablesInRefs.GenerateItemsForMatching()
                 || !this.sharingGroups.GenerateGroupsForMatching(this.attendees))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #region Badge Generation
+        public void GenerateAllBadges()
+        {
+            EnsureLoaded();
+            if (!GenerateAllItems())
             {
                 return;
             }
@@ -193,6 +203,7 @@ namespace IMEVENT.Events
                     this.attendees[attendeeKey].TableSeatNbr = aTable.SeatNbr;
                     
                     this.attendees[attendeeKey].SharingGroupNbr = gshare.Place + 1; //+1 because groups are numbered from 0 on...
+                    this.attendees[attendeeKey].SharingTableNbr = gshare.Table;
 
                     this.attendees[attendeeKey].persist();//save data in DB
                     nbAssignment++;
@@ -239,11 +250,12 @@ namespace IMEVENT.Events
 
             ret.Add(header);
 
+            Dictionary<int, string> groups = Group.GetGroupsList();
             //Add rows
             foreach (KeyValuePair<string, EventAttendee> entry in this.Attendees)
             {
                 string aMatching = string.Format("{0},{1}"
-                    , attendeesInfo[entry.Key].ToString()
+                    , attendeesInfo[entry.Key].ToString(groups)
                     , entry.Value.ToString(this.attendeesInfo, this.seatsInHall.Seats, this.bedsInDorm.Beds, this.tablesInRefs.Refectories, this.tablesInRefs.Tables));
 
                 ret.Add(aMatching);
@@ -266,7 +278,6 @@ namespace IMEVENT.Events
         {
             return this.tablesInRefs.GetListOfRemainingItems();
         }
-
 
         public void PrintBadgesToFile(string directoryPath, bool forceRecompute, bool printFreeSpots)
         {                       

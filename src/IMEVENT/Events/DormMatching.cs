@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class DormMatching : BaseEventResource
+    public class DormMatching : BaseEventResourceManager
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
         private Dictionary<int, Dormitory> bedsInDorms;

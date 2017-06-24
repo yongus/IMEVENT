@@ -54,13 +54,13 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeHallSection sec = context.FreeHallSections.Where(x => x.EventId == eventId && x.Type == type).FirstOrDefault();
-            if(sec == null || !invalidate)
+            if(sec != null && invalidate)
             {
-                return sec;
+                //Mark item as used and update DB
+                context.FreeHallSections.Remove(sec);
+                context.SaveChanges();
             }
-            //Mark item as used and update DB
-            context.FreeHallSections.Remove(sec);
-            context.SaveChanges();
+            
             return sec;
         }
 

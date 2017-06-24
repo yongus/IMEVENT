@@ -46,5 +46,11 @@ namespace IMEVENT.Data
             }
             else return 0;
         }
+
+        public static Dictionary<int, string> GetGroupsList()
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Groups.Where(g => g.Id != 0).ToDictionary(x => x.Id, x => x.Label);
+        }
     }
 }

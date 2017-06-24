@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class SharingGroupMatching : BaseEventResource
+    public class SharingGroupMatching : BaseEventResourceManager
     {
         private static Logger log = LogManager.GetCurrentClassLogger();
         public SharingGroupMatching(Event eventI) : base(eventI)
         {
         }
+
+        int tableIndex;
 
         private Dictionary<SharingGroupCategoryEnum, int> sharingGroups;
         public Dictionary<SharingGroupCategoryEnum, int> SharingGroups
@@ -33,23 +35,41 @@ namespace IMEVENT.Events
         }
 
         //Split input attendee in groups (Round robin Algorithm)
-        public List<GroupSharingEntry> ShuffleSharingGroupEntries(List<string> inputList, int nbrGroup)
+        public List<GroupSharingEntry> ShuffleSharingGroupEntries(List<string> inputList, int nbrGroup, int capacity)
         {
             inputList.Shuffle();
             List<GroupSharingEntry> ret = new List<GroupSharingEntry>();
-            int index = inputList.Count;
-            int totalAttendee = inputList.Count;
+            int index = 0;
+            int groupeIndex = 0;
+
             foreach (string userId in inputList)
             {
-                ret.Add(new GroupSharingEntry
-                {
-                    UserId = userId,
-                    Place = (totalAttendee - index) % nbrGroup
-                }
+                /*ret.Add(new GroupSharingEntry
+                    {
+                        UserId = userId,
+                        Place = (totalAttendee - index) % nbrGroup
+                    }
                 );
                 index--;
+                */
+                if (index == capacity)
+                {
+                    groupeIndex++;
+                    this.tableIndex++;
+                    index = 0;
+                }
+
+                index++;
+                ret.Add(new GroupSharingEntry
+                    {
+                        UserId = userId,
+                        Place = groupeIndex,
+                        Table = this.tableIndex                        
+                    }
+                );                
             }
 
+            this.tableIndex++;//move next group to the next table
             return ret;
         }
 
@@ -58,16 +78,17 @@ namespace IMEVENT.Events
             return false;
         }
 
-        public bool GenerateGroupsForMatching(Dictionary<string, EventAttendee> attendees)
+        public bool GenerateGroupsForMatching(Dictionary<string, EventAttendee> attendeesList)
         {
             List<GroupSharingEntry> tempStack;
             this.ListAvailableSharingGroups = new Dictionary<SharingGroupCategoryEnum, List<GroupSharingEntry>>();
             if (this.Event.MingleAttendees)
             {
-                tempStack = ShuffleSharingGroupEntries(attendees.Keys.ToList(), this.SharingGroups[SharingGroupCategoryEnum.ADULTE]);
+                int capacity = this.SharingGroups[SharingGroupCategoryEnum.ADULTE];
+                tempStack = ShuffleSharingGroupEntries(attendeesList.Keys.ToList(), capacity, capacity);
                 if (tempStack == null)
                 {
-                    Console.WriteLine("Error in generating sharing groups per category with participants mingle");
+                    log.Error("GenerateGroupsForMatching: Error in generating sharing groups per category with participants mingle");
                     return false;
                 }
 
@@ -75,34 +96,40 @@ namespace IMEVENT.Events
                 return true;
             }
 
+            //Get attendees keys and shuffle
+            List<string> attendeeKeys = new List<string>(attendeesList.Keys);
+            attendeeKeys.Shuffle();
+
             Dictionary<SharingGroupCategoryEnum, List<string>> tempDict = new Dictionary<SharingGroupCategoryEnum, List<string>>();
-            foreach (KeyValuePair<string, EventAttendee> attendee in attendees)
+            
+            foreach (string attendee in attendeeKeys)
             {
                 //ADULTE_S | ADULTE_M | JEUNE_MARIE are mapped to ADULTE
-                SharingGroupCategoryEnum sGroup = ((attendee.Value.SharingCategory == SharingGroupCategoryEnum.JEUNE_MARIE)
-                                                    || (attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_MARIE)
-                                                    || ((attendee.Value.SharingCategory == SharingGroupCategoryEnum.ADULTE_SINGLE)))
-                                                    ? SharingGroupCategoryEnum.ADULTE : attendee.Value.SharingCategory;
+                SharingGroupCategoryEnum sGroup = ((attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.JEUNE_MARIE)
+                                                    || (attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.ADULTE_MARIE)
+                                                    || ((attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.ADULTE_SINGLE)))
+                                                    ? SharingGroupCategoryEnum.ADULTE : attendeesList[attendee].SharingCategory;
 
                 if (!tempDict.ContainsKey(sGroup))
                 {
-                    tempDict[sGroup] = new List<string> { attendee.Value.UserId };
+                    tempDict[sGroup] = new List<string> { attendeesList[attendee].UserId };
                 }
                 else
                 {
-                    tempDict[sGroup].Add(attendee.Value.UserId);
+                    tempDict[sGroup].Add(attendeesList[attendee].UserId);
                 }
             }
 
             // regroup per category
+            this.tableIndex = 1;
             foreach (KeyValuePair<SharingGroupCategoryEnum, List<string>> cat in tempDict)
             {
                 //Number sharing groups is the number of attendee per category divided by the capacity of that category
-                double nbGroup = cat.Value.Count / (double)this.SharingGroups[cat.Key];
-                tempStack = ShuffleSharingGroupEntries(cat.Value, (int)Math.Ceiling(nbGroup));
+                double nbGroupPerType = cat.Value.Count / (double)this.SharingGroups[cat.Key];
+                tempStack = ShuffleSharingGroupEntries(cat.Value, (int)Math.Ceiling(nbGroupPerType), this.SharingGroups[cat.Key]);
                 if (tempStack == null)
                 {
-                    Console.WriteLine("Error in generating sharing groups per category with participants not mingle");
+                    log.Error("GenerateGroupsForMatching: Error in generating sharing groups per category with participants not mingle");
                     return false;
                 }
                 this.ListAvailableSharingGroups[cat.Key] = tempStack;
