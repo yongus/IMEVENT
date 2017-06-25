@@ -21,11 +21,13 @@ namespace IMEVENT.Data
         public bool IsGroupResponsible { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string GroupOriginLabel { get; set; }
+        public string TownOriginLabel { get; set; }
         public MembershipLevelEnum Level { get; set; }
 
         public string ToString(Dictionary<int, string> groups, Dictionary<int, string> zone, Dictionary<int, string> sousZone)
         {            
-            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}"
                  , LastName
                  , FirstName
                  , Sex
@@ -38,6 +40,8 @@ namespace IMEVENT.Data
                  , IsGroupResponsible ? "Oui" : "Non" 
                  , (zone == null || !zone.ContainsKey(ZoneId)) ? "" : zone[ZoneId]
                  , (sousZone == null || !sousZone.ContainsKey(SousZoneId)) ? "" : sousZone[SousZoneId]
+                 , TownOriginLabel
+                 , GroupOriginLabel
                  );
 
             return ret;

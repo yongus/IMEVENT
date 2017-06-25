@@ -246,7 +246,7 @@ namespace IMEVENT.Events
             ret.Add(String.Format(" Prix: {0} Fcfa", this.CurrentEvent.Fee));
             ret.Add(",,,,,,,,,,,,,,,,,,,,,,,");
             string header = "Nom,Prenom,Sexe,Ville,Groupe,Niveau,Langue,Email,Téléphone,Responsable Groupe,"
-                            + "Zone,Sous-Zone,Retraite,Invité Par,Categorie,Frais Payés,Remarques,Précision,Section Hall,Nr Siège,Dortoir,"
+                            + "Zone,Sous-Zone,Ville Origine,Groupe Origine,Retraite,Invité Par,Categorie,Frais Payés,Remarques,Précision,Section Hall,Nr Siège,Dortoir,"
                             + "Nr Lit,Réfectoire,Nr Table, Nr Siège, Groupe Partage";
 
             ret.Add(header);

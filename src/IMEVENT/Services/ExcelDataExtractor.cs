@@ -370,6 +370,10 @@ namespace IMEVENT.Services
             group.Label = (string)sheet.Cells[COLUMN_GROUP + Convert.ToString(row)].Value;
             group.Id = group.Persist();
             user.GroupId = group.Id;
+            
+            user.TownOriginLabel = (string)sheet.Cells[COLUMN_ORIGIN_TOWN + Convert.ToString(row)].Value;
+            user.GroupOriginLabel = (string)sheet.Cells[COLUMN_ORIGIN_GROUP + Convert.ToString(row)].Value;
+
             user.persist();
             return user;
         }
