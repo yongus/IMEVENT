@@ -129,7 +129,12 @@ namespace IMEVENT.Services
                         attendee.SectionType = HallSectionTypeEnum.NONE;
                     }
 
-                    attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
+                    attendee.Retreats = (string)worksheet.Cells[COLUMN_RETREAT + Convert.ToString(currentRow)].Value;
+
+                    string remark = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
+                    //The output file separator is ","; this character should be therefore avoided in comment
+                    attendee.Remarks = (string.IsNullOrEmpty(remark)) ? "" : remark.Replace(",",";");                    
+
                     try
                     {
                         attendee.AmountPaid = Convert.ToInt32(worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value);
@@ -147,10 +152,10 @@ namespace IMEVENT.Services
                     }
                     catch
                     {
-                        attendee.SharingCategory = SharingGroupCategoryEnum.ADULTE;
+                        attendee.SharingCategory = SharingGroupCategoryEnum.ADULTE_SINGLE;
                     }
 
-                    attendee.persist();
+                    attendee.Persist();
                     maxEmpty = 0;
                 }
                 else
@@ -196,7 +201,7 @@ namespace IMEVENT.Services
             {
                 h.HallType = HallSectionTypeEnum.NONE;
             }
-            h.persist();
+            h.Persist();
         }
 
         public void LoadRefectories(ExcelWorksheet worksheet, int EventId)
@@ -225,7 +230,7 @@ namespace IMEVENT.Services
 
             h.Name = (string)sheet.Cells[REFECTORY_NAME + Convert.ToString(row)].Value;
             h.EventId = EventId;
-            h.persist();
+            h.Persist();
             Table t = new Table();
             t.Name = (string)sheet.Cells[TABLE_NAME + Convert.ToString(row)].Value;
             t.RefectoryId = h.Id;
@@ -246,7 +251,7 @@ namespace IMEVENT.Services
             {
                 t.RegimeType = RegimeEnum.NONE;
             }
-            t.persist();            
+            t.Persist();            
         }
 
         public void LoadDorms(ExcelWorksheet worksheet, int EventId)
@@ -295,7 +300,7 @@ namespace IMEVENT.Services
                 h.DormCategory = DormitoryCategoryEnum.MATELAS;
             }
 
-            h.persist();
+            h.Persist();
         }
 
         private User GetUserFromSpreadSheet(int row, ExcelWorksheet sheet)
@@ -346,20 +351,20 @@ namespace IMEVENT.Services
             Zone zone = new Zone();
             zone.Label = (string)sheet.Cells[COLUMN_ZONE + Convert.ToString(row)].Value;
             zone.Id = Zone.GetIdRefectoryIdByName(DBcontext, zone.Label);
-            zone.Id = zone.persist();
+            zone.Id = zone.Persist();
             user.ZoneId = zone.Id;
 
             SousZone sousZone = new SousZone();
             sousZone.Label = (string)sheet.Cells[COLUMN_SOUS_ZONE + Convert.ToString(row)].Value;
             sousZone.ZoneId = zone.Id;
-            sousZone.Id = sousZone.persist();
+            sousZone.Id = sousZone.Persist();
             user.SousZoneId = sousZone.Id;
 
             Group group = new Group();
             group.ZoneId = zone.Id;
             group.SousZoneId = sousZone.Id;
             group.Label = (string)sheet.Cells[COLUMN_GROUP + Convert.ToString(row)].Value;
-            group.Id = group.persist();
+            group.Id = group.Persist();
             user.GroupId = group.Id;
             user.persist();
             return user;
@@ -396,9 +401,9 @@ namespace IMEVENT.Services
             }
             catch (Exception)
             {
-                sg.Type = SharingGroupCategoryEnum.ADULTE;
+                sg.Type = SharingGroupCategoryEnum.ADULTE_SINGLE;
             }
-            sg.persist();
+            sg.Persist();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace IMEVENT.Data
         public DbSet<FreeHallSection> FreeHallSections { get; set; }
         public DbSet<FreeDormitory> FreeDormitories { get; set; }
         public DbSet<FreeRefectory> FreeRefectories { get; set; }
+        public DbSet<FreeSharingGroup> FreeSharingGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,7 +43,7 @@ namespace IMEVENT.Data
         public static  ApplicationDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>();
-            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=IMEVENTDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+            options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=IMEVENTDB;Trusted_Connection=True;MultipleActiveResultSets=true");         
             return new ApplicationDbContext(options.Options);
         }
     }

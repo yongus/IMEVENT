@@ -8,7 +8,7 @@ namespace IMEVENT.SharedEnums
     public enum RegimeEnum
     {
         NONE = 0,
-        WITHOUT_SALT_WITHOUT_OIL = 1,
+        UNDER_DIET = 1,
         GENERAL_MANAGER = 2,
         SPECIAL_GUEST = 3,
         FULL_MEMBER = 4,

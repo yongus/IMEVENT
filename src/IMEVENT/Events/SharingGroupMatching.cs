@@ -28,6 +28,7 @@ namespace IMEVENT.Events
         }
 
         public Dictionary<SharingGroupCategoryEnum, List<GroupSharingEntry>> ListAvailableSharingGroups;
+        Dictionary<SharingGroupCategoryEnum, GroupSharingEntry> NextFreeSpot;
 
         public override int CountAvailableResource()
         {
@@ -35,40 +36,37 @@ namespace IMEVENT.Events
         }
 
         //Split input attendee in groups (Round robin Algorithm)
-        public List<GroupSharingEntry> ShuffleSharingGroupEntries(List<string> inputList, int nbrGroup, int capacity)
+        public List<GroupSharingEntry> ShuffleSharingGroupEntries(List<string> inputList, int capacity, SharingGroupCategoryEnum groupCat)
         {
             inputList.Shuffle();
             List<GroupSharingEntry> ret = new List<GroupSharingEntry>();
             int index = 0;
-            int groupeIndex = 0;
+            int groupIndex = 0;
+            GroupSharingEntry grp = null;
 
             foreach (string userId in inputList)
-            {
-                /*ret.Add(new GroupSharingEntry
-                    {
-                        UserId = userId,
-                        Place = (totalAttendee - index) % nbrGroup
-                    }
-                );
-                index--;
-                */
+            {                
                 if (index == capacity)
                 {
-                    groupeIndex++;
+                    groupIndex++;
                     this.tableIndex++;
                     index = 0;
                 }
 
                 index++;
-                ret.Add(new GroupSharingEntry
-                    {
-                        UserId = userId,
-                        Place = groupeIndex,
-                        Table = this.tableIndex                        
-                    }
-                );                
+                grp = new GroupSharingEntry
+                {
+                    UserId = userId,
+                    Place = groupIndex,
+                    Table = this.tableIndex
+                };
+
+                ret.Add(grp);                
             }
 
+            grp.Capacity = capacity;
+            grp.RemainingSeats = capacity - index;//amount of remaining places in the group
+            NextFreeSpot[groupCat] = grp;//save last group per sharing category                 
             this.tableIndex++;//move next group to the next table
             return ret;
         }
@@ -84,15 +82,15 @@ namespace IMEVENT.Events
             this.ListAvailableSharingGroups = new Dictionary<SharingGroupCategoryEnum, List<GroupSharingEntry>>();
             if (this.Event.MingleAttendees)
             {
-                int capacity = this.SharingGroups[SharingGroupCategoryEnum.ADULTE];
-                tempStack = ShuffleSharingGroupEntries(attendeesList.Keys.ToList(), capacity, capacity);
+                int capacity = this.SharingGroups[SharingGroupCategoryEnum.ADULTE_SINGLE];
+                tempStack = ShuffleSharingGroupEntries(attendeesList.Keys.ToList(), capacity, SharingGroupCategoryEnum.ADULTE_SINGLE);
                 if (tempStack == null)
                 {
                     log.Error("GenerateGroupsForMatching: Error in generating sharing groups per category with participants mingle");
                     return false;
                 }
 
-                this.ListAvailableSharingGroups[SharingGroupCategoryEnum.ADULTE] = tempStack;
+                this.ListAvailableSharingGroups[SharingGroupCategoryEnum.ADULTE_SINGLE] = tempStack;
                 return true;
             }
 
@@ -104,11 +102,11 @@ namespace IMEVENT.Events
             
             foreach (string attendee in attendeeKeys)
             {
-                //ADULTE_S | ADULTE_M | JEUNE_MARIE are mapped to ADULTE
+                //ADULTE_S | ADULTE_M | JEUNE_MARIE are grouped together
                 SharingGroupCategoryEnum sGroup = ((attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.JEUNE_MARIE)
                                                     || (attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.ADULTE_MARIE)
                                                     || ((attendeesList[attendee].SharingCategory == SharingGroupCategoryEnum.ADULTE_SINGLE)))
-                                                    ? SharingGroupCategoryEnum.ADULTE : attendeesList[attendee].SharingCategory;
+                                                    ? SharingGroupCategoryEnum.ADULTE_SINGLE : attendeesList[attendee].SharingCategory;
 
                 if (!tempDict.ContainsKey(sGroup))
                 {
@@ -122,11 +120,11 @@ namespace IMEVENT.Events
 
             // regroup per category
             this.tableIndex = 1;
+            NextFreeSpot = new Dictionary<SharingGroupCategoryEnum, GroupSharingEntry>();
+
             foreach (KeyValuePair<SharingGroupCategoryEnum, List<string>> cat in tempDict)
-            {
-                //Number sharing groups is the number of attendee per category divided by the capacity of that category
-                double nbGroupPerType = cat.Value.Count / (double)this.SharingGroups[cat.Key];
-                tempStack = ShuffleSharingGroupEntries(cat.Value, (int)Math.Ceiling(nbGroupPerType), this.SharingGroups[cat.Key]);
+            {                                
+                tempStack = ShuffleSharingGroupEntries(cat.Value, this.SharingGroups[cat.Key], cat.Key);                
                 if (tempStack == null)
                 {
                     log.Error("GenerateGroupsForMatching: Error in generating sharing groups per category with participants not mingle");
@@ -140,12 +138,51 @@ namespace IMEVENT.Events
 
         public override List<string> GetListOfRemainingItems()
         {
-            throw new NotImplementedException();
+            List<string> ret = new List<string>();
+            List<FreeSharingGroup> items = FreeSharingGroup.GetFreeSharingGroupList(this.Event.Id);
+
+            if (items == null || items.Count == 0)
+            {
+                ret.Add("Pas de groupe de Partage disponible!");
+                return ret;
+            }
+
+            ret.Add("Categorie,Groupe Dispo.,Table,Capacite,Places Restantes");
+            foreach (FreeSharingGroup elem in items)
+            {
+                ret.Add(string.Format("{0},{1},T{2},{3},{4}"
+                                , Convertors.SharingGroupCategoryToString(elem.Cat)
+                                , elem.GroupNbr + 1//since groups are numbered from 0 on...
+                                , elem.Table
+                                , elem.Capacity
+                                , elem.RemainingSeats));
+            }
+
+            return ret;
         }
 
         public override void SaveRemainingItemsInDB()
         {
-            throw new NotImplementedException();
+            if (this.NextFreeSpot.Count() == 0)
+            {
+                //nothing to save
+                return;
+            }
+
+            foreach (KeyValuePair<SharingGroupCategoryEnum, GroupSharingEntry> spot in this.NextFreeSpot)
+            {
+                FreeSharingGroup group = new FreeSharingGroup
+                {
+                    EventId = this.Event.Id,
+                    Cat = spot.Key,
+                    GroupNbr = spot.Value.Place,
+                    Table = spot.Value.Table,
+                    Capacity = spot.Value.Capacity,
+                    RemainingSeats = spot.Value.RemainingSeats
+                };
+                 
+                group.Persist();
+            }
         }
 
         protected override void EnsureLoaded()

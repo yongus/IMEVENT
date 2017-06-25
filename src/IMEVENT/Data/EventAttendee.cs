@@ -13,7 +13,8 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get; set; }
         public int EventId { get; set; }
-       
+
+        public string Retreats { get; set; }
         public Int32 AmountPaid { get; set; }
         public string Remarks { get; set; }        
         public string UserId { get; set; }     
@@ -35,8 +36,10 @@ namespace IMEVENT.Data
 
         public override string ToString()
         {
-            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}"
+            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}"
+                , Retreats
                 , InvitedBy
+                , SharingCategory.SharingGroupCategoryToString()
                 , AmountPaid
                 , Remarks                
                 , Precision
@@ -61,8 +64,10 @@ namespace IMEVENT.Data
                             ? string.Format("{0} {1}", AttendeeInfo[InvitedBy].FirstName, AttendeeInfo[InvitedBy].LastName)
                             : "";
 
-            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
+            string ret = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}"
+                    , Retreats
                     , invitedBy
+                    , SharingCategory.SharingGroupCategoryToString()
                     , AmountPaid
                     , Remarks                
                     , Precision
@@ -73,7 +78,7 @@ namespace IMEVENT.Data
                     , Refectories[RefectoryId].Name
                     , Tables[TableId].Name
                     , TableSeatNbr
-                    , string.Format("{0} {1}/T{2}", SharingCategory.SharingGroupCategoryToString(), SharingGroupNbr, SharingTableNbr)
+                    , string.Format("{0} {1} / T{2}", SharingCategory.SharingGroupCategoryToString(), SharingGroupNbr, SharingTableNbr)
                 );
 
             return ret;
@@ -97,10 +102,10 @@ namespace IMEVENT.Data
             return context.EventAttendees.Where(x => x.EventId == eventId).ToList();
         }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-           
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -113,6 +118,11 @@ namespace IMEVENT.Data
             context.SaveChanges();
 
             return this.Id;
+        }
+
+        public object GetRecordID()
+        {
+            return Id;
         }
     }
 }

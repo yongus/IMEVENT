@@ -17,10 +17,13 @@ namespace IMEVENT.Data
         public string Name { get; set; }
         public RegimeEnum RegimeType { get; set; }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            this.Id = GetIdByProperties(Name, RefectoryId, RegimeType);
+            Id = Convert.ToInt32(GetRecordID());
+
+           
+
             if (Id == 0)
             {
                 context.Tables.Add(this);                
@@ -31,7 +34,7 @@ namespace IMEVENT.Data
             }
 
             context.SaveChanges();
-            return this.Id;
+            return Id;
         }
 
         public int GetIdByProperties(string name, int RefectoryId, RegimeEnum RegimeType)
@@ -55,6 +58,11 @@ namespace IMEVENT.Data
                       );
 
             return ret;            
-        }        
+        }
+
+        public object GetRecordID()
+        {
+           return GetIdByProperties(Name, RefectoryId, RegimeType);
+        }
     }
 }

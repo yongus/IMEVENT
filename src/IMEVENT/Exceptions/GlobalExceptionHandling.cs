@@ -18,7 +18,7 @@ namespace IMEVENT.Exceptions
 
         public void OnException(ExceptionContext context)
         {
-            logger.Log(LogLevel.Error, "Un expected exception occured view stack trace: " + context.Exception.StackTrace);
+            logger.Log(LogLevel.Error, "Un expected exception occured view stack trace: " + context.Exception.Message + " \n "+ context.Exception.StackTrace);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace IMEVENT.Data
             return sec;
         }
 
-        public static int GetFreeRefectoryById(int eventId, string name, RegimeEnum type, string table, int place)
+        public static int GetIdByProperties(int eventId, string name, RegimeEnum type, string table, int place)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeRefectory sec = context.FreeRefectories.Where(x => x.EventId == eventId
@@ -64,10 +64,11 @@ namespace IMEVENT.Data
             return (sec == null) ? 0 : sec.Id;
         }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetFreeRefectoryById(EventId, Name, Type, Table, Place);
+            Id = Convert.ToInt32(GetRecordID());
+
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -79,6 +80,11 @@ namespace IMEVENT.Data
 
             context.SaveChanges();
             return Id;
+        }
+
+        public object GetRecordID()
+        {
+            return GetIdByProperties(EventId, Name, Type, Table, Place);
         }
     }
 }
