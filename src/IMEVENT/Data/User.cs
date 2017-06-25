@@ -23,9 +23,9 @@ namespace IMEVENT.Data
         public string LastName { get; set; }
         public MembershipLevelEnum Level { get; set; }
 
-        public string ToString(Dictionary<int, string> groups)
+        public string ToString(Dictionary<int, string> groups, Dictionary<int, string> zone, Dictionary<int, string> sousZone)
         {            
-            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}"
+            string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}"
                  , LastName
                  , FirstName
                  , Sex
@@ -35,7 +35,9 @@ namespace IMEVENT.Data
                  , Language
                  , Email
                  , PhoneNumber
-                 , IsGroupResponsible ? "Oui" : "Non"                                                                    
+                 , IsGroupResponsible ? "Oui" : "Non" 
+                 , (zone == null || !zone.ContainsKey(ZoneId)) ? "" : zone[ZoneId]
+                 , (sousZone == null || !sousZone.ContainsKey(SousZoneId)) ? "" : sousZone[SousZoneId]
                  );
 
             return ret;

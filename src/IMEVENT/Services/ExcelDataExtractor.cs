@@ -129,11 +129,15 @@ namespace IMEVENT.Services
                         attendee.SectionType = HallSectionTypeEnum.NONE;
                     }
 
-                    attendee.Retreats = (string)worksheet.Cells[COLUMN_RETREAT + Convert.ToString(currentRow)].Value;
+                    object retr = worksheet.Cells[COLUMN_RETREAT + Convert.ToString(currentRow)].Value;
+                    attendee.Retreats = retr == null ? "" : retr.ToString();
 
-                    string remark = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
                     //The output file separator is ","; this character should be therefore avoided in comment
-                    attendee.Remarks = (string.IsNullOrEmpty(remark)) ? "" : remark.Replace(",",";");                    
+                    string remark = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;                    
+                    attendee.Remarks = (string.IsNullOrEmpty(remark)) ? "" : remark.Replace(",",";");
+
+                    string precision = (string)worksheet.Cells[COLUMN_PRECISION + Convert.ToString(currentRow)].Value;                    
+                    attendee.Precision = (string.IsNullOrEmpty(precision)) ? "" : precision.Replace(",", ";");
 
                     try
                     {

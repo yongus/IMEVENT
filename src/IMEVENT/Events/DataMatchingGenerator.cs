@@ -245,18 +245,20 @@ namespace IMEVENT.Events
             ret.Add(",,,,,,,,,,,,,,,,,,,,,,,");
             ret.Add(String.Format(" Prix: {0} Fcfa", this.CurrentEvent.Fee));
             ret.Add(",,,,,,,,,,,,,,,,,,,,,,,");
-            string header = "Nom,Prenom,Sexe,Ville,Groupe,Responsable Groupe,Niveau,Langue,Email,Téléphone,"
-                            + "Invité Par,Frais Payés,Remarques,Précision,Section Hall,Nr Siège,Dortoir,"
+            string header = "Nom,Prenom,Sexe,Ville,Groupe,Niveau,Langue,Email,Téléphone,Responsable Groupe,"
+                            + "Zone,Sous-Zone,Retraite,Invité Par,Categorie,Frais Payés,Remarques,Précision,Section Hall,Nr Siège,Dortoir,"
                             + "Nr Lit,Réfectoire,Nr Table, Nr Siège, Groupe Partage";
 
             ret.Add(header);
 
-            Dictionary<int, string> groups = Group.GetGroupsList();
+            Dictionary<int, string> groups = Group.GetList();
+            Dictionary<int, string> zones = Zone.GetList();
+            Dictionary<int, string> sousZones = SousZone.GetList();
             //Add rows
             foreach (KeyValuePair<string, EventAttendee> entry in this.Attendees)
             {
                 string aMatching = string.Format("{0},{1}"
-                    , attendeesInfo[entry.Key].ToString(groups)
+                    , attendeesInfo[entry.Key].ToString(groups, zones, sousZones)
                     , entry.Value.ToString(this.attendeesInfo, this.seatsInHall.Seats, this.bedsInDorm.Beds, this.tablesInRefs.Refectories, this.tablesInRefs.Tables));
 
                 ret.Add(aMatching);
