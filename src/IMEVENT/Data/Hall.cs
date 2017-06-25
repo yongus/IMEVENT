@@ -14,11 +14,11 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get;  set; }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetHallIdByName(Name); 
-               
+            
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -43,6 +43,11 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.Halls.Where(x => x.EventId == eventID).ToDictionary(x => x.Id, x => x);            
-        }    
+        }
+
+        public object GetRecordID()
+        {
+            return GetHallIdByName(Name);
+        }
     }
 }

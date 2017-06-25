@@ -12,9 +12,16 @@ namespace IMEVENT.Data
         public int Id { get; set; }
         public Guid UserId { get; set; }
         public int ZoneId { get; set; }
-        public int persist()
+
+        public object GetRecordID()
+        {
+           return Id;
+        }
+
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;

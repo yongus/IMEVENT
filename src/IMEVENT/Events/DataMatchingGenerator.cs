@@ -205,7 +205,7 @@ namespace IMEVENT.Events
                     this.attendees[attendeeKey].SharingGroupNbr = gshare.Place + 1; //+1 because groups are numbered from 0 on...
                     this.attendees[attendeeKey].SharingTableNbr = gshare.Table;
 
-                    this.attendees[attendeeKey].persist();//save data in DB
+                    this.attendees[attendeeKey].Persist();//save data in DB
                     nbAssignment++;
                 }                                
             }
@@ -222,6 +222,7 @@ namespace IMEVENT.Events
             seatsInHall.SaveRemainingItemsInDB();
             bedsInDorm.SaveRemainingItemsInDB();
             tablesInRefs.SaveRemainingItemsInDB();
+            sharingGroups.SaveRemainingItemsInDB();
         }
 
         #endregion
@@ -279,6 +280,11 @@ namespace IMEVENT.Events
             return this.tablesInRefs.GetListOfRemainingItems();
         }
 
+        public List<string> GetStringListOfAvailableSharingGroups()
+        {
+            return this.sharingGroups.GetListOfRemainingItems();
+        }
+
         public void PrintBadgesToFile(string directoryPath, bool forceRecompute, bool printFreeSpots)
         {                       
             if (this.Attendees == null || !this.Attendees.Any() || forceRecompute)
@@ -286,10 +292,9 @@ namespace IMEVENT.Events
                 GenerateAllBadges();
             }
 
-            string extFile = "Donnees";//Convertors.EventTypeToString(this.CurrentEvent.Type, true);
+            //string extFile = "Donnees";//Convertors.EventTypeToString(this.CurrentEvent.Type, true);
             List<string> temp = GetStringListOfAssignedAttendees();
-            string outputBadgesFile = string.Format("{0}\\{1}_Badges.csv", directoryPath, extFile);
-            File.Delete(outputBadgesFile);//Remove previous file
+            string outputBadgesFile = string.Format("{0}\\Donnees_Badges.csv", directoryPath);
             File.WriteAllLines(outputBadgesFile, temp.ToArray(), Encoding.Unicode);            
 
             if (!printFreeSpots)
@@ -297,20 +302,21 @@ namespace IMEVENT.Events
                 return;
             }
 
-            temp = GetStringListOfEmptySections();
-            string freePlacesFile = string.Format("{0}\\Liste_Sieges_Hall_Disponibles.csv", directoryPath);//string.Format("{0}\\{1}_Liste_Place_Vide_Hall.csv", directoryPath, extFile);
-            File.Delete(freePlacesFile);
+            temp = GetStringListOfEmptySections();            
+            string freePlacesFile = string.Format("{0}\\Liste_Sieges_Hall_Disponibles.csv", directoryPath);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyBeds();
-            freePlacesFile = string.Format("{0}\\Liste_Lits_Dortoir_Disponibles.csv", directoryPath);//string.Format("{0}\\{1}_Liste_Lit_Vide_Dortoir.csv", directoryPath, extFile);
-            File.Delete(freePlacesFile);
+            freePlacesFile = string.Format("{0}\\Liste_Lits_Dortoir_Disponibles.csv", directoryPath);
             File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
 
             temp = GetStringListOfEmptyTables();
-            freePlacesFile = string.Format("{0}\\Liste_Tables_Refectoire_Disponibles.csv", directoryPath);//string.Format("{0}\\{1}_Liste_Tables_Vide_Refectoire.csv", directoryPath, extFile);
-            File.Delete(freePlacesFile);
-            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);            
+            freePlacesFile = string.Format("{0}\\Liste_Tables_Refectoire_Disponibles.csv", directoryPath);
+            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
+
+            temp = GetStringListOfAvailableSharingGroups();
+            freePlacesFile = string.Format("{0}\\Liste_Groupe_Partage.csv", directoryPath);
+            File.WriteAllLines(freePlacesFile, temp.ToArray(), Encoding.Unicode);
         }
         #endregion
     }

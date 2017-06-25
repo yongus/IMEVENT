@@ -42,7 +42,7 @@ namespace IMEVENT.Data
             return context.FreeHallSections.Where(x => x.EventId == eventId && x.Type == type).ToList();
         }
 
-        public static int GetFreeSectionSeatId(int eventId, string name, HallSectionTypeEnum type, int place)
+        public static int GetIdByProperties(int eventId, string name, HallSectionTypeEnum type, int place)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeHallSection sec = context.FreeHallSections.Where(x => x.EventId == eventId 
@@ -64,10 +64,11 @@ namespace IMEVENT.Data
             return sec;
         }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetFreeSectionSeatId(EventId, Name, Type, Place);
+            Id = Convert.ToInt32(GetRecordID());
+
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -79,6 +80,11 @@ namespace IMEVENT.Data
 
             context.SaveChanges();
             return Id;
+        }
+
+        public object GetRecordID()
+        {
+            return GetIdByProperties(EventId, Name, Type, Place);
         }
     }
 }

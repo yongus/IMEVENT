@@ -12,10 +12,11 @@ namespace IMEVENT.Data
         [Key]
         public int Id { get;  set; }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetIdByName(Name);
+            
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -40,6 +41,11 @@ namespace IMEVENT.Data
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             Refectory refectory = context.Refectories.FirstOrDefault(d => d.Name.Equals(name));            
             return (refectory == null) ? 0 : refectory.Id;                        
+        }
+
+        public object GetRecordID()
+        {
+            return GetIdByName(Name);
         }
     }
 }

@@ -210,7 +210,7 @@ namespace IMEVENT.Events
                 {
                     FreeRefectory refec = new FreeRefectory(this.Event.Id, this.refectories[table.RefectoryId].Name,
                         elem.Key, this.tables[table.TableId].Name, table.SeatNbr);
-                    refec.persist();
+                    refec.Persist();
                 }
             }
         }

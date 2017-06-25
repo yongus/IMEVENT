@@ -42,8 +42,8 @@ namespace IMEVENT.Data
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.FreeDormitories.Where(x => x.EventId == eventId && x.Type == type && x.CatType == catType).ToList();
         }
-
-        public static int GetFreeDormitoryById(int eventId, string name, DormitoryTypeEnum type, DormitoryCategoryEnum catType, int place)
+        
+        public static int GetIdByProperties(int eventId, string name, DormitoryTypeEnum type, DormitoryCategoryEnum catType, int place)
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             FreeDormitory sec = context.FreeDormitories.Where(x => x.EventId == eventId
@@ -65,10 +65,10 @@ namespace IMEVENT.Data
             return sec;
         }
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetFreeDormitoryById(EventId, Name, Type, CatType, Place);
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -80,6 +80,11 @@ namespace IMEVENT.Data
 
             context.SaveChanges();
             return Id;
+        }
+
+        public object GetRecordID()
+        {
+            return GetIdByProperties(EventId, Name, Type, CatType, Place);
         }
     }
 }

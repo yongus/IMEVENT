@@ -14,10 +14,10 @@ namespace IMEVENT.Data
         public int SousZoneId { get; set; }
         public int ZoneId { get; set; }
         public int IdResponsable { get; set; }
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            Id = GetIdGroupIdByLabel(Label);
+            Id = Convert.ToInt32(GetRecordID());
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -47,10 +47,16 @@ namespace IMEVENT.Data
             else return 0;
         }
 
+
         public static Dictionary<int, string> GetGroupsList()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.Groups.Where(g => g.Id != 0).ToDictionary(x => x.Id, x => x.Label);
+        }
+
+        public object GetRecordID()
+        {
+            return GetIdGroupIdByLabel(Label);
         }
     }
 }

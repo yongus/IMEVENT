@@ -226,7 +226,7 @@ namespace IMEVENT.Events
                 foreach (HallEntry hall in elem.Value)
                 {
                     FreeHallSection sec = new FreeHallSection(this.Event.Id, elem.Key, this.Seats[hall.HallId].Name, hall.SeatNbr);
-                    sec.persist();                    
+                    sec.Persist();                    
                 }
             }            
         }

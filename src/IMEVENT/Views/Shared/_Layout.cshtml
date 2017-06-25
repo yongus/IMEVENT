@@ -7,7 +7,8 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/jquery-ui.min.js"></script><!-- jQuery Ui -->
     <script src="~/js/jquery-u.js"></script><!-- jQuery Ui -->
-    <environment names="Development">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <environment names="Development,Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
 
@@ -57,115 +58,115 @@
                 <div class="header-holder">
                     <h1 id="logo"><a href="index.html">The Church</a></h1>
                     <div class="nav">
-                        <ul class="menu menu_blue align_left">                            
-                                <!--Home -->
-                                <li class="active">
-                                    <a asp-controller="Home" asp-action="Index">Home</a>
-                                </li>
-                                <!--About-->
-                                <li class="fullwidth">
-                                    <a asp-controller="Home" asp-action="About" class="drop">About</a>
-                                    <div class="dropdown_fullwidth first_fullwidth">
-                                        <div class="col_2 firstcolumn">
-                                            <div class="inner-col">
-                                                <img src="images/ch-25.jpg" alt="">
-                                                <h2>John</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
-                                            <div class="inner-col">
-                                                <img src="images/ch-27.jpg" alt="">
-                                                <h2>Mark</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
+                        <ul class="menu menu_blue align_left">
+                            <!--Home -->
+                            <li class="active">
+                                <a asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <!--About-->
+                            <li class="fullwidth">
+                                <a asp-controller="Home" asp-action="About" class="drop">About</a>
+                                <div class="dropdown_fullwidth first_fullwidth">
+                                    <div class="col_2 firstcolumn">
+                                        <div class="inner-col">
+                                            <img src="images/ch-25.jpg" alt="">
+                                            <h2>John</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
                                         </div>
-                                        <div class="col_2">
-                                            <h2>About Us</h2>
-                                            <div class="col_1 firstcolumn">
-                                                <ul>
-                                                    <li><a href="team.html">Team</a></li>
-                                                    <li><a href="timeline.html">Timeline</a></li>
-                                                    <li><a href="sermons.html">Sermons</a></li>
-                                                </ul>
-                                            </div>
+                                        <div class="inner-col">
+                                            <img src="images/ch-27.jpg" alt="">
+                                            <h2>Mark</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
                                         </div>
                                     </div>
-                                </li>
-                                <!--Events-->
-                                <li class="fullwidth">
-                                    <a asp-controller="Home" asp-action="About" class="drop">Events</a>
-                                    <div class="dropdown_fullwidth first_fullwidth">
-                                        <div class="col_2 firstcolumn">
-                                            <div class="inner-col">
-                                                <img src="images/ch-25.jpg" alt="">
-                                                <h2>John</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
-                                            <div class="inner-col">
-                                                <img src="images/ch-25.jpg" alt="">
-                                                <h2>Mark</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
-                                        </div>
-                                        <div class="col_2">
-                                            <h2>Events</h2>
-                                            <div class="col_1 firstcolumn">
-                                                <ul>
-                                                    <li><a href="event-detail.html">Event Detail</a></li>
-                                                    <li><a href="event-venue.html">Event Venue</a></li>
-                                                    <li><a href="news.html" class="drop">Latest News</a></li>
-                                                </ul>
-                                            </div>
+                                    <div class="col_2">
+                                        <h2>About Us</h2>
+                                        <div class="col_1 firstcolumn">
+                                            <ul>
+                                                <li><a href="team.html">Team</a></li>
+                                                <li><a href="timeline.html">Timeline</a></li>
+                                                <li><a href="sermons.html">Sermons</a></li>
+                                            </ul>
                                         </div>
                                     </div>
-                                </li>
-                                <!--Blog-->
-                                <li class="fullwidth">
-                                    <a href="blog.html" class="drop">Blog</a>
-                                    <div class="dropdown_fullwidth first_fullwidth">
-                                        <div class="col_2 firstcolumn">
-                                            <div class="inner-col">
-                                                <img src="images/ch-36.jpg" alt="">
-                                                <h2>John</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
-                                            <div class="inner-col">
-                                                <img src="images/ch-29.jpg" alt="">
-                                                <h2>Mark</h2>
-                                                <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
-                                            </div>
+                                </div>
+                            </li>
+                            <!--Events-->
+                            <li class="fullwidth">
+                                <a asp-controller="Home" asp-action="About" class="drop">Events</a>
+                                <div class="dropdown_fullwidth first_fullwidth">
+                                    <div class="col_2 firstcolumn">
+                                        <div class="inner-col">
+                                            <img src="images/ch-25.jpg" alt="">
+                                            <h2>John</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
                                         </div>
-                                        <div class="col_2">
-                                            <h2>Blog</h2>
-                                            <div class="col_1 firstcolumn">
-                                                <ul class="plus">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="blog-post.html">Blog Post</a></li>
-                                                </ul>
-                                            </div>
+                                        <div class="inner-col">
+                                            <img src="images/ch-25.jpg" alt="">
+                                            <h2>Mark</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
                                         </div>
                                     </div>
-                                </li>
-                                <!--Gallery-->
-                                <li class="fullwidth">
-                                    <a href="gallery.html" class="drop">Gallery</a>
-                                    <div class="dropdown_fullwidth first_fullwidth">
-                                        <div class="col_2 firstcolumn">
-                                            <div class="inner-col"> <img src="images/ch-28.jpg" alt=""> <img src="images/ch-29.jpg" alt=""> <img src="images/ch-30.jpg" alt=""> <img src="images/ch-31.jpg" alt=""> <img src="images/ch-32.jpg" alt=""> <img src="images/ch-33.jpg" alt=""> <img src="images/ch-34.jpg" alt=""> <img src="images/ch-35.jpg" alt=""> </div>
-                                        </div>
-                                        <div class="col_2">
-                                            <h2>Gallery</h2>
-                                            <div class="col_1 firstcolumn">
-                                                <ul class="plus">
-                                                    <li><a href="gallery-singlepost.html">Gallery Column 1</a></li>
-                                                    <li><a href="gallery-2.html"> Gallery Column 2</a></li>
-                                                    <li><a href="gallery-3.html"> Gallery Column 3</a></li>
-                                                </ul>
-                                            </div>
+                                    <div class="col_2">
+                                        <h2>Events</h2>
+                                        <div class="col_1 firstcolumn">
+                                            <ul>
+                                                <li><a href="event-detail.html">Event Detail</a></li>
+                                                <li><a href="event-venue.html">Event Venue</a></li>
+                                                <li><a href="news.html" class="drop">Latest News</a></li>
+                                            </ul>
                                         </div>
                                     </div>
-                                </li>                            
-                                <!--Contact-->
-                                <li class="fullwidth">                            
+                                </div>
+                            </li>
+                            <!--Blog-->
+                            <li class="fullwidth">
+                                <a href="blog.html" class="drop">Blog</a>
+                                <div class="dropdown_fullwidth first_fullwidth">
+                                    <div class="col_2 firstcolumn">
+                                        <div class="inner-col">
+                                            <img src="images/ch-36.jpg" alt="">
+                                            <h2>John</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
+                                        </div>
+                                        <div class="inner-col">
+                                            <img src="images/ch-29.jpg" alt="">
+                                            <h2>Mark</h2>
+                                            <p>vore veritatis et quasi itecto  veritatis et quasi itecto</p>
+                                        </div>
+                                    </div>
+                                    <div class="col_2">
+                                        <h2>Blog</h2>
+                                        <div class="col_1 firstcolumn">
+                                            <ul class="plus">
+                                                <li><a href="blog.html">Blog</a></li>
+                                                <li><a href="blog-post.html">Blog Post</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!--Gallery-->
+                            <li class="fullwidth">
+                                <a href="gallery.html" class="drop">Gallery</a>
+                                <div class="dropdown_fullwidth first_fullwidth">
+                                    <div class="col_2 firstcolumn">
+                                        <div class="inner-col"> <img src="images/ch-28.jpg" alt=""> <img src="images/ch-29.jpg" alt=""> <img src="images/ch-30.jpg" alt=""> <img src="images/ch-31.jpg" alt=""> <img src="images/ch-32.jpg" alt=""> <img src="images/ch-33.jpg" alt=""> <img src="images/ch-34.jpg" alt=""> <img src="images/ch-35.jpg" alt=""> </div>
+                                    </div>
+                                    <div class="col_2">
+                                        <h2>Gallery</h2>
+                                        <div class="col_1 firstcolumn">
+                                            <ul class="plus">
+                                                <li><a href="gallery-singlepost.html">Gallery Column 1</a></li>
+                                                <li><a href="gallery-2.html"> Gallery Column 2</a></li>
+                                                <li><a href="gallery-3.html"> Gallery Column 3</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!--Contact-->
+                            <li class="fullwidth">
                                 <a asp-controller="Home" asp-action="Contact">Contact</a>
                                 <div class="dropdown_fullwidth first_fullwidth" id="contact-drop">
                                     <div class="col_2 firstcolumn">
@@ -196,10 +197,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>                           
+                            </li>
                         </ul>
-                        <ul class="menu menu_blue align_right">
-                        </ul>
+                        <ul class="menu menu_blue align_right"></ul>
                         <form action="dummy" method="post">
                             <select name="choice" size="1" onChange="jump(this.form)" class="chzn-results">
                                 <option value="index.html">home</option>
@@ -235,7 +235,6 @@
         </header>
 
         <!---------TODO - Add Register and Login Menu | Fix size of Menu boxes | Fix Footer ------>
-
         <!--body-->
         <div class="container body-content">
             <div>
@@ -325,11 +324,11 @@
         </div>
     </footer>
 
-    <environment names="Development">
+    <environment names="Development, Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/html5.js"></script>
         <script type="text/javascript" src="~/js/jquery.slideshow.js"></script><!-- jQuery main banner -->
-       
+
         <script src="~/js/sourtin-jquery.js"></script><!-- sourtin-jquery -->
         <script src="~/js/jqueryi-icon-menu.js"></script><!-- Js For all Small Style  -->
         <script src="~/js/tytabs.js"></script><!-- jQuery Plugin tytabs  -->
@@ -352,6 +351,8 @@
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
         </script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     @RenderSection("scripts", required: false)

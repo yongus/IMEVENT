@@ -44,23 +44,23 @@ namespace IMEVENT.SharedEnums
                 case MembershipLevelEnum.REGULAR:
                     return "Régulier";
                 case MembershipLevelEnum.AKTIV_1:
-                    return "Actif I";
+                    return "Actif 1";
                 case MembershipLevelEnum.AKTIV_2:
-                    return "Actif II";
+                    return "Actif 2";
                 case MembershipLevelEnum.AKTIV_3:
-                    return "Actif III";
+                    return "Actif 3";
                 case MembershipLevelEnum.YOUNG_MODEL:
                     return "Jeune Phare";                
                 case MembershipLevelEnum.AEF:
-                    return "A.E.F.";
+                    return "AEF";
                 case MembershipLevelEnum.CANDIDATE_FULL_MEMBER:
-                    return "Candidat Membre Plein";
+                    return "CMP";
                 case MembershipLevelEnum.FULL_MEMBER:
-                    return "Membre Plein";
+                    return "MP";
                 case MembershipLevelEnum.INCARNATOR:
-                    return "Incarnateur";
+                    return "Inc.";
                 case MembershipLevelEnum.RG:
-                    return "Responsable Général";
+                    return "RG";
                 case MembershipLevelEnum.INVITED:
                     return "Invité";
                 default:
@@ -88,13 +88,14 @@ namespace IMEVENT.SharedEnums
                     return MembershipLevelEnum.AKTIV_3;
                 case "jeunephare":
                     return MembershipLevelEnum.YOUNG_MODEL;
-                case "accompagnateurenformation":
+                case "aef":
                     return MembershipLevelEnum.AEF;
-                case "candidatmembreplein":
+                case "cmp":
                     return MembershipLevelEnum.CANDIDATE_FULL_MEMBER;
-                case "membreplein":
+                case "mp":
                     return MembershipLevelEnum.FULL_MEMBER;
-                case "incarnateur":
+                case "inc.":
+                case "inc":
                     return MembershipLevelEnum.INCARNATOR;
                 case "rg":
                     return MembershipLevelEnum.RG;
@@ -196,23 +197,22 @@ namespace IMEVENT.SharedEnums
             switch (type)
             {                
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT:
-                    return "Universitaire Débutant";
+                    return "Univers Debt";
                 case SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR:
-                    return "Universitaire Majeur";                
+                    return "Univers Maj";                
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR:
-                    return "Jeune Travailleur Majeur";
+                    return "Jeune Trav Maj";
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR:
-                    return "Jeune Travailleur";
+                    return "Jeune Trav";
                 case SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR:
-                    return "Jeune Travailleur Sénior";
+                    return "Jeune Trav Sen";
                 case SharingGroupCategoryEnum.SECOND_INTERMEDIARE:
-                    return "Secondaire Intermédiaire";
+                    return "Second Interm";
                 case SharingGroupCategoryEnum.SECOND_JUNIOR:
-                    return "Secondaire Junior";
+                    return "Second Junior";
                 case SharingGroupCategoryEnum.ADULTE_SINGLE:                    
                 case SharingGroupCategoryEnum.ADULTE_MARIE:                   
-                case SharingGroupCategoryEnum.JEUNE_MARIE:                   
-                case SharingGroupCategoryEnum.ADULTE:
+                case SharingGroupCategoryEnum.JEUNE_MARIE:                                   
                     return "Adulte";
                 default:
                     log.Error(string.Format("SharingGroupCategoryToString: unknown SharingGroupCategoryEnum={0}"
@@ -227,28 +227,26 @@ namespace IMEVENT.SharedEnums
             string tmp = type.ToLower().Replace(" ", string.Empty);
             switch (tmp)
             {
-                case "adultesingle":
+                case "adultes":
                     return SharingGroupCategoryEnum.ADULTE_SINGLE;
-                case "adultemarié":
+                case "adultem":
                     return SharingGroupCategoryEnum.ADULTE_MARIE;
-                case "universitairedébutant":
+                case "universdebt":
                     return SharingGroupCategoryEnum.UNIVERSITAIRE_DEBUTANT;
-                case "universitairemajeur":
+                case "universmaj":
                     return SharingGroupCategoryEnum.UNIVERSITAIRE_MAJEUR;
-                case "jeunemarié":
+                case "jeunem":
                     return SharingGroupCategoryEnum.JEUNE_MARIE;
-                case "jeunetravailleurmajeur":
+                case "jeunetravmaj":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_MAJEUR;
-                case "jeunetravailleur":
+                case "jeunetrav":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR;
-                case "jeunetravailleursénior":
+                case "jeunetravsen":
                     return SharingGroupCategoryEnum.JEUNE_TRAVAILLEUR_SENIOR;
-                case "secondaireintermédiaire":
+                case "secondinterm":
                     return SharingGroupCategoryEnum.SECOND_INTERMEDIARE;
-                case "secondairejunior":
-                    return SharingGroupCategoryEnum.SECOND_JUNIOR;
-                case "adulte":
-                    return SharingGroupCategoryEnum.ADULTE;
+                case "secondjunior":
+                    return SharingGroupCategoryEnum.SECOND_JUNIOR;                
                 default:
                     log.Error(string.Format("GetSharingGroupCategory: unknown SharingGroupCategoryEnum={0}; input={1}"
                         , tmp, type));
@@ -268,9 +266,9 @@ namespace IMEVENT.SharedEnums
                 case RegimeEnum.DISABLED:
                     return "Handicapé";
                 case RegimeEnum.FULL_MEMBER:
-                    return "Membre Plein";
+                    return "MP";
                 case RegimeEnum.CANDIDATE_FULL_MEMBER:
-                    return "Candidat Membre Plein";
+                    return "CMP";
                 case RegimeEnum.GENERAL_MANAGER:
                     return "Responsable Général";
                 case RegimeEnum.HEALTH_SERVICE:
@@ -289,10 +287,10 @@ namespace IMEVENT.SharedEnums
                     return "Invite Spécial";
                 case RegimeEnum.TRANSLATION_SERVICE:
                     return "Service Traduction";
-                case RegimeEnum.WITHOUT_SALT_WITHOUT_OIL:
-                    return "Sans Sel - sans Huile";
+                case RegimeEnum.UNDER_DIET:
+                    return "Sous Régime";
                 case RegimeEnum.AEF:
-                    return "A.E.F.";
+                    return "AEF";
                 case RegimeEnum.NONE:
                     return "Sans Régime";
                 default:
@@ -308,13 +306,13 @@ namespace IMEVENT.SharedEnums
             string tmp = type.Replace(" ", string.Empty).ToLower();
             switch (tmp)
             {                
-                case "sanssel-sanshuile":
-                    return RegimeEnum.WITHOUT_SALT_WITHOUT_OIL;
+                case "sousrégime":
+                    return RegimeEnum.UNDER_DIET;
                 case "invitéspécial":
                     return RegimeEnum.SPECIAL_GUEST;
-                case "membreplein":
+                case "mp":
                     return RegimeEnum.FULL_MEMBER;
-                case "candidatmembreplein":
+                case "cmp":
                     return RegimeEnum.CANDIDATE_FULL_MEMBER;
                 case "handicapé":
                     return RegimeEnum.DISABLED;
@@ -338,7 +336,7 @@ namespace IMEVENT.SharedEnums
                     return RegimeEnum.MUSIC_INSTRUMENT_SERVICE;
                 case "religieux":
                     return RegimeEnum.RELIGIOUS;
-                case "accompagnateurenformation":
+                case "aef":
                     return RegimeEnum.AEF;
                 case "aucun":
                     return RegimeEnum.NONE;
@@ -361,11 +359,11 @@ namespace IMEVENT.SharedEnums
                 case HallSectionTypeEnum.DISABLED:
                     return "Handicapé";
                 case HallSectionTypeEnum.FULL_MEMBER:
-                    return "Membre Plein";
+                    return "MP";
                 case HallSectionTypeEnum.CANDIDATE_FULL_MEMBER:
-                    return "Candidat Membre Plein";
+                    return "CMP";
                 case HallSectionTypeEnum.GENERAL_MANAGER:
-                    return "Responsable Général";
+                    return "RG";
                 case HallSectionTypeEnum.HEALTH_SERVICE:
                     return "Service Santé";
                 case HallSectionTypeEnum.MUSIC_INSTRUMENT_SERVICE:
@@ -385,7 +383,7 @@ namespace IMEVENT.SharedEnums
                 case HallSectionTypeEnum.MASS_REQUEST:
                     return "Demande Messe";
                 case HallSectionTypeEnum.AEF:
-                    return "A.E.F.";
+                    return "AEF";
                 case HallSectionTypeEnum.NONE:
                     return "Public";
                 default:
@@ -413,9 +411,9 @@ namespace IMEVENT.SharedEnums
                     return HallSectionTypeEnum.SPECIAL_GUEST;
                 case "secondelangue":
                     return HallSectionTypeEnum.SECOND_LANGUAGE;
-                case "membreplein":
+                case "mp":
                     return HallSectionTypeEnum.FULL_MEMBER;
-                case "candidatmembreplein":
+                case "cmp":
                     return HallSectionTypeEnum.CANDIDATE_FULL_MEMBER;
                 case "handicapé":
                     return HallSectionTypeEnum.DISABLED;
@@ -431,7 +429,7 @@ namespace IMEVENT.SharedEnums
                     return HallSectionTypeEnum.RELIGIOUS;
                 case "demandemesse":
                     return HallSectionTypeEnum.MASS_REQUEST;
-                case "accompagnateurenformation":
+                case "aef":
                     return HallSectionTypeEnum.AEF;
                 case "aucun":
                     return HallSectionTypeEnum.NONE;

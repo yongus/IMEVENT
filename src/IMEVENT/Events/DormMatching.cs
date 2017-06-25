@@ -215,7 +215,7 @@ namespace IMEVENT.Events
                         FreeDormitory dorm = new FreeDormitory(this.Event.Id, elem1.Key, elem2.Key, 
                             this.Beds[elem3.DormitoryId].Name, elem3.BedNbr);
 
-                        dorm.persist();
+                        dorm.Persist();
                     }
                 }
             }
