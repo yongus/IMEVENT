@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using IMEVENT.Data;
 using IMEVENT.SharedEnums;
 using System.Text;
+using NLog;
 
 namespace IMEVENT.Events
 {
     public class DataMatchingGenerator
     {
         #region internal data definition
-
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         //Is the data loaded from the DB
         public bool IsAllDataLoaded
         {
@@ -753,7 +754,7 @@ namespace IMEVENT.Events
         #endregion
 
         #region Badge Generation
-        public void GenerateAllBadges()
+        public bool GenerateAllBadges()
         {
             EnsureLoaded();
             if (!this.GenerateSeatsForMatching(this.CurrentEvent.MingleAttendees)
@@ -761,7 +762,7 @@ namespace IMEVENT.Events
                 || !this.GenerateTablesForMatching(this.CurrentEvent.MingleAttendees)
                 || !this.GenerateSharingGroupsForMatching(this.CurrentEvent.MingleAttendees))
             {
-                return;
+                return false;
             }
 
             // Check that we have enough places (Seats, beds, tables) available for the matching
@@ -773,9 +774,9 @@ namespace IMEVENT.Events
                || nbrDorms < nbrAttendees
                || nbrTables < nbrAttendees)
             {
-                Console.WriteLine(String.Format("Not enought resources available for registered attendees! " +
-                    "Sections: {0}, Dorms: {1}, Tables: {2}", nbrSections, nbrDorms, nbrTables));
-                return;
+                logger.Log(LogLevel.Error, String.Format("Not enought resources available for registered attendees! " +
+                    "Sections: {0}, Dorms: {1}, Tables: {2}", nbrSections, nbrDorms, nbrTables));                
+                return false;
             }
 
             int nbAssignment = 0;
@@ -788,7 +789,7 @@ namespace IMEVENT.Events
                     HallEntry aSeat = GetHallEntry(this.CurrentEvent.MingleAttendees ? HallSectionTypeEnum.NONE : attendee.SectionType);
                     if (aSeat == null)
                     {
-                        return;
+                        return false;
                     }
 
                     DormitoryTypeEnum dType = this.attendeesInfo[attendee.UserId].Sex.Trim().ToLower() == "f" 
@@ -799,13 +800,13 @@ namespace IMEVENT.Events
                                                   this.CurrentEvent.MingleAttendees ? DormitoryCategoryEnum.BED : attendee.DormCategory);
                     if (aBed == null)
                     {
-                        return;
+                        return false;
                     }
 
                     TableEntry aTable = GetTableEntry(this.CurrentEvent.MingleAttendees ? RegimeEnum.NONE : attendee.TableType);
                     if (aTable == null)
                     {
-                        return;
+                        return false;
                     }
 
                     this.attendees[attendeeKey].HallId = aSeat.HallId;
@@ -828,10 +829,16 @@ namespace IMEVENT.Events
             //Just a check to make sure all attendees have been assigned
             if(nbAssignment != nbrAttendees)
             {
+                logger.Log(LogLevel.Error, String.Format(string.Format("Failure to generate badges for all registered participants of the event at {0}, starting on {1}"
+                    , this.CurrentEvent.Place
+                    , this.CurrentEvent.StartDate.ToString())));
+
                 throw new System.NullReferenceException(string.Format("Failure to generate badges for all registered participants of the event at {0}, starting on {1}"
                     , this.CurrentEvent.Place
                     , this.CurrentEvent.StartDate.ToString()));
-            }                        
+            }
+
+            return true;                        
         }
 
         #endregion
@@ -861,10 +868,11 @@ namespace IMEVENT.Events
             ret.Add(header);
 
             //Add rows
+            Dictionary<int, string> groups = Group.GetGroupsList();
             foreach (KeyValuePair<string, EventAttendee> entry in this.Attendees)
             {
                 string aMatching = string.Format("{0},{1}"
-                    , attendeesInfo[entry.Key].ToString()
+                    , attendeesInfo[entry.Key].ToString(groups)
                     , entry.Value.ToString(this.attendeesInfo, this.seatsInHall, this.bedsInDorms, this.refectories, this.tablesInRefs));
 
                 ret.Add(aMatching);

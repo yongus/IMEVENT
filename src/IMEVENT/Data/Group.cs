@@ -46,5 +46,17 @@ namespace IMEVENT.Data
             }
             else return 0;
         }
+
+        public static Group GetGroupById(int Id)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Groups.FirstOrDefault(d => d.Id == Id);            
+        }
+
+        public static Dictionary<int, string> GetGroupsList()
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Groups.Where(g => g.Id != 0).ToDictionary(x => x.Id, x => x.Label);
+        }
     }
 }
