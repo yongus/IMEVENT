@@ -57,7 +57,7 @@ namespace IMEVENT.Controllers
                         e.MingleAttendees = false;
                         e.Fee = model.Fee;
                         e.Type = EventTypeEnum.GRANDE_RETRAITE;
-                        e.persist();
+                        e.Persist();
                         Thread t = new Thread(() => ProcessEvent(e, dataExtractor.Source));
                         t.Start();                            
                     }

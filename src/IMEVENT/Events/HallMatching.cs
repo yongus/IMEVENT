@@ -1,5 +1,6 @@
 ﻿using IMEVENT.Data;
 using IMEVENT.SharedEnums;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,38 +8,44 @@ using System.Threading.Tasks;
 
 namespace IMEVENT.Events
 {
-    public class HallMatching : EventResource
-    {        
-        private Dictionary<int, Hall> seatsInHall;
-        public Dictionary<int, Hall> SeatsInHall
+    public class HallMatching : BaseEventResourceManager
+    {
+        private static Logger log = LogManager.GetCurrentClassLogger();
+        private Dictionary<int, Hall> seats;
+        public Dictionary<int, Hall> Seats
         {
             get
             {
                 EnsureLoaded();            
-                return seatsInHall;
+                return seats;
             }
         }
-                        
-        public HallMatching(int eventId)
-        {
-            this.EventId = eventId;
-            this.IsDataLoaded = false;
-        }
 
+        //Get available places in defined sections
         Dictionary<HallSectionTypeEnum, Stack<HallEntry>> ListAvailableSections = null;
 
-        protected HallEntry GetHallEntry(HallSectionTypeEnum sectionType)
+        public HallMatching(Event eventI): base(eventI)
+        {           
+          
+        }
+        public override int CountAvailableResource()
+        {
+            return this.ListAvailableSections.Count();
+        }
+
+
+        public HallEntry GetElement(HallSectionTypeEnum sectionType)
         {
             if (this.ListAvailableSections.IsNullOrEmpty()
                || !this.ListAvailableSections.ContainsKey(sectionType)
                || this.ListAvailableSections[sectionType].IsNullOrEmpty())
             {
-                Console.WriteLine("GetHallEntry(): No seat available!");
+                log.Error("GetHallEntry(): No seat available!");
                 return null;
             }
 
             return this.ListAvailableSections[sectionType].Pop();
-        }
+        }        
 
         public List<Section> BalanceShuffle(Dictionary<int, Stack<Section>> inputList)
         {
@@ -94,46 +101,55 @@ namespace IMEVENT.Events
                 Stack<HallEntry> outputSeatList = new Stack<HallEntry>();
                 foreach (int seatID in seatsIds)
                 {
-                    outputSeatList.Push(new HallEntry
+                    HallEntry tmp = new HallEntry
                     {
                         HallId = listofSeats[seatID].Id,
                         SeatNbr = listofSeats[seatID].PlaceNbr
-                    });
+                    };
+
+                    outputSeatList.Push(tmp);
                 }
 
                 return outputSeatList;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception in generating Seats per category" + ex);
+                log.Error(ex, "Exception in generating Seats per category");                
                 return null;
             }
         }
 
         protected override void EnsureLoaded()
-        {
-            //Get list of seats
-            /*this.seatsInHall = Hall.GetHallSections(this.EventId);
-            if (this.seatsInHall == null)
+        {            
+            if (this.IsDataLoaded)
             {
-                throw new System.NullReferenceException(string.Format("Seats not availaible for the event at {0}, starting on {1}"
-                    , this.CurrentEvent.Place
-                    , this.CurrentEvent.StartDate.ToString()));
+                //Data already loaded
+                return;
             }
-            this.IsDataLoaded = true;*/
+
+            //Get list of seats from DB
+            this.seats = Hall.GetHallSections(this.Event.Id);
+            if (this.seats == null)
+            {
+                log.Error(string.Format("Hall Section not configured for event {0}"
+                    , this.Event.Id));
+                throw new System.NullReferenceException(string.Format("Hall Section not configured for event {0}"
+                    , this.Event.Id));
+            }
+            this.IsDataLoaded = true;
         }
 
-        public override bool GenerateItemsForMatching(bool mingle)
+        public override bool GenerateItemsForMatching()
         {
             //if mingle true, no need to break per category
             Stack<HallEntry> tempStack;
             this.ListAvailableSections = new Dictionary<HallSectionTypeEnum, Stack<HallEntry>>();
-            if (mingle)
+            if (this.Event.MingleAttendees)
             {
-                tempStack = ShuffleSectionEntries(this.seatsInHall);
+                tempStack = ShuffleSectionEntries(this.Seats);
                 if (tempStack == null)
                 {
-                    Console.WriteLine("Error in generating seats per category with participants mingle");
+                    log.Error("GenerateItemsForMatching(): Error in generating hall seats per category with participants mingle");                    
                     return false;
                 }
 
@@ -143,7 +159,7 @@ namespace IMEVENT.Events
 
             //Break the list per category if mingle false
             Dictionary<HallSectionTypeEnum, Dictionary<int, Hall>> tempDict = new Dictionary<HallSectionTypeEnum, Dictionary<int, Hall>>();
-            foreach (KeyValuePair<int, Hall> section in this.seatsInHall)
+            foreach (KeyValuePair<int, Hall> section in this.Seats)
             {
                 if (!tempDict.ContainsKey(section.Value.HallType))
                 {
@@ -158,19 +174,61 @@ namespace IMEVENT.Events
                 }
             }
 
+
             // Match per category
             foreach (KeyValuePair<HallSectionTypeEnum, Dictionary<int, Hall>> cat in tempDict)
             {
                 tempStack = ShuffleSectionEntries(cat.Value);
                 if (tempStack == null)
                 {
-                    Console.WriteLine("Error in generating seats per category with participants not mingle");
+                    log.Error("GenerateItemsForMatching(): Error in generating hall seats per category with participants not mingle");                    
                     return false;
                 }
                 this.ListAvailableSections[cat.Key] = tempStack;
             }
 
             return true;
-        }        
+        }
+
+        public override List<string> GetListOfRemainingItems()
+        {
+            List<string> ret = new List<string>();
+            List<FreeHallSection> items = FreeHallSection.GetFreeSectionList(this.Event.Id);
+
+            if (items == null || items.Count == 0)
+            {
+                ret.Add("Plus de place disponible dans le Hall!");
+                return ret;
+            }
+
+            ret.Add("Type Section,Nom Section,Nr Siège");
+            foreach (FreeHallSection elem in items)
+            {
+                ret.Add(string.Format("{0},{1},{2}"
+                            , Convertors.HallSectionTypeToString(elem.Type)
+                            , elem.Name
+                            , elem.Place));
+            }
+
+            return ret;
+        }
+
+        public override void SaveRemainingItemsInDB()
+        {            
+            if (this.ListAvailableSections.Count() == 0)
+            {
+                //nothing to save
+                return;
+            }
+           
+            foreach (KeyValuePair<HallSectionTypeEnum, Stack<HallEntry>> elem in this.ListAvailableSections)
+            {
+                foreach (HallEntry hall in elem.Value)
+                {
+                    FreeHallSection sec = new FreeHallSection(this.Event.Id, elem.Key, this.Seats[hall.HallId].Name, hall.SeatNbr);
+                    sec.Persist();                    
+                }
+            }            
+        }
     }
 }

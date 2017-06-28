@@ -13,11 +13,11 @@ namespace IMEVENT.Data
         public int Id { get; set; }
         public SharingGroupCategoryEnum Type { get; set; }                
 
-        public int persist()
+        public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            this.Id = GetSharingGroupIdByType(Type);
-
+           
+            Id = Convert.ToInt32(GetRecordID());
             if (Id == 0)
             {
                 context.SharingGroups.Add(this);                
@@ -42,6 +42,11 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
             return context.SharingGroups.Where(x => x.EventId == eventID).ToDictionary(x => x.Type, x => x.Capacity);
+        }
+
+        public object GetRecordID()
+        {
+            return  GetSharingGroupIdByType(Type);
         }
     }
 }
